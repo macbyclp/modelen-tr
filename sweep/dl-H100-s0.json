@@ -1,0 +1,51 @@
+{
+  "args": {
+    "mode": "diloco",
+    "data": "corpus-yerel.txt",
+    "workers": 4,
+    "rounds": 5,
+    "inner": 100,
+    "bs": 16,
+    "block": 128,
+    "dim": 256,
+    "layers": 4,
+    "heads": 4,
+    "lr": 0.001,
+    "warmup": 50,
+    "outer_lr": 1.0,
+    "outer_mom": 0.5,
+    "eval_batches": 20,
+    "seed": 0,
+    "out": "sweep/dl-H100-s0.json"
+  },
+  "data": "corpus-yerel.txt",
+  "params_m": 3.314176,
+  "diloco": [
+    {
+      "round": 1,
+      "step": 100,
+      "val_loss": 2.6460785269737244
+    },
+    {
+      "round": 2,
+      "step": 200,
+      "val_loss": 2.3865899801254273
+    },
+    {
+      "round": 3,
+      "step": 300,
+      "val_loss": 2.1218724727630613
+    },
+    {
+      "round": 4,
+      "step": 400,
+      "val_loss": 1.8451761782169342
+    },
+    {
+      "round": 5,
+      "step": 500,
+      "val_loss": 1.7595242738723755
+    }
+  ],
+  "seconds": 20.8659930229187
+}

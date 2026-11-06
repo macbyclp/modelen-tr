@@ -1,0 +1,34 @@
+# ortam ve derleme çıktıları
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+uygulama/target/
+
+# büyük/üretilen veri (yeniden üretilebilir; betikler depoda)
+models/
+data/
+adapters/
+istemci/calisma/
+corpus-wiki-tr-30mb.txt
+pip-torch.log
+*.safetensors
+*.pt
+
+# kişisel veri: kullanıcının kendi notlarından türetilmiş ham metin; paylaşılmaz
+corpus-yerel.txt
+
+# portal çalışma verisi (hesaplar, parolalar özeti, yedekler)
+portal/veri/
+*.db
+*.db-wal
+*.db-shm
+
+# logo: yalnızca seçilen sürüm ve betikler; ara ham çıktılar yok
+logo/img/
+logo/ham/
+logo/ham-img/
+logo/briefs-img/
+logo/fener/ham/
+logo/fener/img/
+logo/fener/briefs-img/

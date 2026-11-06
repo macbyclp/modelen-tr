@@ -1,0 +1,58 @@
+{
+  "args": {
+    "mode": "both",
+    "data": null,
+    "workers": 4,
+    "rounds": 3,
+    "inner": 20,
+    "bs": 16,
+    "block": 128,
+    "dim": 256,
+    "layers": 4,
+    "heads": 4,
+    "lr": 0.003,
+    "warmup": 50,
+    "outer_lr": 0.7,
+    "outer_mom": 0.9,
+    "eval_batches": 20,
+    "seed": 0,
+    "out": "duman.json"
+  },
+  "data": "SENTETIK (yalnızca duman testi)",
+  "params_m": 3.314176,
+  "baseline": [
+    {
+      "round": 1,
+      "step": 20,
+      "val_loss": 1.7602970898151398
+    },
+    {
+      "round": 2,
+      "step": 40,
+      "val_loss": 1.431990283727646
+    },
+    {
+      "round": 3,
+      "step": 60,
+      "val_loss": 1.1694753110408782
+    }
+  ],
+  "diloco": [
+    {
+      "round": 1,
+      "step": 20,
+      "val_loss": 1.7407880663871764
+    },
+    {
+      "round": 2,
+      "step": 40,
+      "val_loss": 1.4853870153427124
+    },
+    {
+      "round": 3,
+      "step": 60,
+      "val_loss": 1.4511972665786743
+    }
+  ],
+  "seconds": 6.322581768035889
+}

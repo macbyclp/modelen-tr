@@ -1,0 +1,43 @@
+{
+  "args": {
+    "model": "models/qwen3-0.6b-base",
+    "corpus": "corpus-wiki-tr-30mb.txt",
+    "mode": "both",
+    "workers": 4,
+    "rounds": 1,
+    "inner": 2,
+    "bs": 4,
+    "seq": 512,
+    "lr": 0.0002,
+    "outer_lr": 1.0,
+    "outer_mom": 0.5,
+    "eval_tokens": 8000,
+    "seed": 0,
+    "out": "duman-adaptor.json"
+  },
+  "baseline": [
+    {
+      "tur": 0,
+      "bpb": 1.2679009490197912
+    },
+    {
+      "tur": 1,
+      "bpb": 1.266225471123045,
+      "sn": 8.885372161865234
+    }
+  ],
+  "diloco": [
+    {
+      "tur": 0,
+      "bpb": 1.2679009490197912
+    },
+    {
+      "tur": 1,
+      "bpb": 1.266810855569807,
+      "sn": 9.627154350280762
+    }
+  ],
+  "lora_parametre": 10092544,
+  "adaptor_mb_fp32": 40.370176,
+  "tepe_vram_gb": 5.637582848
+}

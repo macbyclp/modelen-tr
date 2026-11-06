@@ -1,0 +1,76 @@
+{
+  "args": {
+    "mode": "diloco",
+    "data": "corpus-yerel.txt",
+    "workers": 4,
+    "rounds": 10,
+    "inner": 50,
+    "bs": 16,
+    "block": 128,
+    "dim": 256,
+    "layers": 4,
+    "heads": 4,
+    "lr": 0.001,
+    "warmup": 50,
+    "outer_lr": 1.0,
+    "outer_mom": 0.5,
+    "eval_batches": 20,
+    "seed": 2,
+    "out": "sweep/dl-H50-s2.json"
+  },
+  "data": "corpus-yerel.txt",
+  "params_m": 3.314176,
+  "diloco": [
+    {
+      "round": 1,
+      "step": 50,
+      "val_loss": 2.800160014629364
+    },
+    {
+      "round": 2,
+      "step": 100,
+      "val_loss": 2.561480438709259
+    },
+    {
+      "round": 3,
+      "step": 150,
+      "val_loss": 2.4795987486839293
+    },
+    {
+      "round": 4,
+      "step": 200,
+      "val_loss": 2.319922649860382
+    },
+    {
+      "round": 5,
+      "step": 250,
+      "val_loss": 2.1831740736961365
+    },
+    {
+      "round": 6,
+      "step": 300,
+      "val_loss": 2.0222436010837557
+    },
+    {
+      "round": 7,
+      "step": 350,
+      "val_loss": 1.8767063438892364
+    },
+    {
+      "round": 8,
+      "step": 400,
+      "val_loss": 1.8213005781173706
+    },
+    {
+      "round": 9,
+      "step": 450,
+      "val_loss": 1.754063993692398
+    },
+    {
+      "round": 10,
+      "step": 500,
+      "val_loss": 1.702846610546112
+    }
+  ],
+  "seconds": 22.694405555725098
+}
