@@ -1,0 +1,25 @@
+### TABAN
+INGILIZCE token=200000 kayıp=2.8141 nat ppl=16.68 bayt başına bit=0.9468
+  Biology                          35/100 = 0.350
+  Chemistry                        42/100 = 0.420
+  Geography                        33/100 = 0.330
+  History                          29/100 = 0.290
+  Mathematics                      32/100 = 0.320
+  Philosophy                       45/100 = 0.450
+  Physics                          35/100 = 0.350
+  Religion and Ethics              39/100 = 0.390
+  Turkish Language and Literature  30/100 = 0.300
+TURKISHMMLU 5-shot toplam: 320/900 = 0.3556
+### ADAPTOR
+INGILIZCE token=200000 kayıp=2.8524 nat ppl=17.33 bayt başına bit=0.9597
+  Biology                          36/100 = 0.360
+  Chemistry                        39/100 = 0.390
+  Geography                        34/100 = 0.340
+  History                          29/100 = 0.290
+  Mathematics                      35/100 = 0.350
+  Philosophy                       43/100 = 0.430
+  Physics                          34/100 = 0.340
+  Religion and Ethics              35/100 = 0.350
+  Turkish Language and Literature  27/100 = 0.270
+TURKISHMMLU 5-shot toplam: 312/900 = 0.3467
+bitti
