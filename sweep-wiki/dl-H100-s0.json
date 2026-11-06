@@ -1,0 +1,51 @@
+{
+  "args": {
+    "mode": "diloco",
+    "data": "corpus-wiki-tr-30mb.txt",
+    "workers": 4,
+    "rounds": 5,
+    "inner": 100,
+    "bs": 16,
+    "block": 128,
+    "dim": 256,
+    "layers": 4,
+    "heads": 4,
+    "lr": 0.001,
+    "warmup": 50,
+    "outer_lr": 1.0,
+    "outer_mom": 0.5,
+    "eval_batches": 20,
+    "seed": 0,
+    "out": "sweep-wiki/dl-H100-s0.json"
+  },
+  "data": "corpus-wiki-tr-30mb.txt",
+  "params_m": 3.314176,
+  "diloco": [
+    {
+      "round": 1,
+      "step": 100,
+      "val_loss": 2.523096430301666
+    },
+    {
+      "round": 2,
+      "step": 200,
+      "val_loss": 2.419250798225403
+    },
+    {
+      "round": 3,
+      "step": 300,
+      "val_loss": 2.3008925199508665
+    },
+    {
+      "round": 4,
+      "step": 400,
+      "val_loss": 2.136302077770233
+    },
+    {
+      "round": 5,
+      "step": 500,
+      "val_loss": 2.079244923591614
+    }
+  ],
+  "seconds": 22.144850730895996
+}

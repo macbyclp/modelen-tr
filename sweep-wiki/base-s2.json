@@ -1,0 +1,126 @@
+{
+  "args": {
+    "mode": "baseline",
+    "data": "corpus-wiki-tr-30mb.txt",
+    "workers": 4,
+    "rounds": 20,
+    "inner": 25,
+    "bs": 16,
+    "block": 128,
+    "dim": 256,
+    "layers": 4,
+    "heads": 4,
+    "lr": 0.001,
+    "warmup": 50,
+    "outer_lr": 0.7,
+    "outer_mom": 0.9,
+    "eval_batches": 20,
+    "seed": 2,
+    "out": "sweep-wiki/base-s2.json"
+  },
+  "data": "corpus-wiki-tr-30mb.txt",
+  "params_m": 3.314176,
+  "baseline": [
+    {
+      "round": 1,
+      "step": 25,
+      "val_loss": 3.1270140528678896
+    },
+    {
+      "round": 2,
+      "step": 50,
+      "val_loss": 2.581597054004669
+    },
+    {
+      "round": 3,
+      "step": 75,
+      "val_loss": 2.5165520310401917
+    },
+    {
+      "round": 4,
+      "step": 100,
+      "val_loss": 2.4656503081321715
+    },
+    {
+      "round": 5,
+      "step": 125,
+      "val_loss": 2.4228507041931153
+    },
+    {
+      "round": 6,
+      "step": 150,
+      "val_loss": 2.3588852882385254
+    },
+    {
+      "round": 7,
+      "step": 175,
+      "val_loss": 2.3073206901550294
+    },
+    {
+      "round": 8,
+      "step": 200,
+      "val_loss": 2.238634932041168
+    },
+    {
+      "round": 9,
+      "step": 225,
+      "val_loss": 2.1992252230644227
+    },
+    {
+      "round": 10,
+      "step": 250,
+      "val_loss": 2.171243393421173
+    },
+    {
+      "round": 11,
+      "step": 275,
+      "val_loss": 2.1170688211917876
+    },
+    {
+      "round": 12,
+      "step": 300,
+      "val_loss": 2.0587990522384643
+    },
+    {
+      "round": 13,
+      "step": 325,
+      "val_loss": 2.055354619026184
+    },
+    {
+      "round": 14,
+      "step": 350,
+      "val_loss": 1.998500794172287
+    },
+    {
+      "round": 15,
+      "step": 375,
+      "val_loss": 2.0012659966945647
+    },
+    {
+      "round": 16,
+      "step": 400,
+      "val_loss": 1.9811993479728698
+    },
+    {
+      "round": 17,
+      "step": 425,
+      "val_loss": 1.97772456407547
+    },
+    {
+      "round": 18,
+      "step": 450,
+      "val_loss": 1.9467155277729034
+    },
+    {
+      "round": 19,
+      "step": 475,
+      "val_loss": 1.9503203690052033
+    },
+    {
+      "round": 20,
+      "step": 500,
+      "val_loss": 1.9231652081012727
+    }
+  ],
+  "seconds": 19.717976093292236
+}

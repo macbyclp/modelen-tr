@@ -1,0 +1,76 @@
+{
+  "args": {
+    "mode": "diloco",
+    "data": "corpus-wiki-tr-30mb.txt",
+    "workers": 4,
+    "rounds": 10,
+    "inner": 50,
+    "bs": 16,
+    "block": 128,
+    "dim": 256,
+    "layers": 4,
+    "heads": 4,
+    "lr": 0.001,
+    "warmup": 50,
+    "outer_lr": 1.0,
+    "outer_mom": 0.5,
+    "eval_batches": 20,
+    "seed": 1,
+    "out": "sweep-wiki/dl-H50-s1.json"
+  },
+  "data": "corpus-wiki-tr-30mb.txt",
+  "params_m": 3.314176,
+  "diloco": [
+    {
+      "round": 1,
+      "step": 50,
+      "val_loss": 2.611542046070099
+    },
+    {
+      "round": 2,
+      "step": 100,
+      "val_loss": 2.487818479537964
+    },
+    {
+      "round": 3,
+      "step": 150,
+      "val_loss": 2.452072334289551
+    },
+    {
+      "round": 4,
+      "step": 200,
+      "val_loss": 2.3853209376335145
+    },
+    {
+      "round": 5,
+      "step": 250,
+      "val_loss": 2.3068662166595457
+    },
+    {
+      "round": 6,
+      "step": 300,
+      "val_loss": 2.225220024585724
+    },
+    {
+      "round": 7,
+      "step": 350,
+      "val_loss": 2.158898484706879
+    },
+    {
+      "round": 8,
+      "step": 400,
+      "val_loss": 2.1088002800941466
+    },
+    {
+      "round": 9,
+      "step": 450,
+      "val_loss": 2.091674041748047
+    },
+    {
+      "round": 10,
+      "step": 500,
+      "val_loss": 2.0873103082180022
+    }
+  ],
+  "seconds": 21.414258241653442
+}
