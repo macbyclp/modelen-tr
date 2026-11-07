@@ -1,0 +1,7 @@
+Modelen
+Copyright 2026 Modelen Alternatif Eğitim Topluluğu
+
+This product includes software developed by the Modelen project.
+Base model: Qwen3-0.6B-Base (c) Alibaba Cloud, Apache License 2.0.
+Early Turkish experiments used Turkish Wikipedia text (CC BY-SA / GFDL, Wikimedia Foundation).
+Training-data licences and their effect on released weights are under legal review.
