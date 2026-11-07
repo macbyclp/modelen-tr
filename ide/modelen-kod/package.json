@@ -1,0 +1,38 @@
+{
+  "name": "modelen-kod",
+  "displayName": "Modelen Kod",
+  "description": "Türkçe kodlama yardımcısı: Modelen modelleri ve dış API'ler (OpenAI uyumlu, Anthropic, Ollama) tek sohbet panelinde.",
+  "version": "0.1.0",
+  "publisher": "modelen",
+  "license": "Apache-2.0",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["AI", "Chat"],
+  "main": "./src/extension.js",
+  "activationEvents": ["onCommand:modelen.sohbetAc"],
+  "contributes": {
+    "commands": [
+      { "command": "modelen.sohbetAc", "title": "Modelen: Sohbeti aç" },
+      { "command": "modelen.anahtarAyarla", "title": "Modelen: API anahtarı ayarla" },
+      { "command": "modelen.anahtarSil", "title": "Modelen: API anahtarını sil" },
+      { "command": "modelen.secimiSor", "title": "Modelen: Seçimi sor" }
+    ],
+    "keybindings": [{ "command": "modelen.secimiSor", "key": "ctrl+alt+m", "when": "editorHasSelection" }],
+    "configuration": {
+      "title": "Modelen Kod",
+      "properties": {
+        "modelen.saglayicilar": {
+          "type": "array",
+          "description": "Sağlayıcı listesi. API anahtarı BURAYA YAZILMAZ; 'Modelen: API anahtarı ayarla' komutuyla işletim sistemi anahtar kasasına kaydedilir.",
+          "default": [
+            { "ad": "Modelen (yerel)", "tur": "openai", "adres": "http://127.0.0.1:8760/v1", "model": "modelen-qwen3-0.6b", "anahtarGerekir": false },
+            { "ad": "Ollama (yerel)", "tur": "openai", "adres": "http://127.0.0.1:11434/v1", "model": "qwen3:4b-instruct-2507-q4_K_M", "anahtarGerekir": false },
+            { "ad": "OpenAI uyumlu (bulut)", "tur": "openai", "adres": "https://api.openai.com/v1", "model": "", "anahtarGerekir": true },
+            { "ad": "Anthropic", "tur": "anthropic", "adres": "https://api.anthropic.com", "model": "", "anahtarGerekir": true }
+          ]
+        },
+        "modelen.varsayilan": { "type": "string", "default": "Modelen (yerel)", "description": "Başlangıçta seçili sağlayıcının adı." },
+        "modelen.maxToken": { "type": "number", "default": 1024 }
+      }
+    }
+  }
+}
