@@ -1,0 +1,30 @@
+You are a senior logo designer drawing SVG marks for "Modelen", an open-source Turkish AI startup (community-trained language models on volunteers' graphics cards; open, transparent, Turkish-first). You will draw 10 DIFFERENT logo marks, one per concept listed at the end. Output SVG only.
+
+HARD RULES for every SVG
+- Standalone, well-formed XML starting exactly with: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+- Symbol only. NO <text>. No <style>, <script>, <image>, <use>, <filter>, <mask>, <clipPath>, gradients, opacity tricks, blur or external references. Letters may only appear as drawn shapes (paths/polygons), and only if the concept is a letter.
+- Allowed elements: svg, g, path, circle, ellipse, rect, polygon, polyline, line. Use explicit fill/stroke attributes (no CSS classes).
+- Palette ONLY: #ff4640 (bright red), #e30a17 (deep red), #fafaf4 (off-white), #8a8a96 (gray), #101013 (near-black). At most 3 colors per mark. Transparent background: do NOT draw a background rectangle. The mark is shown on dark AND light backgrounds, so the essential silhouette must be red (#ff4640 or #e30a17); use off-white or gray only for secondary details.
+- Bold, geometric, flat. It must stay recognisable at 24x24 px: minimum stroke width 6 units on the 128 grid, minimum gap 4 units, no hairlines, no tiny details. Keep an 8-unit margin and center the mark. Strong, simple silhouette.
+- One clear idea per mark. Make the 10 marks visibly different in construction (mix filled shapes, thick-stroke line art, negative space, pixel/grid constructions, symmetric and asymmetric ones).
+- Originality: do not imitate any existing company logo (no Mistral, OpenAI, Anthropic, Hugging Face, Google, Meta, etc.). No national flags, crescent-and-star, coats of arms, religious symbols, or real people.
+- Each SVG under 1800 bytes.
+
+Work method: for each concept, decide the construction on the 128x128 grid (coordinates), check balance and legibility at small size, then write the final SVG. Do not write any files and do not run commands; just answer.
+
+OUTPUT FORMAT (your final message must contain ONLY these blocks, no prose, no markdown fences, one block per concept, using the given id, in the given order):
+<<<LOGO 007>>>
+<svg ...>...</svg>
+<<<END>>>
+
+CONCEPTS (id | name | meaning | construction hint)
+005 | Selçuklu Sekizgeni | Selçuklu çini geometrisi: sekiz noktada buluşan gönüllüler. | 45° döndürülmüş iki kareden sekiz köşeli yıldız.
+015 | Taş Köprü | Anadolu taş köprüleri: iki yakayı bağlamak. | Tek kavisli kemer köprü ve su çizgisi.
+025 | Turna Sürüsü | Turnalar V düzeninde uçar, liderliği paylaşır. | V dizilmiş küçük ok başları; öndeki farklı renk.
+035 | Kaşgarlı Haritası | Divanü Lügati't-Türk: dünya haritası ve sözlük derlemesi. | Daire içinde radyal bölümler, merkez noktası.
+045 | Karınca Yolu | Karınca kolonisi: iz bırakan sürü zekâsı. | Noktalı bir yol ve birleşen kollar.
+055 | Söz Hakkı | Eşit çemberler, biri konuşma balonu. | Aynı boyda çemberler, biri balon biçiminde.
+065 | Gradyan İnişi | Vadiye yuvarlanan top: eğitim. | Eğri vadi çizgisi, topun adım izleri.
+075 | Fraktal Dal | Kendine benzeyen ölçeklenme. | Y biçiminde yinelenen üç seviye dal.
+085 | Zirve | Hedef: yüksek zirve. | İki üçgen dağ, tepede küçük güneş.
+095 | Möbius | Sürekli öğrenme: sonsuz döngü. | Möbius şeridi ya da sekiz biçimi kıvrım.
