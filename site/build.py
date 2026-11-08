@@ -220,7 +220,7 @@ def main():
     with open(os.path.join(kok, "404.html"), "w", encoding="utf-8", newline="\n") as f:
         f.write(k404)
     with open(os.path.join(kok, "manifest.webmanifest"), "w", encoding="utf-8", newline="\n") as f:
-        f.write('{"name":"Modelen","short_name":"Modelen","description":"Türkçe için açık, topluluk sahipli yapay zekâ.",'
+        f.write('{"name":"Modelen","short_name":"Modelen","description":"Açık, topluluk sahipli yapay zekâ.",'
                 '"start_url":"/","display":"standalone","background_color":"#101013","theme_color":"#101013","lang":"tr",'
                 '"icons":[{"src":"assets/icon-192.png","sizes":"192x192","type":"image/png"},'
                 '{"src":"assets/icon-512.png","sizes":"512x512","type":"image/png"}]}\n')

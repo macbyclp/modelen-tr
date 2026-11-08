@@ -45,7 +45,7 @@ TR["nasil-calisir"] = dict(
     title="Nasıl çalışır · Modelen",
     desc="Modelen'de gönüllü GPU'larla dağıtık eğitim nasıl çalışacak: açık taban, LoRA adaptörü, seyrek senkronizasyon ve doğrulama.",
     body=phead("Nasıl çalışır", "Sıfırdan değil. Açık bir tabandan.",
-               "Modeli baştan eğitmek yerine Türkçe öğrenen küçük bir parçayı eğitiyoruz ve bu parçayı gönüllü bilgisayarlara bölüyoruz.")
+               "Modeli baştan eğitmek yerine yeni bir dili öğrenen küçük bir parçayı eğitiyoruz (ilk dilimiz Türkçe) ve bu parçayı gönüllü bilgisayarlara bölüyoruz.")
     + """<div class="flow" aria-label="Akış">
 <div class="box">Taban model<small>dondurulmuş · ≈ 1,2 GB</small></div><span>+</span>
 <div class="box hot">LoRA adaptörü<small>eğitilen · ≈ 40 MB</small></div><span>→</span>
@@ -73,12 +73,12 @@ TR["nasil-calisir"] = dict(
 
 TR["yol-haritasi"] = dict(
     title="Yol haritası · Modelen",
-    desc="Modelen yol haritası: araştırma, Türkçe uyarlama, gönüllü istemcisi, pilot ve açık ağ. Tarih taahhüdü yok.",
+    desc="Modelen yol haritası: araştırma, ilk dil uyarlaması, gönüllü istemcisi, pilot ve açık ağ. Tarih taahhüdü yok.",
     body=phead("Yol haritası", "Aşamaları yazıyoruz, tarih vermiyoruz.",
                "Bir aşama bitince ölçtüğümüzü ve bulamadığımızı birlikte yayınlayacağız.")
     + stages([
         ("done", "00 · YAPILDI", "Araştırma", "Küçük modelde seyrek senkronizasyon ve adaptör ölçeğinde DiLoCo simülasyonu."),
-        ("done", "01 · İLK DENEY", "Türkçe uyarlama", "Qwen3-0.6B-Base üzerinde 8 GB'ta LoRA ile kısa sürekli ön eğitim."),
+        ("done", "01 · İLK DENEY", "İlk dil: Türkçe", "Qwen3-0.6B-Base üzerinde 8 GB'ta LoRA ile kısa sürekli ön eğitim."),
         ("", "02 · SIRADA", "Veri ve ölçüm", "Daha çok Türkçe veri, İngilizce tekrar karışımı, tokenizer, 1,7B taban."),
         ("", "03", "Gönüllü istemcisi", "Açık kaynak, imzalı güncelleme, katkı doğrulama; alfa."),
         ("", "04", "Kapalı pilot", "Küçük bir gönüllü grubuyla gerçek ağda eğitim."),
@@ -88,7 +88,7 @@ TR["yol-haritasi"] = dict(
     + risks([
         "Seyrek senkronizasyonla eğitilen ağırlıkların sonradan standart eğitimle uyumsuz kalabileceğine dair araştırma var. Bunu kendimiz sınayacağız.",
         "Eğitim verisinin lisansları (ör. CC BY-SA veriler) yayınlayacağımız ağırlıklar için hukuki inceleme gerektiriyor. Sonucu <a href=\"lisans.html\">Lisans</a> sayfasında duyuracağız.",
-        "Türkçe için açık modeller zaten var. Farkımız ölçülebilir iyileşme ve topluluk sahipliği olmak zorunda.",
+        "Birçok dil için açık modeller zaten var. Farkımız ölçülebilir iyileşme ve topluluk sahipliği olmak zorunda.",
     ]))
 
 TR["sss"] = dict(
@@ -133,7 +133,7 @@ TR["topluluk-kurallari"] = dict(
     title="Topluluk kuralları · Modelen",
     desc="Modelen topluluğunda profil, gönderi ve takip için temel kurallar; bildirim ve moderasyon süreci.",
     legal=True,
-    body=phead("Topluluk", "Topluluk kuralları", "Burası Türkçe yapay zekâ üzerine birlikte çalışanların alanı. Kısa tutuyoruz.")
+    body=phead("Topluluk", "Topluluk kuralları", "Burası açık yapay zekâ üzerine birlikte çalışanların alanı. Kısa tutuyoruz.")
     + "<h2>Temel kurallar</h2>"
     + risks(["Birbirimize saygılı davranırız; taciz, nefret söylemi, tehdit ve aşağılama yasaktır.",
              "Spam, toplu reklam ve aldatıcı bağlantılar yasaktır.",
@@ -157,7 +157,7 @@ TR["katil"] = dict(
 <li>Para ya da kripto ödülü yok; katkı kaydı ve söz hakkı var.</li></ul>
 <a class="btn accent" href="mailto:%%EPOSTA%%?subject=Gönüllü%20ilgisi">Haber verin</a></div>
 <div><h3>Katkı ver</h3><ul>
-<li>Kod ve Türkçe kıyas testleri.</li>
+<li>Kod ve dil kıyas testleri (önce Türkçe).</li>
 <li>Veri değerlendirmesi.</li>
 <li>Hukuki ve güvenlik incelemesi.</li></ul>
 <a class="btn" href="katki-sartlari.html">Katkı şartları</a></div></div>
@@ -166,8 +166,8 @@ TR["katil"] = dict(
 TR["hakkinda"] = dict(
     title="Hakkında · Modelen",
     desc="Modelen Alternatif Eğitim Topluluğu hakkında: misyon, ilkeler ve topluluk bilgileri.",
-    body=phead("Hakkında", "Türkçe için açık, topluluk sahipli yapay zekâ.",
-               "Verinizi yurt dışına çıkarmak zorunda kalmadan kullanabileceğiniz, şeffaf biçimde eğitilmiş açık modeller.")
+    body=phead("Hakkında", "Açık, topluluk sahipli yapay zekâ.",
+               "Verinizi üçüncü taraf servislere göndermek zorunda kalmadan kullanabileceğiniz, şeffaf biçimde eğitilmiş açık modeller.")
     + "<h2>İlkelerimiz</h2>"
     + kv([("Şeffaflık", "Ne ölçtüğümüzü ve ne ölçemediğimizi yayınlarız."),
           ("Açıklık", "Kod ve ağırlıklar açık lisansla yayınlanır."),
@@ -234,7 +234,7 @@ EN["nasil-calisir"] = dict(
     title="How it works · Modelen",
     desc="How distributed training on volunteer GPUs will work at Modelen: open base, LoRA adapter, sparse synchronisation and verification.",
     body=phead("How it works", "Not from scratch. From an open base.",
-               "Instead of training a model from the ground up, we train a small part that learns Turkish and split that part across volunteer computers.")
+               "Instead of training a model from the ground up, we train a small part that learns a new language (Turkish first) and split that part across volunteer computers.")
     + """<div class="flow" aria-label="Flow">
 <div class="box">Base model<small>frozen · ≈ 1.2 GB</small></div><span>+</span>
 <div class="box hot">LoRA adapter<small>trained · ≈ 40 MB</small></div><span>→</span>
@@ -262,12 +262,12 @@ EN["nasil-calisir"] = dict(
 
 EN["yol-haritasi"] = dict(
     title="Roadmap · Modelen",
-    desc="Modelen roadmap: research, Turkish adaptation, volunteer client, pilot and open network. No date commitments.",
+    desc="Modelen roadmap: research, first-language adaptation, volunteer client, pilot and open network. No date commitments.",
     body=phead("Roadmap", "We write the stages, not the dates.",
                "When a stage ends we will publish what we measured together with what we could not find.")
     + stages([
         ("done", "00 · DONE", "Research", "Sparse synchronisation on a small model and an adapter-scale DiLoCo simulation."),
-        ("done", "01 · FIRST EXPERIMENT", "Turkish adaptation", "Short continued pre-training with LoRA on Qwen3-0.6B-Base on 8 GB."),
+        ("done", "01 · FIRST EXPERIMENT", "First language: Turkish", "Short continued pre-training with LoRA on Qwen3-0.6B-Base on 8 GB."),
         ("", "02 · NEXT", "Data and evaluation", "More Turkish data, English replay mix, tokenizer, a 1.7B base."),
         ("", "03", "Volunteer client", "Open source, signed updates, contribution verification; alpha."),
         ("", "04", "Closed pilot", "Training over a real network with a small group of volunteers."),
@@ -277,7 +277,7 @@ EN["yol-haritasi"] = dict(
     + risks([
         "Research suggests weights trained with sparse synchronisation may not combine well with later standard training. We will test this ourselves.",
         "Training-data licences (e.g. CC BY-SA data) need legal review for the weights we release. We will announce the outcome on the <a href=\"license.html\">Licence</a> page.",
-        "Open Turkish models already exist. Our difference has to be measurable improvement and community ownership.",
+        "Open models already exist for many languages. Our difference has to be measurable improvement and community ownership.",
     ]))
 
 EN["sss"] = dict(
@@ -322,7 +322,7 @@ EN["topluluk-kurallari"] = dict(
     title="Community rules · Modelen",
     desc="Basic rules for profiles, posts and follows in the Modelen community; reporting and moderation.",
     legal=True,
-    body=phead("Community", "Community rules", "This is a place for people working together on Turkish AI. We keep it short.")
+    body=phead("Community", "Community rules", "This is a place for people working together on open AI. We keep it short.")
     + "<h2>Basic rules</h2>"
     + risks(["We treat each other respectfully; harassment, hate speech, threats and belittling are not allowed.",
              "Spam, bulk advertising and deceptive links are not allowed.",
@@ -346,7 +346,7 @@ EN["katil"] = dict(
 <li>No money or crypto reward; a contribution record and a say in direction.</li></ul>
 <a class="btn accent" href="mailto:%%EPOSTA%%?subject=Volunteer%20interest">Let us know</a></div>
 <div><h3>Contribute</h3><ul>
-<li>Code and Turkish benchmarks.</li>
+<li>Code and language benchmarks (Turkish first).</li>
 <li>Data evaluation.</li>
 <li>Legal and security review.</li></ul>
 <a class="btn" href="contributing.html">Contribution terms</a></div></div>
@@ -355,8 +355,8 @@ EN["katil"] = dict(
 EN["hakkinda"] = dict(
     title="About · Modelen",
     desc="About Modelen Alternatif Eğitim Topluluğu: mission, principles and community information.",
-    body=phead("About", "Open, community-owned AI for Turkish.",
-               "Openly and transparently trained models you can use without sending your data abroad.")
+    body=phead("About", "Open, community-owned AI.",
+               "Openly and transparently trained models you can use without sending your data to third-party services.")
     + "<h2>Our principles</h2>"
     + kv([("Transparency", "We publish what we measured and what we could not measure."),
           ("Openness", "Code and weights are released under open licences."),

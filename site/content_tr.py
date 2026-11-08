@@ -4,13 +4,13 @@
 PAGES = {}
 
 PAGES["index"] = dict(
-    title="Modelen · Türkçe için topluluğun birlikte eğittiği açık yapay zekâ",
-    desc="Modelen, Türkçe açık yapay zekâ modellerini gönüllülerin GPU'larıyla birlikte eğitmeyi hedefleyen bir girişimdir. Araştırma aşamasındayız.",
+    title="Modelen · Topluluğun birlikte eğittiği açık yapay zekâ",
+    desc="Modelen, açık yapay zekâ modellerini gönüllülerin GPU'larıyla birlikte eğitmeyi hedefleyen bir girişimdir. İlk dilimiz Türkçe, hedefimiz herkesin dili. Araştırma aşamasındayız.",
     body="""
 <section class="hero prose">
   <p><span class="status">Araştırma aşaması · henüz yayınlanmış model yok</span></p>
-  <h1>Türkçe için, topluluğun birlikte eğittiği açık yapay zekâ.</h1>
-  <p class="lead">Modelen, Türkçe konuşan geliştiriciler ve kurumlar için açık lisanslı, yerelde çalışabilen dil modelleri geliştirir. Hedefimiz bu modelleri tek bir kurumun sunucu salonunda değil, gönüllülerin boştaki GPU'larında birlikte eğitmek.</p>
+  <h1>Topluluğun birlikte eğittiği açık yapay zekâ.</h1>
+  <p class="lead">Modelen, dünyanın her yerinden geliştiriciler ve kurumlar için açık lisanslı, yerelde çalışabilen dil modelleri geliştirir. Hedefimiz bu modelleri tek bir kurumun sunucu salonunda değil, gönüllülerin boştaki GPU'larında birlikte eğitmek. İlk dilimiz Türkçe; diğer diller sırada.</p>
   <div class="actions">
     <a class="btn" href="katil.html">Gönüllü olmak istiyorum</a>
     <a class="btn ghost" href="nasil-calisir.html">Nasıl çalışır?</a>
@@ -19,7 +19,7 @@ PAGES["index"] = dict(
 
 <div class="grid">
   <div class="card"><h3>Açık</h3><p>Kod ve model ağırlıkları Apache-2.0 lisansıyla yayınlanacak. Eğitim verisi kaynakları ve lisansları açıkça listelenecek.</p></div>
-  <div class="card"><h3>Türkçe öncelikli</h3><p>Türkçenin eklemeli yapısı genel modellerde hem başarıyı hem maliyeti etkiliyor. Türkçeyi ölçerek geliştiriyoruz.</p></div>
+  <div class="card"><h3>Dil odaklı</h3><p>Her dilin yapısı genel modellerde hem başarıyı hem maliyeti etkiliyor. Dilleri tek tek ölçerek geliştiriyoruz; pilot dilimiz Türkçe.</p></div>
   <div class="card"><h3>Topluluk sahipliği</h3><p>Katkılar şeffaf bir kayıtta tutulur. Başlangıçta para ya da kripto ödülü yok; katkı kaydı ve söz hakkı var.</p></div>
   <div class="card"><h3>Gizliliğe saygılı</h3><p>Gönüllü istemcisi yalnızca eğitim işini çalıştırır; kişisel dosyalarınıza ya da verilerinize erişmez. Tasarım ilkesi budur ve istemci açık kaynak olacak.</p></div>
 </div>
@@ -35,7 +35,7 @@ PAGES["index"] = dict(
 <p>Bu sayfada ileride yayınlayacağımız şeyler için söz vermiyoruz; yayınladığımız şeyleri gösteriyoruz.</p>
 
 <h2>Kimler için?</h2>
-<p>Türkçe ile çalışan geliştiriciler, araştırmacılar ve kurumlar. Hedef ürün biçimi, yerelde çalıştırılabilen modeller ve bir API.</p>
+<p>Kendi dilinde açık model arayan geliştiriciler, araştırmacılar ve kurumlar (ilk olarak Türkçe). Hedef ürün biçimi, yerelde çalıştırılabilen modeller ve bir API.</p>
 </div>
 """)
 
@@ -45,10 +45,10 @@ PAGES["nasil-calisir"] = dict(
     body="""
 <div class="prose">
 <h1>Nasıl çalışır?</h1>
-<p class="lead">Kısa anlatım: büyük bir modeli sıfırdan eğitmek yerine, açık bir tabanı Türkçeye uyarlıyoruz ve bu uyarlamayı birçok gönüllü bilgisayara bölüyoruz.</p>
+<p class="lead">Kısa anlatım: büyük bir modeli sıfırdan eğitmek yerine, açık bir tabanı bir dile uyarlıyoruz (ilk denememiz Türkçe) ve bu uyarlamayı birçok gönüllü bilgisayara bölüyoruz.</p>
 
 <h2>1. Açık bir tabandan başlıyoruz</h2>
-<p>Sıfırdan eğitim, tek bir GPU ile aylar sürer. Bunun yerine lisansı uygun açık bir taban modeli (ilk deneylerimizde Qwen3-0.6B-Base, Apache-2.0) alıp Türkçe metinle sürekli ön eğitim uyguluyoruz.</p>
+<p>Sıfırdan eğitim, tek bir GPU ile aylar sürer. Bunun yerine lisansı uygun açık bir taban modeli (ilk deneylerimizde Qwen3-0.6B-Base, Apache-2.0) alıp hedef dildeki metinle sürekli ön eğitim uyguluyoruz (ilk koşumuz Türkçe metinle).</p>
 
 <h2>2. Yalnızca küçük bir parçayı eğitiyoruz</h2>
 <p>LoRA yöntemiyle taban modeli dondurup yalnızca küçük bir adaptörü eğitiyoruz. Denemelerimizde adaptör yaklaşık 40 MB, taban model ise yaklaşık 1,2 GB. Bu, gönüllü GPU'nun bellek ihtiyacını ve ağ üzerinden taşınan veriyi küçültür.</p>
@@ -74,7 +74,7 @@ PAGES["nasil-calisir"] = dict(
 
 PAGES["yol-haritasi"] = dict(
     title="Yol haritası · Modelen",
-    desc="Modelen yol haritası: araştırma, Türkçe uyarlama, gönüllü istemcisi, kapalı pilot ve açık ağ. Tarih taahhüdü yok.",
+    desc="Modelen yol haritası: araştırma, ilk dil uyarlaması, gönüllü istemcisi, kapalı pilot ve açık ağ. Tarih taahhüdü yok.",
     body="""
 <div class="prose">
 <h1>Yol haritası</h1>
@@ -82,8 +82,8 @@ PAGES["yol-haritasi"] = dict(
 
 <ol class="timeline">
   <li class="done"><b>0. Araştırma ve simülasyon · yapıldı (ilk tur)</b>Küçük modelde seyrek senkronizasyon, dış optimizer taraması ve adaptör ölçeğinde DiLoCo simülasyonu. Sınırlar: küçük ölçek, tek tohum, gerçek ağ yok.</li>
-  <li class="done"><b>1. Türkçe uyarlama · ilk deney yapıldı</b>Qwen3-0.6B-Base üzerinde 8 GB'lık tüketici GPU'sunda LoRA ile kısa sürekli ön eğitim. Türkçe dil modelleme iyileşti; Türkçe kıyas testinde (TurkishMMLU) anlamlı bir iyileşme görmedik ve İngilizcede hafif bir kayıp ölçtük.</li>
-  <li><b>2. Daha büyük ve çeşitli veri</b>Daha fazla Türkçe veri, İngilizce tekrar karışımı, tokenizer değerlendirmesi, 1,7B ölçekli taban.</li>
+  <li class="done"><b>1. İlk dil uyarlaması (Türkçe) · ilk deney yapıldı</b>Qwen3-0.6B-Base üzerinde 8 GB'lık tüketici GPU'sunda LoRA ile kısa sürekli ön eğitim. Türkçe dil modelleme iyileşti; Türkçe kıyas testinde (TurkishMMLU) anlamlı bir iyileşme görmedik ve İngilizcede hafif bir kayıp ölçtük.</li>
+  <li><b>2. Daha büyük ve çeşitli veri</b>Daha fazla Türkçe veri, İngilizce tekrar karışımı, tokenizer değerlendirmesi, 1,7B ölçekli taban; ardından diğer dillere genişleme.</li>
   <li><b>3. Gönüllü istemcisi (alfa)</b>Açık kaynak, imzalı güncellemeli istemci; katkı doğrulama; ilk iç testler.</li>
   <li><b>4. Kapalı pilot</b>Küçük bir gönüllü grubuyla gerçek ağ üzerinde eğitim; hata ve güvenlik denemeleri.</li>
   <li><b>5. Açık ağ ve ilk yayın</b>Ağırlıkların, kodun ve veri kaynaklarının listesinin Apache-2.0 / ilgili lisanslarla yayını.</li>
@@ -93,7 +93,7 @@ PAGES["yol-haritasi"] = dict(
 <ul>
   <li>Seyrek senkronizasyonla eğitilen ağırlıkların sonradan standart eğitimle uyumsuz kalabileceğine dair araştırma var; bunu kendimiz sınayacağız.</li>
   <li>Eğitim verisinin lisansları (ör. CC BY-SA veriler) yayınlayacağımız ağırlıklar için hukuki inceleme gerektiriyor.</li>
-  <li>Türkçe için açık modeller zaten var; farkımız ölçülebilir iyileşme ve topluluk sahipliği olmalı.</li>
+  <li>Birçok dil için açık modeller zaten var; farkımız ölçülebilir iyileşme ve topluluk sahipliği olmalı.</li>
 </ul>
 </div>
 """)
@@ -126,7 +126,7 @@ PAGES["katil"] = dict(
 <h2>Şimdi ne yapabilirsiniz?</h2>
 <ul>
   <li><b>Haberdar olun:</b> <a href="mailto:%%EPOSTA%%?subject=Gönüllü%20ilgisi">%%EPOSTA%%</a> adresine "Gönüllü" konusuyla yazın. E-posta adresiniz yalnızca Modelen duyuruları için kullanılır; ayrıntı için <a href="kvkk.html">Aydınlatma Metni</a>.</li>
-  <li><b>Katkı verin:</b> kod, veri değerlendirmesi, Türkçe kıyas testleri ve hukuki/güvenlik incelemesi için de yardıma ihtiyacımız var. <a href="katki-sartlari.html">Katkı şartlarına</a> bakın.</li>
+  <li><b>Katkı verin:</b> kod, veri değerlendirmesi, dil kıyas testleri (önce Türkçe) ve hukuki/güvenlik incelemesi için de yardıma ihtiyacımız var. <a href="katki-sartlari.html">Katkı şartlarına</a> bakın.</li>
 </ul>
 <h2>Gönüllü olacaksanız beklentimiz</h2>
 <ul>
@@ -144,9 +144,9 @@ PAGES["hakkinda"] = dict(
     body="""
 <div class="prose">
 <h1>Hakkında</h1>
-<p class="lead">Modelen, Türkçe için açık ve topluluk sahipli yapay zekâ modelleri geliştirmeyi amaçlayan bir girişimdir.</p>
+<p class="lead">Modelen, açık ve topluluk sahipli yapay zekâ modelleri geliştirmeyi amaçlayan uluslararası bir girişimdir. İlk dilimiz Türkçe.</p>
 <h2>Misyonumuz</h2>
-<p>Türkçe konuşan geliştiricilerin ve kurumların, verilerini yurt dışına çıkarmak zorunda kalmadan kullanabileceği, şeffaf biçimde eğitilmiş açık modeller sunmak.</p>
+<p>Geliştiricilerin ve kurumların, verilerini üçüncü taraf servislere göndermek zorunda kalmadan kullanabileceği, şeffaf biçimde eğitilmiş açık modeller sunmak.</p>
 <h2>İlkelerimiz</h2>
 <ul>
   <li><b>Şeffaflık:</b> Ne ölçtüğümüzü ve ne ölçemediğimizi yayınlarız.</li>
@@ -371,7 +371,7 @@ FOOT = [("gizlilik", "Gizlilik"), ("kvkk", "KVKK Aydınlatma"), ("kullanim-sartl
 UI = dict(
     lang="tr", skip="İçeriğe geç", switch="English", draft=("<b>Taslak:</b> Bu metin yayınlanmadan önce bir avukat tarafından "
     "incelenmelidir."),
-    footer_tag="Türkçe için açık, topluluk sahipli yapay zekâ.",
+    footer_tag="Açık, topluluk sahipli yapay zekâ.",
     copyright="© 2026 Modelen Alternatif Eğitim Topluluğu",
     sitename="Modelen", nav_label="Ana gezinme", legal_label="Yasal bağlantılar",
 )

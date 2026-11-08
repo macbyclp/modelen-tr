@@ -10,13 +10,13 @@ FILES = {"index": "index", "nasil-calisir": "how-it-works", "yol-haritasi": "roa
 PAGES = {}
 
 PAGES["index"] = dict(
-    title="Modelen · Open AI for Turkish, trained together by the community",
-    desc="Modelen aims to train open Turkish language models on volunteers' GPUs. We are at the research stage.",
+    title="Modelen · Open AI, trained together by the community",
+    desc="Modelen aims to train open language models on volunteers' GPUs. Turkish first, other languages next. We are at the research stage.",
     body="""
 <section class="hero prose">
   <p><span class="status">Research stage · no released model yet</span></p>
-  <h1>Open AI for Turkish, trained together by the community.</h1>
-  <p class="lead">Modelen builds openly licensed language models that Turkish-speaking developers and organisations can run locally. Our goal is to train them not in a single organisation's data centre but on volunteers' idle GPUs.</p>
+  <h1>Open AI, trained together by the community.</h1>
+  <p class="lead">Modelen builds openly licensed language models that developers and organisations anywhere can run locally. Our goal is to train them not in a single organisation's data centre but on volunteers' idle GPUs. Turkish comes first; other languages follow.</p>
   <div class="actions">
     <a class="btn" href="join.html">I want to volunteer</a>
     <a class="btn ghost" href="how-it-works.html">How it works</a>
@@ -25,7 +25,7 @@ PAGES["index"] = dict(
 
 <div class="grid">
   <div class="card"><h3>Open</h3><p>Code and model weights are planned under Apache-2.0. Training-data sources and their licences will be listed openly.</p></div>
-  <div class="card"><h3>Turkish first</h3><p>Turkish morphology affects both quality and cost in general-purpose models. We measure Turkish and build for it.</p></div>
+  <div class="card"><h3>Language-focused</h3><p>Each language's structure affects both quality and cost in general-purpose models. We measure language by language; our pilot language is Turkish.</p></div>
   <div class="card"><h3>Community owned</h3><p>Contributions are kept in a transparent record. No money or crypto rewards to begin with; a contribution record and a say in direction instead.</p></div>
   <div class="card"><h3>Privacy respecting</h3><p>The volunteer client runs only the training job and does not access your files or personal data. That is the design principle, and the client will be open source.</p></div>
 </div>
@@ -41,7 +41,7 @@ PAGES["index"] = dict(
 <p>We make no promises about what comes later on this page; we show what we have published.</p>
 
 <h2>Who is it for?</h2>
-<p>Developers, researchers and organisations working in Turkish. The target product form is locally runnable models and an API.</p>
+<p>Developers, researchers and organisations who want open models in their own language (starting with Turkish). The target product form is locally runnable models and an API.</p>
 </div>
 """)
 
@@ -51,10 +51,10 @@ PAGES["nasil-calisir"] = dict(
     body="""
 <div class="prose">
 <h1>How it works</h1>
-<p class="lead">In short: instead of training a large model from scratch, we adapt an open base model to Turkish and split that adaptation across many volunteer computers.</p>
+<p class="lead">In short: instead of training a large model from scratch, we adapt an open base model to a language and split that adaptation across many volunteer computers (our first experiment: Turkish).</p>
 
 <h2>1. We start from an open base</h2>
-<p>Training from scratch takes months on a single GPU. Instead we take a suitably licensed open base model (Qwen3-0.6B-Base, Apache-2.0, in our first experiments) and apply continued pre-training on Turkish text.</p>
+<p>Training from scratch takes months on a single GPU. Instead we take a suitably licensed open base model (Qwen3-0.6B-Base, Apache-2.0, in our first experiments) and apply continued pre-training on target-language text (our first run used Turkish).</p>
 
 <h2>2. We train only a small part</h2>
 <p>With LoRA we freeze the base model and train only a small adapter. In our experiments the adapter is about 40&nbsp;MB while the base model is about 1.2&nbsp;GB. That reduces a volunteer GPU's memory needs and the data sent over the network.</p>
@@ -80,7 +80,7 @@ PAGES["nasil-calisir"] = dict(
 
 PAGES["yol-haritasi"] = dict(
     title="Roadmap · Modelen",
-    desc="Modelen roadmap: research, Turkish adaptation, volunteer client, closed pilot and open network. No date commitments.",
+    desc="Modelen roadmap: research, first-language adaptation, volunteer client, closed pilot and open network. No date commitments.",
     body="""
 <div class="prose">
 <h1>Roadmap</h1>
@@ -88,8 +88,8 @@ PAGES["yol-haritasi"] = dict(
 
 <ol class="timeline">
   <li class="done"><b>0. Research and simulation · done (first round)</b>Sparse synchronisation on a small model, outer-optimiser sweeps and an adapter-scale DiLoCo simulation. Limits: small scale, single seed, no real network.</li>
-  <li class="done"><b>1. Turkish adaptation · first experiment done</b>Short continued pre-training with LoRA on Qwen3-0.6B-Base on a consumer 8&nbsp;GB GPU. Turkish language modelling improved; we saw no meaningful improvement on a Turkish benchmark (TurkishMMLU) and measured a slight loss in English.</li>
-  <li><b>2. More and more varied data</b>More Turkish data, English replay mix, tokenizer evaluation, a 1.7B-scale base.</li>
+  <li class="done"><b>1. First-language adaptation (Turkish) · first experiment done</b>Short continued pre-training with LoRA on Qwen3-0.6B-Base on a consumer 8&nbsp;GB GPU. Turkish language modelling improved; we saw no meaningful improvement on a Turkish benchmark (TurkishMMLU) and measured a slight loss in English.</li>
+  <li><b>2. More and more varied data</b>More Turkish data, English replay mix, tokenizer evaluation, a 1.7B-scale base; then more languages.</li>
   <li><b>3. Volunteer client (alpha)</b>Open-source client with signed updates; contribution verification; first internal tests.</li>
   <li><b>4. Closed pilot</b>Training over a real network with a small group of volunteers; fault and security trials.</li>
   <li><b>5. Open network and first release</b>Release of weights, code and the list of data sources under Apache-2.0 / applicable licences.</li>
@@ -99,7 +99,7 @@ PAGES["yol-haritasi"] = dict(
 <ul>
   <li>Research suggests weights trained with sparse synchronisation may not combine well with later standard training; we will test this ourselves.</li>
   <li>Training-data licences (e.g. CC BY-SA data) need legal review for the weights we release.</li>
-  <li>Open Turkish models already exist; our difference has to be measurable improvement and community ownership.</li>
+  <li>Open models already exist for many languages; our difference has to be measurable improvement and community ownership.</li>
 </ul>
 </div>
 """)
@@ -132,7 +132,7 @@ PAGES["katil"] = dict(
 <h2>What can you do now?</h2>
 <ul>
   <li><b>Stay informed:</b> write to <a href="mailto:%%EPOSTA%%?subject=Volunteer%20interest">%%EPOSTA%%</a> with the subject "Volunteer". Your email address is used only for Modelen announcements; see the <a href="kvkk-notice.html">Data Notice</a>.</li>
-  <li><b>Contribute:</b> we also need help with code, data evaluation, Turkish benchmarks and legal/security review. See the <a href="contributing.html">contribution terms</a>.</li>
+  <li><b>Contribute:</b> we also need help with code, data evaluation, language benchmarks (Turkish first) and legal/security review. See the <a href="contributing.html">contribution terms</a>.</li>
 </ul>
 <h2>What we expect from volunteers</h2>
 <ul>
@@ -150,9 +150,9 @@ PAGES["hakkinda"] = dict(
     body="""
 <div class="prose">
 <h1>About</h1>
-<p class="lead">Modelen is a venture aiming to build open, community-owned AI models for Turkish.</p>
+<p class="lead">Modelen is an international venture aiming to build open, community-owned AI models. Turkish is our first language.</p>
 <h2>Mission</h2>
-<p>To offer openly and transparently trained models that Turkish-speaking developers and organisations can use without having to send their data abroad.</p>
+<p>To offer openly and transparently trained models that developers and organisations can use without having to send their data to third-party services.</p>
 <h2>Principles</h2>
 <ul>
   <li><b>Transparency:</b> we publish what we measured and what we could not measure.</li>
@@ -377,7 +377,7 @@ FOOT = [("gizlilik", "Privacy"), ("kvkk", "Data notice (KVKK)"), ("kullanim-sart
 UI = dict(
     lang="en", skip="Skip to content", switch="Türkçe", draft=("<b>Draft:</b> This text must be reviewed by a lawyer before "
     "publication."),
-    footer_tag="Open, community-owned AI for Turkish.",
+    footer_tag="Open, community-owned AI.",
     copyright="© 2026 Modelen Alternatif Eğitim Topluluğu",
     sitename="Modelen", nav_label="Main navigation", legal_label="Legal links",
 )
