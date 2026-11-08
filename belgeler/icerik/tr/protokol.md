@@ -108,6 +108,7 @@ Koordinatörün anlık durumu.
 | `bs`, `seq` | tamsayı | Yığın büyüklüğü ve dizi uzunluğu |
 | `lr` | sayı | Tepe öğrenme oranı (kosinüs çizelgesi işçide uygulanır) |
 | `tohum` | tamsayı | Başlangıç adaptörünü ve modeli kuran tohum (tüm işçilerde aynı) |
+| `mod` | metin | **İsteğe bağlı.** `"cpt"` (varsayılan): ham metinde devam eden ön eğitim, kayıp her belirteçte. `"sft"`: talimat ince ayarı, kayıp yalnızca asistan yanıtı belirteçlerinde (ChatML). Yoksa `cpt` varsayılır. Adaptör biçimi iki modda da aynıdır.
 | `agirlik_sha256` | metin | İndirilecek adaptörün 64 karakterlik **küçük harfli onaltılı** SHA-256 özeti |
 
 **Diğer yanıtlar:**

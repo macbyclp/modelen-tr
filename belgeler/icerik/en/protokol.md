@@ -51,6 +51,8 @@ A worker may send **at most one** result per round.
  "lr": 0.0002, "tohum": 0, "agirlik_sha256": "<64 lowercase hex>"}
 ```
 
+Optional field `mod`: `"cpt"` (default; continued pretraining on raw text, loss on every token) or `"sft"` (instruction fine-tuning; loss only on assistant reply tokens, ChatML format). Workers that do not know it treat it as `cpt`. The adapter format is identical in both modes.
+
 Other replies: `{"bekle": true, "tur": N}` (this worker already submitted this round) and `{"bitti": true}` (training finished).
 
 ### `GET /agirlik`

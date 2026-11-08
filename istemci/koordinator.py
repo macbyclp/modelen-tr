@@ -40,6 +40,7 @@ ap.add_argument("--aykiri-kat", type=float, default=5.0, help="delta normu medya
 ap.add_argument("--anahtar", default="", help="boş değilse istekler X-Anahtar başlığı taşımalı")
 ap.add_argument("--calisma", default="istemci/calisma")
 ap.add_argument("--tohum", type=int, default=0)
+ap.add_argument("--mod", choices=["cpt", "sft"], default="cpt", help="işçilere bildirilen eğitim modu: cpt = ham metinde devam eden ön eğitim, sft = talimat (yanıt-maskeli) ince ayar")
 A = ap.parse_args()
 
 KIL = threading.Lock()
@@ -155,7 +156,7 @@ class H(BaseHTTPRequestHandler):
                                        "taban_model": "Qwen/Qwen3-0.6B-Base",
                                        "adaptor": {"yontem": "lora", "r": ortak.LORA_R, "alfa": ortak.LORA_ALPHA, "hedef_moduller": ortak.HEDEF,
                                                    "dtype": "float32", "tensor_sayisi": len(glob)},
-                                       "agirlik_boyutu": len(glob_bytes), "agirlik_sha256": glob_ozet, "anahtar_gerekli": bool(A.anahtar)})
+                                       "mod": A.mod, "agirlik_boyutu": len(glob_bytes), "agirlik_sha256": glob_ozet, "anahtar_gerekli": bool(A.anahtar)})
         if not self._yetki():
             return
         if u.path == "/durum":
@@ -176,7 +177,7 @@ class H(BaseHTTPRequestHandler):
                 if isci not in isci_parca:
                     isci_parca[isci] = len(isci_parca) % A.parca
                 return self._yaz(200, {"tur": tur, "toplam_tur": A.tur, "parca": isci_parca[isci], "n_parca": A.parca,
-                                       "ic_adim": A.ic_adim, "bs": A.bs, "seq": A.seq, "lr": A.lr, "tohum": A.tohum,
+                                       "ic_adim": A.ic_adim, "bs": A.bs, "seq": A.seq, "lr": A.lr, "tohum": A.tohum, "mod": A.mod,
                                        "agirlik_sha256": glob_ozet})
         if u.path == "/agirlik":
             with KIL:
