@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif">
+  <title id="t">Modelen büyük resim</title>
+  <desc id="d">Gönüllü uygulaması koordinatörden görev ve adaptörü alır, eğitir ve sonucu geri yollar. Koordinatör portalın API'sine nabız ve başvuru gönderir; onaylı koordinatörler dizinde görünür.</desc>
+  <defs>
+    <marker id="ok" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff4640"/></marker>
+    <marker id="ok2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9aa6"/></marker>
+  </defs>
+
+  <!-- işçi -->
+  <rect x="20" y="30" width="250" height="120" rx="10" fill="#17171b" stroke="#27272b" stroke-width="1.5"/>
+  <text x="145" y="62" text-anchor="middle" fill="#f1f1f3" font-size="17" font-weight="650">Gönüllü uygulaması</text>
+  <text x="145" y="84" text-anchor="middle" fill="#9a9aa6" font-size="13">(işçi)</text>
+  <text x="145" y="114" text-anchor="middle" fill="#f1f1f3" font-size="14">LoRA eğitimi</text>
+  <text x="145" y="134" text-anchor="middle" fill="#9a9aa6" font-size="13">yerel GPU · taban model + veri yerelde</text>
+
+  <!-- koordinatör -->
+  <rect x="530" y="30" width="250" height="120" rx="10" fill="#17171b" stroke="#27272b" stroke-width="1.5"/>
+  <text x="655" y="62" text-anchor="middle" fill="#f1f1f3" font-size="17" font-weight="650">Koordinatör</text>
+  <text x="655" y="84" text-anchor="middle" fill="#9a9aa6" font-size="13">sizin sunucunuz · HTTPS</text>
+  <text x="655" y="114" text-anchor="middle" fill="#f1f1f3" font-size="14">adaptörü tutar, turları yönetir</text>
+  <text x="655" y="134" text-anchor="middle" fill="#9a9aa6" font-size="13">sonuçları doğrular ve ortalar</text>
+
+  <!-- işçi -> koordinatör: istek ve yanıt -->
+  <line x1="272" y1="68" x2="526" y2="68" stroke="#ff4640" stroke-width="2" marker-end="url(#ok)"/>
+  <text x="399" y="58" text-anchor="middle" fill="#f1f1f3" font-size="13" font-family="ui-monospace, Consolas, monospace">GET /gorev · /agirlik</text>
+  <line x1="526" y1="100" x2="272" y2="100" stroke="#9a9aa6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ok2)"/>
+  <text x="399" y="120" text-anchor="middle" fill="#9a9aa6" font-size="12">görev + adaptör (~40 MB)</text>
+  <line x1="272" y1="136" x2="526" y2="136" stroke="#ff4640" stroke-width="2" marker-end="url(#ok)"/>
+  <text x="399" y="154" text-anchor="middle" fill="#f1f1f3" font-size="13" font-family="ui-monospace, Consolas, monospace">POST /sonuc</text>
+
+  <!-- koordinatör -> portal -->
+  <line x1="655" y1="152" x2="655" y2="246" stroke="#ff4640" stroke-width="2" marker-end="url(#ok)"/>
+  <text x="667" y="190" fill="#f1f1f3" font-size="13">nabız · başvuru</text>
+  <text x="667" y="209" fill="#f1f1f3" font-size="13">adres doğrulama</text>
+
+  <!-- portal -->
+  <rect x="470" y="250" width="310" height="110" rx="10" fill="#17171b" stroke="#ff4640" stroke-width="1.5"/>
+  <text x="625" y="282" text-anchor="middle" fill="#f1f1f3" font-size="17" font-weight="650">modelen.tr Portal API</text>
+  <text x="625" y="303" text-anchor="middle" fill="#9a9aa6" font-size="13" font-family="ui-monospace, Consolas, monospace">/api/v1</text>
+  <text x="625" y="332" text-anchor="middle" fill="#f1f1f3" font-size="14">onaylı koordinatör dizini</text>
+
+  <!-- portal -> işçi (dizin) -->
+  <path d="M468 335 H145 V152" fill="none" stroke="#9a9aa6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ok2)"/>
+  <text x="300" y="325" text-anchor="middle" fill="#9a9aa6" font-size="13">dizin uygulamada listelenir</text>
+</svg>

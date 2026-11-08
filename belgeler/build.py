@@ -203,7 +203,7 @@ def olustur():
     if os.path.exists(CIKTI):
         shutil.rmtree(CIKTI)
     os.makedirs(os.path.join(CIKTI, "assets"))
-    for d in ("belgeler.css", "belgeler.js"):
+    for d in os.listdir(os.path.join(KOK, "assets")):
         shutil.copy(os.path.join(KOK, "assets", d), os.path.join(CIKTI, "assets", d))
     shutil.copy(os.path.join(DEPO, "site", "assets", "favicon.svg"), os.path.join(CIKTI, "assets", "favicon.svg"))
     with open(os.path.join(CIKTI, "openapi.json"), "w", encoding="utf-8") as f:

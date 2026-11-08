@@ -61,6 +61,7 @@ def satir_ici(m):
         ek = ' rel="noopener"' if url.startswith("http") else ""
         return f'<a href="{kaçış(url)}"{ek}>{x.group(1)}</a>'
 
+    m = re.sub(r"!\[([^\]]*)\]\((/[^)\s]+)\)", lambda x: f'<img src="{x.group(2)}" alt="{x.group(1)}" loading="lazy">', m)
     m = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", baglanti, m)
     m = re.sub(r"&lt;(https?://[^\s&]+)&gt;", r'<a href="\1" rel="noopener">\1</a>', m)
     return re.sub(r"\x00(\d+)\x00", lambda x: f"<code>{kaçış(kodlar[int(x.group(1))])}</code>", m)

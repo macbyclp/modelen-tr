@@ -22,6 +22,22 @@ This site is for people who want to **run a coordinator** or **plug their own tr
 | Automate the portal (profile, heartbeat) | [API introduction](/en/api/) and [API reference](/en/api-referans/) |
 | Keep a coordinator healthy and safe | [Heartbeat](/en/nabiz/), [Security](/en/guvenlik/) |
 
+## What kind of training does Modelen do?
+
+Modelen is a **fine-tuning** system. We do not train a base model from scratch; we train a small **LoRA** adapter on top of an open model (currently Qwen3-0.6B-Base). LoRA is the *parameter-efficient* (PEFT) way of fine-tuning: the base weights stay frozen and only an adapter of roughly 10 million parameters is learned. Only that ~40 MB crosses the network and an 8 GB volunteer GPU is enough. That is why LoRA appears so often in these docs: "fine-tuning" in Modelen means training a LoRA adapter in a distributed way.
+
+| Question | Answer |
+|---|---|
+| Fine-tuning with LoRA | **Yes.** The fixed format of protocol v1 |
+| Full-weight fine-tuning (all parameters) | No (not supported in v1) |
+| Training a model from scratch | No |
+| Which data? | **The coordinator's choice.** Modelen neither provides nor selects data |
+| Training type | Optional `mod` field in the task: `cpt` (continued pretraining on raw text, the default) or `sft` (instruction fine-tuning). Both use the same adapter format; see the [protocol](/en/protokol/) |
+
+:::not
+Which data and which mode you train with is your decision as a coordinator, and so is the licence and provenance of that data.
+:::
+
 ## The pieces
 
 - **Volunteer app** (Rust desktop app): downloads a task, trains locally, uploads the adapter.

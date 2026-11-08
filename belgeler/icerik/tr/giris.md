@@ -17,16 +17,23 @@ ozet: Modelen'e koordinatör olarak katılmak, kendi eğitim sisteminizi bağlam
 
 Eğitim şöyle işler: bir **koordinatör**, küçük bir **LoRA adaptörünü** (~40 MB) tutar ve **tur** tur ilerletir. Gönüllünün bilgisayarındaki uygulama (**işçi**) koordinatörden görev ve adaptörü alır, kendi verisiyle birkaç yüz adım eğitir, sonucu geri yollar. Koordinatör sonuçları ortalar ve yeni adaptörü yayınlar. Taban model ve eğitim verisi gönüllünün bilgisayarında kalır; ağdan yalnızca adaptör geçer.
 
-```text
- Gönüllü uygulaması (işçi)            Koordinatör (sizin sunucunuz, HTTPS)
-        |  GET  /gorev, /agirlik  ------------>  |   adaptörü tutar, turları yönetir
-        |  POST /sonuc            ------------>  |   sonuçları doğrular, ortalar
-        v                                        ^
-   LoRA eğitimi (yerel GPU)                      |  nabız, başvuru, adres doğrulama
-                                                 |
-                                       modelen.tr Portal API  (/api/v1)
-                                       onaylı koordinatör dizini -> uygulamada görünür
-```
+![Modelen büyük resim: işçi, koordinatör ve portal arasındaki akış](/assets/buyuk-resim.svg)
+
+## Modelen ne tür bir eğitim yapar?
+
+Modelen bir **ince ayar (fine-tuning)** sistemidir. Taban modeli sıfırdan eğitmiyoruz; açık bir modelin (şimdilik Qwen3-0.6B-Base) üzerine **LoRA** denen küçük bir adaptör eğitiyoruz. LoRA, ince ayarın *parametre-verimli* (PEFT) yöntemidir: taban ağırlıklar donuk kalır, yalnızca yaklaşık 10 milyon parametrelik adaptör öğrenilir. Ağdan yalnızca bu 40 MB geçer ve 8 GB'lık bir gönüllü kartı yeter. Dokümantasyonda LoRA'nın sık geçmesinin nedeni budur: Modelen'de "ince ayar" demek, LoRA adaptörünü dağıtık olarak eğitmek demektir.
+
+| Soru | Cevap |
+|---|---|
+| LoRA ile ince ayar | **Evet.** Protokol v1'in sabit biçimi |
+| Tam ağırlık ince ayarı (tüm parametreler) | Hayır (v1'de desteklenmez) |
+| Sıfırdan model eğitimi | Hayır |
+| Hangi veriyle eğitilir? | **Koordinatörün seçimi.** Modelen veri sağlamaz ve seçmez |
+| Eğitim türü | Görevdeki isteğe bağlı `mod` alanı: `cpt` (ham metinde devam eden ön eğitim, varsayılan) ya da `sft` (talimat ince ayarı). İkisi de aynı adaptör biçimini kullanır; [protokole](/protokol/) bakın |
+
+:::not
+Hangi veriyle ve hangi modda eğiteceğiniz, koordinatör olarak sizin kararınızdır. Verinin lisansı ve kaynağı da sizin sorumluluğunuzdadır.
+:::
 
 Üç parça birlikte çalışır:
 

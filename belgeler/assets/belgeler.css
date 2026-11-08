@@ -96,3 +96,4 @@ article blockquote { margin: 1em 0; padding: .1em 1em; border-left: 3px solid va
   article h1 { font-size: 1.7rem; } .gez { flex-direction: column; }
 }
 @media print { .ust, .yan, .toc, .gez, .alt, .kod button { display: none; } body { background: #fff; color: #000; } }
+article img, .icerik img, main img { display: block; max-width: 100%; height: auto; margin: 22px auto; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--kod); }
