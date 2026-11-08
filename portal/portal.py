@@ -844,7 +844,8 @@ def main():
     ap.add_argument("--to", help="eposta-test: deneme iletisinin gideceği adres")
     ap.add_argument("--ad", default="Yönetici")
     a = ap.parse_args()
-    BAGLAM["db"] = db_ac(a.db)
+    if a.komut != "eposta-test":  # SMTP denemesi veritabanına dokunmaz
+        BAGLAM["db"] = db_ac(a.db)
     if a.komut == "admin-olustur":
         import getpass
         if not a.eposta:
