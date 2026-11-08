@@ -149,29 +149,35 @@ TR["katil"] = dict(
     title="Katıl · Modelen",
     desc="Modelen'e gönüllü ya da katkıcı olarak katılmak için bilgi: Windows kurulum programını indirin; gereksinimler, kurulum ve dürüst durum.",
     body=phead("Katıl", "GPU'nuzu açık modellere adayın.",
-               "Kurulum programı yayında. Aşağıdan indirip birkaç dakikada kurabilirsiniz.")
-    + """<p><a class="btn accent" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/Modelen-Kurulum.exe">Windows için indir: Modelen-Kurulum.exe</a> <a class="btn" href="https://docs.modelen.tr/gonullu-kurulumu/" rel="noopener">Kurulum rehberi</a></p>
+               "Kurulum programı yayında. Gerisini o halleder.")
+    + """<div class="indir">
+<div class="indir-ana">
+<span class="indir-et">Windows 10/11 · 64 bit</span>
+<h2>Modelen Kurulum</h2>
+<p>Tek dosya, çift tıklayın. Python, PyTorch ve taban modeli kurulum programı sizin yerinize kurar; yönetici yetkisi gerekmez.</p>
+<a class="btn accent big" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/Modelen-Kurulum.exe"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7L3 18.5zM11.6 12.6H21V21l-9.4-1.3z"/></svg> İndir</a>
+<p class="indir-alt">Modelen-Kurulum.exe · kendisi küçüktür; kurulum sırasında birkaç GB indirir<br><a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">SHA-256 ile doğrula</a> · <a href="https://docs.modelen.tr/gonullu-kurulumu/" rel="noopener">Kurulum rehberi</a></p>
+</div>
+<ol class="indir-adim">
+<li><b>İndirin ve çalıştırın.</b> Windows SmartScreen uyarırsa "Daha fazla bilgi", sonra "Yine de çalıştır" deyin (program henüz imzalı değil).</li>
+<li><b>Kurulumu bekleyin.</b> Süre, internet hızınıza bağlıdır.</li>
+<li><b>Modelen'i açın,</b> bir koordinatör seçip AÇIK'a basın.</li>
+</ol>
+</div>
 <p class="note"><b>Dürüst durum:</b> Modelen araştırma aşamasındadır. Şu an dizinde onaylı bir koordinatör yok; ilk koordinatörler katıldığında <a href="koordinatorler.html">Koordinatörler</a> sayfasında listelenecek ve uygulamadan seçilebilecek. Kurulumu şimdi yapabilir, hazır olduğunda katkı verebilirsiniz.</p>
 <div class="cards2">
 <div><h3>Gereksinimler</h3><ul>
-<li>Windows 10/11 (64 bit).</li>
 <li>NVIDIA ekran kartı (en az 6 GB bellek; 8 GB ile denendi) ve güncel sürücü.</li>
-<li>Yaklaşık 8 GB boş disk ve internet. Yönetici yetkisi gerekmez.</li>
+<li>Yaklaşık 8 GB boş disk ve internet.</li>
 <li>18 yaşından küçükler için veli ya da vasi onayı.</li>
 <li>Para ya da kripto ödülü yok; katkı kaydı ve söz hakkı var.</li></ul></div>
 <div><h3>Kurulum hakkında</h3><ul>
-<li>Program henüz <b>dijital olarak imzalı değil</b>; Windows SmartScreen uyarı gösterebilir. Dosya özetini <a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">sürüm sayfasındaki</a> SHA256SUMS ile karşılaştırabilirsiniz.</li>
 <li>Her şey tek klasöre kurulur (<code>%LOCALAPPDATA%\\Modelen</code>); silerek kaldırılır.</li>
-<li>Eğitim sizin kartınızda yapılır; ağdan yalnızca küçük bir adaptör (~40 MB) geçer. Kaynak kod <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub'da</a> açıktır.</li></ul></div>
-<div><h3>Koordinatör ol</h3><ul>
-<li>Kendi topluluğunuzla eğitim çalıştırın.</li>
-<li>Hangi veriyle eğitileceğini siz seçersiniz.</li></ul>
-<a class="btn" href="koordinator-ol.html">Koordinatör ol</a></div>
-<div><h3>Katkı ver</h3><ul>
-<li>Kod ve dil kıyas testleri (önce Türkçe).</li>
-<li>Veri değerlendirmesi.</li>
-<li>Hukuki ve güvenlik incelemesi.</li></ul>
-<a class="btn" href="katki-sartlari.html">Katkı şartları</a></div></div>
+<li>Eğitim sizin kartınızda yapılır; ağdan yalnızca küçük bir adaptör (~40 MB) geçer.</li>
+<li>Kaynak kod <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub'da</a> açıktır.</li></ul></div>
+<div><h3>Başka nasıl katılırım?</h3><ul>
+<li><a href="koordinator-ol.html">Koordinatör olun</a>: kendi topluluğunuzla, seçtiğiniz veriyle eğitim çalıştırın.</li>
+<li>Kod, dil kıyas testleri (önce Türkçe), veri değerlendirmesi, hukuki ve güvenlik incelemesi: <a href="katki-sartlari.html">Katkı şartları</a>.</li></ul></div></div>
 <p class="note">Haber almak için <a href="mailto:%%EPOSTA%%?subject=Gönüllü%20ilgisi">%%EPOSTA%%</a> adresine yazın; e-postanızı yalnızca Modelen duyuruları için kullanırız. <a href="kvkk.html">Aydınlatma Metni</a> · <a href="gonullu-sartlari.html">Gönüllü şartları</a></p>""")
 
 TR["hakkinda"] = dict(
@@ -349,29 +355,35 @@ EN["katil"] = dict(
     title="Join · Modelen",
     desc="How to join Modelen as a volunteer or contributor: download the Windows installer; requirements, setup and honest status.",
     body=phead("Join", "Lend your GPU to open models.",
-               "The installer is available. Download it below and set up in a few minutes.")
-    + """<p><a class="btn accent" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/Modelen-Kurulum.exe">Download for Windows: Modelen-Kurulum.exe</a> <a class="btn" href="https://docs.modelen.tr/en/gonullu-kurulumu/" rel="noopener">Setup guide</a></p>
+               "The installer is available. It takes care of the rest.")
+    + """<div class="indir">
+<div class="indir-ana">
+<span class="indir-et">Windows 10/11 · 64-bit</span>
+<h2>Modelen Installer</h2>
+<p>One file, double-click. It installs Python, PyTorch and the base model for you; no administrator rights needed.</p>
+<a class="btn accent big" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/Modelen-Kurulum.exe"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7L3 18.5zM11.6 12.6H21V21l-9.4-1.3z"/></svg> Download</a>
+<p class="indir-alt">Modelen-Kurulum.exe · the file itself is small; setup downloads a few GB<br><a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">Verify with SHA-256</a> · <a href="https://docs.modelen.tr/en/gonullu-kurulumu/" rel="noopener">Setup guide</a></p>
+</div>
+<ol class="indir-adim">
+<li><b>Download and run it.</b> If Windows SmartScreen warns, choose "More info", then "Run anyway" (the program is not signed yet).</li>
+<li><b>Wait for setup.</b> The time depends on your internet speed.</li>
+<li><b>Open Modelen,</b> pick a coordinator and press ON.</li>
+</ol>
+</div>
 <p class="note"><b>Honest status:</b> Modelen is at the research stage. There is no approved coordinator in the directory yet; once the first coordinators join they will be listed on the <a href="koordinatorler.html">Coordinators</a> page and selectable from the app. You can install now and contribute when one is ready.</p>
 <div class="cards2">
 <div><h3>Requirements</h3><ul>
-<li>Windows 10/11 (64-bit).</li>
 <li>An NVIDIA graphics card (at least 6&nbsp;GB of memory; tested with 8&nbsp;GB) and a current driver.</li>
-<li>About 8&nbsp;GB of free disk and internet. No administrator rights needed.</li>
+<li>About 8&nbsp;GB of free disk and internet.</li>
 <li>For under-18s, parental or guardian consent.</li>
 <li>No money or crypto reward; there is a contribution record and a say in direction.</li></ul></div>
 <div><h3>About the installer</h3><ul>
-<li>The program is <b>not digitally signed yet</b>; Windows SmartScreen may show a warning. Compare the file digest with SHA256SUMS on the <a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">release page</a>.</li>
 <li>Everything is installed in one folder (<code>%LOCALAPPDATA%\\Modelen</code>) and removed by deleting it.</li>
-<li>Training happens on your card; only a small adapter (~40&nbsp;MB) crosses the network. The source is open on <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub</a>.</li></ul></div>
-<div><h3>Become a coordinator</h3><ul>
-<li>Run training with your own community.</li>
-<li>You choose which data to train on.</li></ul>
-<a class="btn" href="become-coordinator.html">Become a coordinator</a></div>
-<div><h3>Contribute</h3><ul>
-<li>Code and language benchmarks (Turkish first).</li>
-<li>Data evaluation.</li>
-<li>Legal and security review.</li></ul>
-<a class="btn" href="contributing.html">Contribution terms</a></div></div>
+<li>Training happens on your card; only a small adapter (~40&nbsp;MB) crosses the network.</li>
+<li>The source is open on <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub</a>.</li></ul></div>
+<div><h3>Other ways to join</h3><ul>
+<li><a href="become-coordinator.html">Become a coordinator</a>: run training with your own community and the data you choose.</li>
+<li>Code, language benchmarks (Turkish first), data evaluation, legal and security review: <a href="contributing.html">Contribution terms</a>.</li></ul></div></div>
 <p class="note">To stay informed, write to <a href="mailto:%%EPOSTA%%?subject=Volunteer%20interest">%%EPOSTA%%</a>; we use your email only for Modelen announcements. <a href="kvkk-notice.html">KVKK notice</a> · <a href="volunteer-terms.html">Volunteer terms</a></p>""")
 
 EN["hakkinda"] = dict(
