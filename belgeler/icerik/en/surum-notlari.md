@@ -11,7 +11,7 @@ Full history: [GitHub releases](https://github.com/macbyclp/modelen-tr/releases)
 
 ## Unreleased (after v0.5.0)
 
-- **Data distribution:** the coordinator can serve tokenised training data shards (`--veri`, `GET /veri`); workers verify the SHA-256 and cache them. No local data file is needed any more. Optional protocol fields `veri_sha256` / `veri_belirtec`.
+- **Data distribution:** the coordinator can serve tokenised training data shards (`--veri`, `GET /veri`); workers verify the SHA-256 and cache them. No local data file is needed any more. Optional protocol fields `veri_sha256` / `veri_belirtec`. **Note:** the coordinator side passed unit tests; the worker-side download and training path has not yet passed a real end-to-end GPU test. It only activates when the coordinator is started with `--veri`; otherwise the old local-data path works unchanged.
 - **Training mode:** optional task field `mod` (`cpt` / `sft`).
 - **Reference coordinator hardening:** state and outer-step momentum persisted every round and restored on restart; worker-name validation (`400`); per-IP rate limit (`429`); worker-count limit (`503`); connection timeout; several comma-separated keys; `--vekil` for proxies. Coordinator version `0.5.0`.
 - **Worker:** URL-encodes the worker name.
