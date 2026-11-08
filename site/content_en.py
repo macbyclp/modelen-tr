@@ -296,7 +296,7 @@ PAGES["cerez"] = dict(
 PAGES["gonullu-sartlari"] = dict(
     legal=True,
     title="Volunteer participation terms · Modelen",
-    desc="Draft Modelen volunteer terms: conditions for volunteering GPU power, security principles and responsibilities.",
+    desc="Modelen volunteer terms: conditions for volunteering GPU power, security principles and responsibilities.",
     body="""
 <div class="prose">
 <h1>Volunteer participation terms</h1>

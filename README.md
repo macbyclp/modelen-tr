@@ -164,7 +164,7 @@ flowchart TB
 - **Profil varsayılan gizlidir.** Kişi "herkese açık" yapmadıkça adı, fotoğrafı ve gönderileri görünmez.
 - API anahtarları (uygulamada) yalnızca işletim sistemi kimlik kasasında; ayar dosyasına yazılmaz.
 
-> Yasal metinler (KVKK, gizlilik, çerez, topluluk kuralları, koşullar) **taslaktır**; yayından önce avukat onayı gerekir ([`kurumsal/AVUKAT-ONAY-LISTESI.md`](kurumsal/AVUKAT-ONAY-LISTESI.md)).
+> Yasal metinler (KVKK, gizlilik, çerez, topluluk kuralları, koşullar) sitede yayındadır; **bir avukat tarafından incelenmemiştir**. Avukat için soru listesi: [`kurumsal/AVUKAT-ONAY-LISTESI.md`](kurumsal/AVUKAT-ONAY-LISTESI.md).
 
 ## Hızlı başlangıç
 
@@ -232,7 +232,7 @@ modelen/
 - [ ] Çok tohumlu ve IID olmayan veriyle deneyler; DiLoCo → DDP uyumu sorusu.
 - [ ] Gerçek gönüllülerle (farklı donanımlar) uçtan uca deneme.
 - [ ] Portalda İngilizce arayüz, iki adımlı doğrulama. (E-posta doğrulama, şifre sıfırlama ve başvuru bildirimleri SMTP ile **yapıldı**.)
-- [ ] Avukat onaylı yasal metinler (`DRAFT` kaldırılacak).
+- [ ] Avukat incelemesi (yasal metinlerden "taslak" uyarısı kaldırıldı; hukuki inceleme yapılmadı).
 - [ ] Uygulamada tüm düğmelerin elle test edilmesi (altındaki mantık testli; etkileşimler görsel olarak denendi ama kapsamlı el testi yok).
 
 ## Katıl

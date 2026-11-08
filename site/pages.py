@@ -119,7 +119,7 @@ TR["koordinator-ol"] = dict(
              ("İnceleme", "Yöneticiler başvuruyu kendi panelinde görür; onaylar, reddeder ya da not düşer. Sonucu panelinde görürsün."),
              ("Yayın", "Onaylanınca sayfan <a href=\"/koordinatorler\">Koordinatörler</a> listesinde yayınlanır. Adresin varsa gönüllüler uygulamadan GPU'sunu sana adayabilir.")])
     + """<p class="actions"><a class="btn accent" href="/kayit">Kayıt ol</a> <a class="btn" href="/giris">Giriş yap</a> <a class="btn ghost" href="/koordinatorler">Koordinatörleri gör</a></p>"""
-    + """<h2>Koşullar (taslak)</h2>
+    + """<h2>Koşullar</h2>
 <ul>
 <li>Gönüllünün bilgisayarında yalnızca Modelen'in yayımladığı eğitim betiği çalışır; koordinatör gönüllüye keyfi kod gönderemez.</li>
 <li>Koordinatör adresin varsa HTTPS ile erişilebilir olmalı; ağırlıklar ve sonuçlar güvenli aktarılmalı. Adres zorunlu değildir; adresi olmayan projeler yalnızca sitede görünür.</li>
@@ -143,7 +143,7 @@ TR["topluluk-kurallari"] = dict(
              "Profilinizde ve gönderilerinizde yalnızca paylaşma hakkınız olan görselleri kullanırsınız."])
     + "<h2>Gizlilik</h2><p>Profiliniz varsayılan olarak gizlidir; siz açana kadar kimse göremez. E-posta adresiniz hiçbir sayfada gösterilmez. Bir kullanıcıyı engelleyebilirsiniz; engellenen kişi sizi göremez ve takip edemez.</p>"
     + "<h2>Bildirim ve moderasyon</h2><p>Kurallara aykırı bir gönderi ya da profili \"Bildir\" düğmesiyle bildirebilirsiniz. Yöneticiler bildirimi inceler; gönderiyi gizleyebilir, profili gizleyebilir ya da paylaşımı kısıtlayabilir. Kararlara itiraz için %%EPOSTA%% adresine yazabilirsiniz. Yasal bildirimler (ör. hak ihlali) aynı adrese yapılır; makul sürede incelenir.</p>"
-    + '<p class="note">Bu metin taslaktır ve yayından önce bir avukat tarafından incelenmelidir. <a href="/akis">Akışa dön</a></p>')
+    + '<p class="note"><a href="/akis">Akışa dön</a></p>')
 
 TR["katil"] = dict(
     title="Katıl · Modelen",
@@ -308,7 +308,7 @@ EN["koordinator-ol"] = dict(
              ("Review", "Admins see the application in their own panel and approve, reject or leave a note. You see the result in your panel."),
              ("Published", "Once approved, your page appears in the <a href=\"/koordinatorler\">Coordinators</a> list. If you have an address, volunteers can dedicate their GPUs to you from the app.")])
     + """<p class="actions"><a class="btn accent" href="/kayit">Register</a> <a class="btn" href="/giris">Sign in</a> <a class="btn ghost" href="/koordinatorler">See coordinators</a></p><p class="note">The portal interface is currently in Turkish only.</p>"""
-    + """<h2>Terms (draft)</h2>
+    + """<h2>Terms</h2>
 <ul>
 <li>Only the training script published by Modelen runs on a volunteer's computer; a coordinator cannot send arbitrary code to volunteers.</li>
 <li>If you have a coordinator address it must be reachable over HTTPS; weights and results must be transferred securely. The address is optional; projects without one appear on the site only.</li>
@@ -332,7 +332,7 @@ EN["topluluk-kurallari"] = dict(
              "In your profile and posts you use only images you have the right to share."])
     + "<h2>Privacy</h2><p>Your profile is private by default; nobody can see it until you open it. Your email address is never shown. You can block a user; a blocked person cannot see or follow you.</p>"
     + "<h2>Reporting and moderation</h2><p>You can report a post or profile that breaks the rules with the \"Report\" button. Admins review reports and may hide a post, hide a profile or restrict posting. To appeal a decision, write to %%EPOSTA%%. Legal notices (e.g. rights infringement) go to the same address and are reviewed within a reasonable time.</p>"
-    + '<p class="note">This text is a draft and should be reviewed by a lawyer before publication. <a href="/akis">Back to the feed</a></p>')
+    + '<p class="note"><a href="/akis">Back to the feed</a></p>')
 
 EN["katil"] = dict(
     title="Join · Modelen",

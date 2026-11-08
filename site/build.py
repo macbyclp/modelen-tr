@@ -23,15 +23,19 @@ content_en.FILES["olcumler"] = "measurements"
 content_tr.NAV.insert(2, ("olcumler", "Ölçümler"))
 content_en.NAV.insert(2, ("olcumler", "Measurements"))
 
-DRAFT = True
+DRAFT = False  # True yapılırsa yasal sayfalara "taslak" uyarısı konur
 BASE = "https://modelen.tr"
-TARIH_TR = "7 Kasım 2026"
-TARIH_EN = "7 November 2026"
+TARIH_TR = "8 Kasım 2026"
+TARIH_EN = "8 November 2026"
 PLACEHOLDERS = {
     "EPOSTA": "iletisim@modelen.tr",
     "UNVAN": "Modelen Alternatif Eğitim Topluluğu",
-    "BARINDIRMA": "[BARINDIRMA SAĞLAYICISI — seçilince eklenecek]",
-    "MAHKEME": "[YETKİLİ MAHKEME VE İCRA DAİRELERİ — merkez adresine göre]",
+    "BARINDIRMA": "VDS ve e-posta altyapısı sağlayıcıları",
+    "MAHKEME": "Türkiye mahkemeleri ve icra daireleri",
+}
+PLACEHOLDERS_EN = {
+    "BARINDIRMA": "VDS and email infrastructure providers",
+    "MAHKEME": "the courts and enforcement offices of Türkiye",
 }
 
 def _logo():
@@ -99,7 +103,7 @@ def legalize(body, key, lang):
 
 def fill(text, lang):
     t = text.replace("%%GRID%%", grid_html())
-    for k, v in PLACEHOLDERS.items():
+    for k, v in {**PLACEHOLDERS, **(PLACEHOLDERS_EN if lang == "en" else {})}.items():
         t = t.replace(f"%%{k}%%", v)
     return t.replace("%%TARIH%%", TARIH_TR).replace("%%TARIH_EN%%", TARIH_EN)
 
