@@ -105,9 +105,9 @@ Tek exe (~10 MB, egui). **Kolay mod:** tek sayfa, büyük AÇIK/KAPALI düğmesi
 <td width="50%" valign="top">
 
 ### 🌐 Site ve portal (modelen.tr)
-34 sayfa, TR + EN, çerezsiz, üçüncü taraf kaynaksız. **Portal** (tek dosya Python, SQLite): kayıt/giriş, **koordinatör başvurusu** (adres isteğe bağlı, Hugging Face bağlantısı, görseller, onaylı profil düzenleme), herkese açık **Koordinatörler** sayfaları, **yönetici paneli**, **profiller**, sosyal bağlantılar, takip, kısa gönderi **akışı**, engel/bildirim ve moderasyon. Profil varsayılan **gizli**.
+34 sayfa, TR + EN, çerezsiz, üçüncü taraf kaynaksız. **Portal** (tek dosya Python, SQLite): kayıt/giriş, **e-posta doğrulama ve şifre sıfırlama (SMTP)**, **koordinatör başvurusu** (adres isteğe bağlı, Hugging Face bağlantısı, görseller, onaylı profil düzenleme), herkese açık **Koordinatörler** sayfaları, **yönetici paneli**, **profiller**, sosyal bağlantılar, takip, kısa gönderi **akışı**, engel/bildirim ve moderasyon. Profil varsayılan **gizli**.
 
-`site/` · `portal/` · [`PORTAL.md`](portal/PORTAL.md) · 34 test
+`site/` · `portal/` · [`PORTAL.md`](portal/PORTAL.md) · 45 test
 
 </td>
 </tr>
@@ -183,7 +183,7 @@ cargo test --release                  # 15 test
 py -3 site/build.py                                          # statik siteyi derle (34 sayfa)
 py -3 portal/portal.py admin-olustur --eposta ben@ornek.org  # yönetici hesabı
 py -3 portal/portal.py calistir --port 8780                  # http://127.0.0.1:8780
-cd portal && py -3 -W ignore -m unittest test_portal test_gorsel test_duzenleme test_sosyal   # 34 test
+cd portal && py -3 -W ignore -m unittest test_portal test_gorsel test_duzenleme test_sosyal test_eposta   # 45 test
 ```
 
 **Gönüllü protokolünü yerelde dene** (CUDA'lı GPU, PyTorch, `transformers`, `peft`, `safetensors`; Qwen3-0.6B-Base `models/qwen3-0.6b-base` altında): adım adım komutlar [`istemci/ISTEMCI.md`](istemci/ISTEMCI.md) içinde. Veri ve model dosyaları depoda yok (büyük ve lisanslı); Vikipedi metnini `wiki_to_txt.py` üretir.
@@ -217,7 +217,8 @@ modelen/
 | [`v0.1.0`](../../releases/tag/v0.1.0) | 2026-11-06 | **Araştırma:** DiLoCo benzetimi, tohum×aralık taramaları, Türkçe Vikipedi ile tekrar, 20 dk LoRA uyarlaması, unutma ve TurkishMMLU ölçümü, adaptör-DiLoCo |
 | [`v0.2.0`](../../releases/tag/v0.2.0) | 2026-11-07 | **Kimlik ve istemci:** logo (Halay Halkası), TR+EN site, gönüllü istemci prototipi, yerel model sunucusu, Rust masaüstü uygulaması, kurumsal belgeler, Apache-2.0 |
 | [`v0.3.0`](../../releases/tag/v0.3.0) | 2026-11-08 | **Portal ve topluluk:** koordinatör dizini ve başvurusu, yönetici paneli, profiller, sosyal bağlantılar, takip, akış, moderasyon; modelen.tr canlıya alındı |
-| [`v0.3.1`](../../releases/tag/v0.3.1) | 2026-11-08 | **Belgeler:** bu README, görseller, dağıtım örnekleri |
+| [`v0.3.1`](../../releases/tag/v0.3.1) | 2026-11-08 | **Belgeler:** README, görseller, dağıtım örnekleri |
+| [`v0.4.0`](../../releases/tag/v0.4.0) | 2026-11-08 | **E-posta:** SMTP ile e-posta doğrulama, şifre sıfırlama ve başvuru durumu bildirimleri; uluslararası konumlandırma |
 
 ## Dürüst durum ve yol haritası
 
@@ -230,7 +231,7 @@ modelen/
 - [ ] Koordinatör tarafında kimlik doğrulama, gerçek zehirlenme koruması (tekrarlı doğrulama), TLS.
 - [ ] Çok tohumlu ve IID olmayan veriyle deneyler; DiLoCo → DDP uyumu sorusu.
 - [ ] Gerçek gönüllülerle (farklı donanımlar) uçtan uca deneme.
-- [ ] Portalda e-posta doğrulaması, parola sıfırlama, İngilizce arayüz.
+- [ ] Portalda İngilizce arayüz, iki adımlı doğrulama. (E-posta doğrulama, şifre sıfırlama ve başvuru bildirimleri SMTP ile **yapıldı**.)
 - [ ] Avukat onaylı yasal metinler (`DRAFT` kaldırılacak).
 - [ ] Uygulamada tüm düğmelerin elle test edilmesi (altındaki mantık testli; etkileşimler görsel olarak denendi ama kapsamlı el testi yok).
 

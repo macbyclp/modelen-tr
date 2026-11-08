@@ -45,11 +45,23 @@ Engel iki yönlüdür (taraflar birbirini göremez/takip edemez). Bildirim: kend
 
 Yok: gönderiye görsel/yorum/beğeni, bildirimler, doğrudan mesaj, profil arama, bildirim e-postaları.
 
+## E-posta (SMTP)
+
+İşlemsel e-postalar `info@modelen.tr` adresinden gider: **e-posta doğrulama** (kayıtta; doğrulamadan koordinatör başvurusu ve gönderi yapılamaz), **şifre sıfırlama** (`/sifre-sifirla`: tek kullanımlık, 1 saat geçerli bağlantı; hesabın var olup olmadığını sızdırmaz; sıfırlayınca tüm oturumlar kapanır ve bilgilendirme gider) ve **başvuru bildirimleri** (başvuru alındı, onaylandı, reddedildi, askıya alındı, düzenleme onayı/reddi; yeni başvuruda yöneticilere haber). Reklam/pazarlama e-postası yoktur.
+
+Ayarlar ortam değişkenleriyle (parola depoya girmez): `MODELEN_SMTP_HOST`, `MODELEN_SMTP_PORT` (465 ssl / 587 starttls), `MODELEN_SMTP_USER`, `MODELEN_SMTP_PASS`, `MODELEN_SMTP_FROM` (varsayılan `Modelen <kullanıcı>`), `MODELEN_SITE_URL`. Sunucuda `/etc/modelen/portal.env` (root:modelen, 640) içinde durur; `modelen-portal.service` bunu okur. Ayar yoksa e-posta özellikleri kapalıdır ve doğrulama şartı aranmaz.
+
+```
+runuser -u modelen -- bash -c 'set -a; . /etc/modelen/portal.env; set +a; python3 /opt/modelen/portal/portal.py eposta-test --to sizin@adresiniz'
+```
+
+Günlüğe yalnızca "kime (maskeli) · konu" yazılır; gövde ve belirteçler asla yazılmaz. Gönderim arka planda, en çok 3 denemeyle yapılır.
+
 ## Güvenlik (ve eksikler)
 
 Var: scrypt parola özeti; oturum belirteci veritabanında yalnızca SHA-256 özeti; HttpOnly + SameSite=Lax çerez; CSRF belirteci; giriş ve kayıt hız sınırı; tüm kullanıcı metni HTML kaçışlı; parametreli SQL; CSP ve güvenlik başlıkları; statik sunumda yol gezintisi ve kaynak dosya engeli; iletişim e-postası yalnızca yöneticide.
 
-Yok: e-posta doğrulaması ve parola sıfırlama (e-posta sunucusu yok), iki adımlı doğrulama, yönetici işlem günlüğü, İngilizce arayüz (portal şimdilik Türkçe), TLS (ters vekil ya da barındırıcıda kurulmalı), süreçler arası paylaşılan hız sınırı.
+Yok: iki adımlı doğrulama, yönetici işlem günlüğü, İngilizce arayüz (portal şimdilik Türkçe), TLS (ters vekil ya da barındırıcıda kurulmalı), süreçler arası paylaşılan hız sınırı.
 
 ## Yayına alırken
 

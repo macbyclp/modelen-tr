@@ -32,6 +32,8 @@ KOK = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.join(os.path.dirname(KOK), "site")
 sys.path.insert(0, SITE)
 import gorsel  # noqa: E402  (görsel doğrulama/temizleme)
+import eposta  # noqa: E402  (SMTP gönderimi)
+import hesap  # noqa: E402  (e-posta doğrulama, şifre sıfırlama, bildirimler)
 import sosyal  # noqa: E402  (profil, takip, akış, moderasyon)
 import build  # noqa: E402  (sitenin kabuğu: üst çubuk, menü, alt bilgi)
 import content_en  # noqa: E402
@@ -405,7 +407,7 @@ class H(BaseHTTPRequestHandler):
 
     # ---- GET
     def _get(self, yol, q):
-        if sosyal.get(self, yol, q):
+        if hesap.get(self, yol, q) or sosyal.get(self, yol, q):
             return
         if yol == "/koordinatorler.json":
             return self._json_dizin()
@@ -537,7 +539,7 @@ class H(BaseHTTPRequestHandler):
             + '<form class="kform" method="post" action="/giris">' + csrf_alani(self.csrf)
             + alan("eposta", "E-posta", eposta, "email", 'maxlength="120" required autocomplete="email"')
             + alan("parola", "Parola", "", "password", 'maxlength="200" required autocomplete="current-password"')
-            + '<button class="btn accent" type="submit">Giriş yap</button></form><p>Hesabınız yok mu? <a href="/kayit">Kayıt olun</a>.</p>')
+            + '<button class="btn accent" type="submit">Giriş yap</button></form><p><a href="/sifre-sifirla">Şifremi unuttum</a></p><p>Hesabınız yok mu? <a href="/kayit">Kayıt olun</a>.</p>')
         self._html(200, "Giriş yap", govde)
 
     # ---- kullanıcı paneli
@@ -574,7 +576,7 @@ class H(BaseHTTPRequestHandler):
     def _panel(self, q, hata="", form=None):
         k = self.kullanici
         b = tek("SELECT * FROM basvurular WHERE kullanici_id=?", k["id"])
-        ust = pages.phead("Panel", f"Merhaba, {e(k['ad'])}.", e(k["eposta"])) + self._mesaj(q)
+        ust = pages.phead("Panel", f"Merhaba, {e(k['ad'])}.", e(k["eposta"])) + self._mesaj(q) + hesap.dogrulama_notu(self)
         if b is None:
             icerik = "<h2>Koordinatör başvurusu</h2><p>Başvurunuz yönetici tarafından incelenir; sonuç bu sayfada görünür.</p>" + self._basvuru_formu(form, hata)
         else:
@@ -661,6 +663,8 @@ class H(BaseHTTPRequestHandler):
             return self._html(413, "Çok büyük", self._cerceve(pages.phead("Hata", "İstek çok büyük.")))
         if not self._csrf_ok(f):
             return self._html(400, "Geçersiz istek", self._cerceve(pages.phead("Hata", "Geçersiz istek.", "Sayfayı yenileyip tekrar deneyin.")))
+        if hesap.post(self, yol, f):
+            return
         if yol == "/kayit":
             return self._kayit(f)
         if yol == "/giris":
@@ -689,17 +693,19 @@ class H(BaseHTTPRequestHandler):
     def _kayit(self, f):
         if hiz_asildi(("kayit", self._ip()), 5, 3600):
             return self._kayit_formu("Çok fazla deneme. Daha sonra tekrar deneyin.", f)
-        ad, eposta, p1, p2 = f.get("ad", "").strip(), f.get("eposta", "").strip().lower(), f.get("parola", ""), f.get("parola2", "")
+        ad, eposta_adresi, p1, p2 = f.get("ad", "").strip(), f.get("eposta", "").strip().lower(), f.get("parola", ""), f.get("parola2", "")
         hata = ("Adınız 2-60 karakter olmalı." if not 2 <= len(ad) <= 60 else
-                "Geçerli bir e-posta yazın." if not EPOSTA.match(eposta) or len(eposta) > 120 else
+                "Geçerli bir e-posta yazın." if not EPOSTA.match(eposta_adresi) or len(eposta_adresi) > 120 else
                 "Parola en az 10 karakter olmalı." if len(p1) < 10 or len(p1) > 200 else
                 "Parolalar aynı değil." if p1 != p2 else
                 "Aydınlatma metnini kabul etmelisiniz." if f.get("kabul") != "1" else "")
-        if not hata and tek("SELECT 1 FROM kullanicilar WHERE eposta=?", eposta):
+        if not hata and tek("SELECT 1 FROM kullanicilar WHERE eposta=?", eposta_adresi):
             hata = "Bu e-posta ile zaten bir hesap var. Giriş yapmayı deneyin."
         if hata:
             return self._kayit_formu(hata, f)
-        kid = yurut("INSERT INTO kullanicilar(eposta,ad,parola,olusturma) VALUES(?,?,?,?)", eposta, ad, parola_ozet(p1), int(time.time())).lastrowid
+        kid = yurut("INSERT INTO kullanicilar(eposta,ad,parola,olusturma) VALUES(?,?,?,?)", eposta_adresi, ad, parola_ozet(p1), int(time.time())).lastrowid
+        if eposta.hazir():
+            hesap.dogrulama_gonder(tek("SELECT * FROM kullanicilar WHERE id=?", kid))
         self._yonlendir("/panel?m=kayit", [self._cerez("ms", oturum_ac(kid), SURE_OTURUM)])
 
     def _giris(self, f):
@@ -716,6 +722,8 @@ class H(BaseHTTPRequestHandler):
     def _basvuru(self, f):
         k = self.kullanici
         mevcut = tek("SELECT * FROM basvurular WHERE kullanici_id=?", k["id"])
+        if not hesap.dogrulanmis(k):
+            return self._panel({}, "Önce e-posta adresinizi doğrulayın (yukarıdaki bağlantıyı kullanın).", f)
         if mevcut and mevcut["durum"] == "askida":
             return self._panel({}, "Başvurunuz askıda; değişiklik yapılamaz.", None)
         duzenleme = bool(mevcut and mevcut["durum"] == "onaylandi")  # yayındaki profil: değişiklik onaya düşer, sayfa onaya kadar değişmez
@@ -751,6 +759,9 @@ class H(BaseHTTPRequestHandler):
                         k["id"], slug_uret(d["ad"]), d["ad"], d["kisa"], d["ayrinti"], d["baglanti"], d["adres"], d["iletisim"], d["hf"], simdi, simdi).lastrowid
         for tur, temiz, w, h in yeni:
             yurut("INSERT INTO gorseller(basvuru_id,tur,veri,genislik,yukseklik,olusturma) VALUES(?,?,?,?,?,?)", bid, tur, temiz, w, h, simdi)
+        yeni_b = tek("SELECT * FROM basvurular WHERE id=?", bid)
+        eposta.gonder(k["eposta"], *eposta.basvuru_alindi(k["ad"], yeni_b["ad"]))
+        hesap.basvuru_yoneticiye(yeni_b, k["ad"])
         self._yonlendir("/panel?m=basvuru")
 
     def _gorsel_sil(self, f):
@@ -794,6 +805,8 @@ class H(BaseHTTPRequestHandler):
                     yurut("UPDATE basvurular SET ad=?,kisa=?,ayrinti=?,baglanti=?,adres=?,iletisim=?,hf=?,taslak='' WHERE id=?",
                           t["ad"], t["kisa"], t["ayrinti"], t["baglanti"], t["adres"], t["iletisim"], t["hf"], kimlik)
                 yurut("UPDATE gorseller SET onayli=1 WHERE basvuru_id=?", kimlik)
+        if karar != "beklemede":
+            hesap.basvuru_karar_bildir(tek("SELECT * FROM basvurular WHERE id=?", kimlik), karar, nota)
         self._yonlendir("/yonetim?m=karar")
 
 
@@ -810,23 +823,25 @@ def yonetici_olustur(eposta, ad, parola):
     if not EPOSTA.match(eposta) or len(parola) < 10:
         raise ValueError("geçerli e-posta ve en az 10 karakterli parola gerekli")
     if tek("SELECT 1 FROM kullanicilar WHERE eposta=?", eposta):
-        yurut("UPDATE kullanicilar SET rol='yonetici', parola=? WHERE eposta=?", parola_ozet(parola), eposta)
+        yurut("UPDATE kullanicilar SET rol='yonetici', parola=?, eposta_dogrulandi=1 WHERE eposta=?", parola_ozet(parola), eposta)
     else:
-        yurut("INSERT INTO kullanicilar(eposta,ad,parola,rol,olusturma) VALUES(?,?,?,?,?)", eposta, ad, parola_ozet(parola), "yonetici", int(time.time()))
+        yurut("INSERT INTO kullanicilar(eposta,ad,parola,rol,olusturma,eposta_dogrulandi) VALUES(?,?,?,?,?,1)", eposta, ad, parola_ozet(parola), "yonetici", int(time.time()))
 
 
+hesap.baglan(sys.modules[__name__])
 sosyal.baglan(sys.modules[__name__])
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("komut", choices=["calistir", "admin-olustur", "liste"])
+    ap.add_argument("komut", choices=["calistir", "admin-olustur", "liste", "eposta-test"])
     ap.add_argument("--db", default=os.path.join(KOK, "veri", "portal.db"))
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8780)
     ap.add_argument("--guvenli", action="store_true", help="çerezlere Secure ekle (TLS arkasında çalışırken)")
     ap.add_argument("--vekil", action="store_true", help="yerel ters vekil arkasında: X-Forwarded-For'u istemci IP'si say")
     ap.add_argument("--eposta")
+    ap.add_argument("--to", help="eposta-test: deneme iletisinin gideceği adres")
     ap.add_argument("--ad", default="Yönetici")
     a = ap.parse_args()
     BAGLAM["db"] = db_ac(a.db)
@@ -839,6 +854,16 @@ def main():
             sys.exit("Parolalar aynı değil")
         yonetici_olustur(a.eposta, a.ad, p1)
         print("Yönetici hazır:", a.eposta)
+    elif a.komut == "eposta-test":
+        if not a.to or not eposta.ADRES.match(a.to):
+            sys.exit("--to <geçerli adres> gerekli")
+        if not eposta.hazir():
+            sys.exit("SMTP yapılandırılmamış: MODELEN_SMTP_HOST / _USER / _PASS (bkz. portal/PORTAL.md)")
+        try:
+            eposta.simdi_gonder(a.to, "Modelen: SMTP testi", "Bu bir deneme iletisidir. Bunu alıyorsanız Modelen portalının e-posta ayarı çalışıyor.")
+        except Exception as ex:
+            sys.exit(f"Gönderilemedi: {type(ex).__name__}: {ex}")
+        print(f"Gönderildi: {a.to} (gönderen: {eposta.AYAR['gonderen']}, sunucu: {eposta.AYAR['host']}:{eposta.AYAR['port']} {eposta.AYAR['mod']})")
     elif a.komut == "liste":
         for r in sorgu("SELECT b.id,b.ad,b.durum,b.iletisim,b.adres,k.eposta FROM basvurular b JOIN kullanicilar k ON k.id=b.kullanici_id ORDER BY b.id"):
             print(f"#{r['id']} {r['ad']} [{r['durum']}] iletişim={r['iletisim']} hesap={r['eposta']} adres={r['adres'] or '-'}")

@@ -407,7 +407,8 @@ def gonderi_ekle(h, f):
     k = h.kullanici
     metin = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", f.get("metin", "")).replace("\r\n", "\n").strip()
     metin = re.sub(r"\n{3,}", "\n\n", metin)
-    hata = ("Profiliniz gizli; önce herkese açın." if not acik_mi(k) else
+    hata = ("Gönderi paylaşmak için önce e-posta adresinizi doğrulayın (panelinizdeki bağlantı)." if not P.hesap.dogrulanmis(k) else
+            "Profiliniz gizli; önce herkese açın." if not acik_mi(k) else
             "Gönderi paylaşımınız kısıtlandı." if k["susturuldu"] else
             "Gönderi boş olamaz." if not metin else
             f"Gönderi en çok {MAKS_GONDERI} karakter olabilir." if len(metin) > MAKS_GONDERI else "")

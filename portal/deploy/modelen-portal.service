@@ -7,6 +7,8 @@ User=modelen
 Group=modelen
 WorkingDirectory=/opt/modelen/portal
 Environment=PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+# SMTP ayarları ve parola burada (root:modelen 640); depoya girmez
+EnvironmentFile=-/etc/modelen/portal.env
 ExecStart=/usr/bin/python3 /opt/modelen/portal/portal.py calistir --host 127.0.0.1 --port 8780 --guvenli --vekil --db /opt/modelen/veri/portal.db
 Restart=always
 RestartSec=3
