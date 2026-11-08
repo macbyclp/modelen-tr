@@ -201,7 +201,7 @@ TR["olcumler"] = dict(
         ["2 · Qwen3-0.6B Türkçe uyarlama", "20 dakikalık LoRA Türkçeyi iyileştirir mi?", "Dil modelleme −%4,3; kıyas testi değişmedi", "tamamlandı · tek koşu"],
         ["3 · Adaptör-DiLoCo", "Adaptörde seyrek senkronizasyonun bedeli?", "Fark %0,09; ~25× az veri", "tamamlandı · simülasyon"],
     ], num_from=9)
-    + '<p class="cap2">Ham çıktılar ve betikler, depo yayınlandığında paylaşılacak.</p>'
+    + '<p class="cap2">Ham çıktılar ve betikler <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub deposunda</a> (Apache-2.0).</p>'
     + """<h2>1 · Seyrek senkronizasyon, oyuncak model <span class="tag">DiLoCo</span></h2>
 <p>3,3M parametreli bayt düzeyinde bir GPT, 4 sanal işçi, işçi başına 500 adım, 3 tohum, dış optimizer lr 1,0 / momentum 0,5. İki veriyle denedik: küçük bir yerel Türkçe metin (256 KB) ve Türkçe Vikipedi'nin ilk 3280 makalesi (30 MB). Değerler, referans eğitime (her adımda senkron) göre doğrulama kaybı farkıdır (nat; düşük iyi).</p>"""
     + table(["H (iki senkron arası adım)", "Senkron sayısı", "Yerel metin: fark", "Vikipedi: fark"], [
@@ -390,7 +390,7 @@ EN["olcumler"] = dict(
         ["2 · Qwen3-0.6B Turkish adaptation", "Does 20 minutes of LoRA improve Turkish?", "Language modelling −4.3%; benchmark unchanged", "done · single run"],
         ["3 · Adapter DiLoCo", "What does sparse sync cost on an adapter?", "0.09% gap; ~25× less data", "done · simulation"],
     ], num_from=9)
-    + '<p class="cap2">Raw outputs and scripts will be shared when the repository is published.</p>'
+    + '<p class="cap2">Raw outputs and scripts are in the <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub repository</a> (Apache-2.0).</p>'
     + """<h2>1 · Sparse synchronisation, toy model <span class="tag">DiLoCo</span></h2>
 <p>A byte-level GPT with 3.3M parameters, 4 simulated workers, 500 steps per worker, 3 seeds, outer optimiser lr 1.0 / momentum 0.5. We tried two datasets: a small local Turkish text (256 KB) and the first 3,280 articles of Turkish Wikipedia (30 MB). Values are the validation-loss gap to the reference run (synchronised every step), in nats; lower is better.</p>"""
     + table(["H (steps between syncs)", "Number of syncs", "Local text: gap", "Wikipedia: gap"], [

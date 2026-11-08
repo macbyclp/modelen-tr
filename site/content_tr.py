@@ -342,7 +342,7 @@ PAGES["katki-sartlari"] = dict(
 <h2>4. İnceleme</h2>
 <p>Katkıları kalite, güvenlik ve lisans uyumu açısından inceleriz ve reddetme hakkımız saklıdır.</p>
 <h2>5. Davranış</h2>
-<p>Saygılı ve yapıcı bir iletişim bekliyoruz. Ayrıntılı davranış kuralları depo yayınlandığında eklenecektir.</p>
+<p>Saygılı ve yapıcı bir iletişim bekliyoruz. Topluluk davranış kuralları için <a href="topluluk-kurallari.html">Topluluk kuralları</a> sayfasına, kod için <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub deposuna</a> bakın.</p>
 </div>
 """)
 
