@@ -1,0 +1,60 @@
+# Kurulum betiklerini GitHub'ın temiz makinelerinde sınar (GPU yok: PyTorch "cpu" tekeri ve modelsiz).
+# Amaç: betiklerin sözdizimi, indirme adresleri, sanal ortam, paket kurulumu ve çıktıların gerçekten çalıştığını göstermek.
+# GPU'lu eğitim ve model indirme bu testin kapsamı DEĞİLDİR.
+name: kurulum-testi
+on:
+  workflow_dispatch:
+  push:
+    paths: ["kur.sh", "kur.ps1", "kurulum/**", ".github/workflows/kurulum-testi.yml"]
+  pull_request:
+    paths: ["kur.sh", "kur.ps1", "kurulum/**"]
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: GPU yokken (cpu bayrağı olmadan) net hata vermeli
+        run: |
+          if bash kur.sh --dene 2>err.txt; then echo "GPU olmadan hata beklenirdi"; exit 1; fi
+          cat err.txt
+          grep -q "nvidia-smi bulunamadı" err.txt
+
+      - name: Ön koşul denetimi (--dene --cuda cpu)
+        run: bash kur.sh --dene --cuda cpu
+
+      - name: Kur (yerel kaynak, cpu, modelsiz)
+        run: bash kur.sh --kaynak . --cuda cpu --model-atla --hedef "$RUNNER_TEMP/modelen"
+
+      - name: Kurulumu doğrula
+        run: |
+          PY="$RUNNER_TEMP/modelen/.venv/bin/python"
+          "$PY" -c "import torch, transformers, peft, safetensors; print('torch', torch.__version__)"
+          "$PY" "$RUNNER_TEMP/modelen/istemci/isci.py" --help
+          test -x "$HOME/.local/bin/modelen-isci"
+          "$HOME/.local/bin/modelen-isci" --help
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Windows PowerShell 5.1 ile sözdizimi ve plan (-Dene)
+        shell: powershell
+        run: |
+          $PSVersionTable.PSVersion
+          powershell -NoProfile -ExecutionPolicy Bypass -File kur.ps1 -Dene -CudaSurumu cpu
+
+      - name: Kur (yerel kaynak, cpu, modelsiz)
+        shell: powershell
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File kur.ps1 -Kaynak . -CudaSurumu cpu -ModelAtla -Hedef "$env:RUNNER_TEMP\Modelen"
+
+      - name: Kurulumu doğrula
+        shell: powershell
+        run: |
+          $py = "$env:RUNNER_TEMP\Modelen\.venv\Scripts\python.exe"
+          & $py -c "import torch, transformers, peft, safetensors; print('torch', torch.__version__)"
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          & $py "$env:RUNNER_TEMP\Modelen\istemci\isci.py" --help
+          if ($LASTEXITCODE -ne 0) { exit 1 }
