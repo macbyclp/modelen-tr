@@ -55,6 +55,7 @@ Test, koordinatörünüzde `uyum-testi` adlı bir işçi kaydı oluşturur (`/go
 | **/durum** | zorunlu | `tur`, `toplam_tur` (tamsayı), `bekleyen_sonuc` (liste), `isciler` (nesne), `trafik` (nesne) |
 | **/gorev (işçi adı yok)** | uyarı | `isci` yoksa `400` |
 | **/gorev** | zorunlu | `bekle`/`bitti` ya da tüm görev alanları (tipleriyle) + 64 haneli `agirlik_sha256` |
+| **/veri** | zorunlu (görevde `veri_sha256` varsa) | `/veri?parca=` sunuluyor, gövdenin özeti `veri_sha256` ile aynı, geçerli safetensors |
 | **/agirlik sha256** | zorunlu | `X-Sha256` başlığı gövdenin gerçek özetiyle aynı |
 | **/agirlik X-Tur** | zorunlu | Tamsayı |
 | **görev-ağırlık** | zorunlu | Aynı turda `gorev.agirlik_sha256` indirilen ağırlığın özetiyle aynı |

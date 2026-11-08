@@ -35,6 +35,7 @@ The test registers a probe worker (via `/gorev`) and sends deliberately invalid 
 | `/bilgi` | warning | JSON with `protokol: "1"` |
 | `/durum` | required | `tur`, `toplam_tur`, `bekleyen_sonuc`, `isciler`, `trafik` with correct types |
 | `/gorev` | required | `bekle`/`bitti` or full task + 64-hex `agirlik_sha256`; `400` without `isci` (warning) |
+| `/veri` | required (if the task has `veri_sha256`) | `/veri?parca=` is served, the body digest equals `veri_sha256`, valid safetensors |
 | `/agirlik` | required | `X-Sha256` matches body, integer `X-Tur`, valid safetensors, same digest as the task |
 | `/agirlik` dtype | warning | non-`F32` |
 | `/sonuc` | required | corrupt body → 400/422, stale round → 400/409/422, empty body → 400/413/422 (never 200/500) |

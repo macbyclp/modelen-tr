@@ -19,7 +19,8 @@ ozet: Modelen'de kullanılan terimler: koordinatör, işçi, tur, adaptör, LoRA
 | **H (iç adım)** | Bir işçinin turda yerelde yaptığı adım sayısı (`ic_adim`, varsayılan 20). Senkronizasyon her adımda değil her H adımda olur. |
 | **DiLoCo** | Seyrek senkronizasyonla dağıtık eğitim yöntemi: işçiler yerelde çok adım atar, sonra koordinatörle birleşir. |
 | **Dış adım** | Koordinatörün, işçi ortalamasına uyguladığı optimizer adımı (referans: Nesterov, lr 1,0, momentum 0,5). |
-| **Veri dilimi (parça)** | Eğitim verisinin `n_parca` eşit parçasından biri; her işçiye bir parça atanır. |
+| **Veri dilimi (parça)** | Eğitim verisinin `n_parca` eşit parçasından biri; her işçiye bir parça atanır. Koordinatör `--veri` ile veriyi kendisi sunuyorsa işçi yalnızca kendi dilimini indirir. |
+| **İnce ayar (fine-tuning)** | Hazır bir modeli yeni veriyle uyarlama. Modelen'de bu, taban modeli dondurup yalnızca LoRA adaptörünü eğitmek demektir. |
 | **Nabız** | Koordinatörün portala "çalışıyorum" bildirimi (bkz. [Nabız](/nabiz/)). |
 | **Adres doğrulama** | Koordinatör adresinin sizin olduğunu kanıtlayan, `.well-known` dosyasına dayalı denetim. |
 | **API anahtarı** | `mdl_...` ile başlayan, Portal API'sine erişim anahtarı. Panelden oluşturulur, bir kez gösterilir. |

@@ -143,6 +143,19 @@ def calistir(url, anahtar="", isci="uyum-testi"):
             s.ekle("PASS", "/gorev", f"tur {g['tur']}, parça {g['parca']}/{g['n_parca']}, {g['ic_adim']} adım")
     else:
         s.ekle("FAIL", "/gorev", f"HTTP {d}; JSON görev, {{\"bekle\":true}} ya da {{\"bitti\":true}} bekleniyor")
+    # ---- /veri (isteğe bağlı: görevde veri_sha256 varsa koordinatör veri dilimini kendisi sunar)
+    if gorev and "veri_sha256" in gorev:
+        if not re.fullmatch(r"[0-9a-f]{64}", str(gorev["veri_sha256"])):
+            s.ekle("FAIL", "/veri", "veri_sha256 64 karakterlik küçük harfli onaltılı özet olmalı")
+        else:
+            d, b, v, sure = ist.istek("GET", f"/veri?parca={gorev['parca']}")
+            if d != 200:
+                s.ekle("FAIL", "/veri", f"HTTP {d}; görevde veri_sha256 var ama /veri?parca={gorev['parca']} sunulmuyor")
+            elif hashlib.sha256(v).hexdigest() != gorev["veri_sha256"]:
+                s.ekle("FAIL", "/veri sha256", "indirilen veri diliminin özeti görevdeki veri_sha256 ile uyuşmuyor")
+            else:
+                hata, bilgi = safetensors_dogrula(v)
+                s.ekle("FAIL" if hata else "PASS", "/veri", hata or f"{bilgi['tensor']} tensör, {len(v) / 1e6:.1f} MB, özet doğru")
     # ---- /agirlik
     d, b, v, sure = ist.istek("GET", "/agirlik")
     if d != 200:

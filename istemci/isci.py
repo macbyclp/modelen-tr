@@ -12,6 +12,7 @@ import random
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 
 import torch
@@ -40,8 +41,34 @@ def istek(yol, veri=None):
 
 
 def gorev():
-    b, _ = istek(f"/gorev?isci={A.isci}")
+    b, _ = istek(f"/gorev?isci={urllib.parse.quote(A.isci)}")
     return json.loads(b)
+
+
+def veri_klasoru():
+    return os.environ.get("MODELEN_VERI_KLASORU") or os.path.join(os.path.expanduser("~"), ".modelen", "veri")
+
+
+def uzak_dilim(g):
+    """Koordinatörün sunduğu veri dilimini (görevdeki veri_sha256) indirir, özetini doğrular, önbelleğe alır. (ids, etiket) döner.
+    Biçim safetensors: pickle yok, ağdan gelen veri kod çalıştıramaz."""
+    from safetensors.torch import load_file
+    sha = g["veri_sha256"]
+    if not (isinstance(sha, str) and len(sha) == 64 and all(c in "0123456789abcdef" for c in sha)):
+        raise RuntimeError("görevdeki veri_sha256 geçersiz")
+    yol = os.path.join(veri_klasoru(), f"{sha}.safetensors")
+    if not os.path.exists(yol):
+        os.makedirs(veri_klasoru(), exist_ok=True)
+        b, _ = istek(f"/veri?parca={g['parca']}")
+        if ortak.ozet(b) != sha:
+            raise RuntimeError("indirilen veri özeti görevdekiyle uyuşmuyor; koordinatör yeniden denenmeli")
+        gecici = yol + ".yeni"
+        open(gecici, "wb").write(b)
+        os.replace(gecici, yol)
+        print(f"[işçi {A.isci}] veri dilimi indirildi: {len(b) / 1e6:.1f} MB", flush=True)
+    d = load_file(yol)
+    ids = d["ids"].long()
+    return ids, (d["etiket"].long() if "etiket" in d else ids)
 
 
 def donanim():
@@ -105,10 +132,13 @@ def main():
             continue
         ortak.adaptor_yaz(m, ortak.bayttan(veri))
         mod = g.get("mod", "cpt")
-        ids, etiketler = veri_al(mod)
-        n = len(ids) // g["n_parca"]
-        dilim = ids[g["parca"] * n:(g["parca"] + 1) * n]
-        etiket_dilim = etiketler[g["parca"] * n:(g["parca"] + 1) * n]
+        if g.get("veri_sha256"):  # koordinatör kendi veri diliminizi sunuyor: yerel dosya gerekmez
+            dilim, etiket_dilim = uzak_dilim(g)
+        else:  # prototip: aynı belirteçlenmiş dosya her makinede yerelde
+            ids, etiketler = veri_al(mod)
+            n = len(ids) // g["n_parca"]
+            dilim = ids[g["parca"] * n:(g["parca"] + 1) * n]
+            etiket_dilim = etiketler[g["parca"] * n:(g["parca"] + 1) * n]
         rng = random.Random(f"{A.isci}-{g['tur']}")
         H = g["ic_adim"]
         toplam = g["toplam_tur"] * H
@@ -126,7 +156,7 @@ def main():
             opt.zero_grad(set_to_none=True)
         gonder = ortak.bayta(ortak.adaptor_al(m))
         try:
-            b, _ = istek(f"/sonuc?isci={A.isci}&tur={g['tur']}", gonder)
+            b, _ = istek(f"/sonuc?isci={urllib.parse.quote(A.isci)}&tur={g['tur']}", gonder)
             print(f"[işçi {A.isci}] tur {g['tur']} {H} adım, {time.time() - t0:.0f} sn, yük {len(gonder) / 1e6:.1f} MB -> {b.decode()}", flush=True)
         except urllib.error.HTTPError as e:
             print(f"[işçi {A.isci}] tur {g['tur']} reddedildi: {e.code} {e.read().decode()}", flush=True)

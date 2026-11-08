@@ -1,0 +1,65 @@
+# Sürüm hattı: "vX.Y.Z" etiketi atılınca Windows uygulamasını derler, istemci paketini ve SHA256SUMS'ı üretir,
+# her varlık için kaynak kanıtı (build provenance attestation) oluşturur ve GitHub sürümü açar.
+# Doğrulama (indiren kişi): gh attestation verify modelen.exe --repo macbyclp/modelen-tr
+#
+# NOT: Bu iş akışı yazıldı ama henüz hiç koşmadı; ilk etiket atıldığında çalışması izlenmeli.
+name: surum
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write       # sürüm oluşturmak için
+  id-token: write       # attestation imzası için (Sigstore, OIDC)
+  attestations: write
+
+jobs:
+  derle:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            uygulama/target
+          key: cargo-${{ hashFiles('uygulama/Cargo.lock') }}
+
+      - name: Uygulamayı derle
+        working-directory: uygulama
+        run: cargo build --release --locked
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sürüm varlıklarını paketle
+        run: python tools/paketle.py --exe uygulama/target/release/modelen.exe
+
+      - name: Kaynak kanıtı (attestation)
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            dist/modelen.exe
+            dist/modelen-istemci.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: surum-varliklari
+          path: dist/*
+
+      - name: GitHub sürümüne ekle
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/modelen.exe
+            dist/modelen-istemci.zip
+            dist/SHA256SUMS
+          generate_release_notes: false
+          fail_on_unmatched_files: true

@@ -44,7 +44,13 @@ Durum paneli: `http://127.0.0.1:8750/` (JSON: `/durum`).
 | `--dis-lr` | `1.0` | Dış adım öğrenme oranı |
 | `--dis-mom` | `0.5` | Dış adım momentumu |
 | `--aykiri-kat` | `5.0` | Delta normu medyanın bu katını aşan sonucu ele (≥3 sonuçta) |
-| `--anahtar` | *(boş)* | Doluysa tüm istekler `X-Anahtar` başlığı taşımalı |
+| `--anahtar` | *(boş)* | Doluysa tüm istekler `X-Anahtar` başlığı taşımalı. **Virgülle birden çok anahtar** verilebilir (gönüllü başına bir anahtar; sızanı yeniden başlatarak tek tek çıkarırsınız) |
+| `--veri` | *(boş)* | Belirteçlenmiş eğitim verisi (safetensors); dilimlenip [`/veri`](/protokol/#get-veri-parca-i-istege-bagli) ile işçilere sunulur. `istemci/veri_donustur.py` ile üretilir |
+| `--mod` | `cpt` | İşçilere bildirilen eğitim modu: `cpt` ya da `sft` |
+| `--sifirdan` | kapalı | Çalışma klasöründeki kayıtlı durumu yok say, tur 0'dan başla |
+| `--en-cok-isci` | `1000` | Takip edilen en çok farklı işçi adı (bellek sınırı); aşılınca yeni işçi `503` alır |
+| `--istek-siniri` | `240` | IP başına dakikada en çok istek (`0` = sınırsız); aşılınca `429` |
+| `--vekil` | kapalı | Güvenilir bir ters vekil arkasındaysanız istemci IP'sini `X-Forwarded-For`'dan al |
 | `--calisma` | `istemci/calisma` | Çıktı klasörü |
 | `--tohum` | `0` | Başlangıç adaptörü tohumu |
 
@@ -55,6 +61,7 @@ Durum paneli: `http://127.0.0.1:8750/` (JSON: `/durum`).
 | Dosya | İçerik |
 |---|---|
 | `tur-N.safetensors` | N. turun sonunda global adaptör (tur-0 başlangıçtır) |
+| `durum.json`, `momentum.safetensors` | **Her tur sonunda** yazılan kalıcı durum (tur, işçi-dilim atamaları, dış adım momentumu). Koordinatör yeniden başlayınca kaldığı yerden devam eder; `--sifirdan` ile yok sayılır |
 | `gunluk.json` | Tur günlüğü (kullanılan/elenen işçiler, delta normları, süre) ve trafik |
 | `sorular.jsonl` | `/soru` ile gelen topluluk soruları (`python istemci/sorular.py` ile okunur) |
 
@@ -88,8 +95,8 @@ WantedBy=multi-user.target
 :::uyari
 Referans koordinatör bir **prototiptir**:
 
-- Dış adım momentum tamponu **bellekte** durur; yeniden başlatınca sıfırlanır (turlar diske yazılır).
-- Kimlik doğrulama yalnızca isteğe bağlı **tek paylaşılan anahtardır**; hesap/hız sınırı yoktur. Sybil saldırısına açıktır.
+- Dış adım momentumu her tur sonunda diske yazılır ve yeniden başlatınca geri yüklenir; yarım kalan turun (henüz gelmemiş) işçi sonuçları ise bellektedir ve kaybolur, işçiler o turu yeniden gönderir.
+- Kimlik doğrulama yalnızca isteğe bağlı **paylaşılan anahtar(lar)dır**; hesap yoktur. IP başına hız sınırı ve işçi sayısı sınırı vardır ama Sybil saldırısına karşı koruma değildir.
 - Zehirlenme koruması yalnızca **basit aykırı norm elemesidir** (≥3 sonuçta). Kararlı bir saldırgana karşı yetmez; tekrarlı doğrulama (aynı görevi iki işçiye verip karşılaştırma) yapılmaz.
 - TLS yoktur; ters vekil gerekir.
 - Tüm işçiler aynı adım sayısını yapar; yavaş bir GPU turu geciktirir (zaman aşımı eldekilerle kapatır).

@@ -17,7 +17,7 @@ Bu sayfa, **gönüllü uygulaması (işçi) ile koordinatör arasındaki** sözl
 
 - Aktarım **HTTP/1.1**, yanıtlar **UTF-8 JSON**; ağırlıklar **safetensors** (ikili). **Pickle yok**: ağdan gelen hiçbir veri kod olarak yorumlanmaz.
 - Genel ağda **HTTPS zorunludur** (adaptörler ve görevler şifresiz akmamalı). Yalnızca `127.0.0.1` üzerinde `http` kabul edilir.
-- İşçi kimliği, gönüllünün seçtiği **takma addır** (`isci`); kişisel veri içermemelidir. En çok 60 karakter öneririz.
+- İşçi kimliği, gönüllünün seçtiği **takma addır** (`isci`); kişisel veri içermemelidir. Referans koordinatör **1-60 karakter; harf, rakam, `_`, `.`, `-`** kabul eder (diğerleri `400`). İşçi, adı URL'ye kodlayarak (percent-encoding) göndermelidir.
 - Koordinatör isteğe bağlı olarak **paylaşılan anahtar** isteyebilir: işçi her isteğe `X-Anahtar: <anahtar>` başlığı ekler; yanlışsa `401 {"hata":"yetkisiz"}`. `/bilgi` anahtarsız çağrılabilir.
 - Hata gövdeleri `{"hata": "<açıklama>"}` biçimindedir.
 
@@ -108,6 +108,7 @@ Koordinatörün anlık durumu.
 | `bs`, `seq` | tamsayı | Yığın büyüklüğü ve dizi uzunluğu |
 | `lr` | sayı | Tepe öğrenme oranı (kosinüs çizelgesi işçide uygulanır) |
 | `tohum` | tamsayı | Başlangıç adaptörünü ve modeli kuran tohum (tüm işçilerde aynı) |
+| `veri_sha256`, `veri_belirtec` | metin, tamsayı | **İsteğe bağlı.** Koordinatör eğitim verisini kendisi sunuyorsa işçinin diliminin özeti ve belirteç sayısı; işçi [`GET /veri`](#get-veri-parca-i-istege-bagli) ile indirir. Yoksa işçi yerel veriyi kullanır (prototip) |
 | `mod` | metin | **İsteğe bağlı.** `"cpt"` (varsayılan): ham metinde devam eden ön eğitim, kayıp her belirteçte. `"sft"`: talimat ince ayarı, kayıp yalnızca asistan yanıtı belirteçlerinde (ChatML). Yoksa `cpt` varsayılır. Adaptör biçimi iki modda da aynıdır.
 | `agirlik_sha256` | metin | İndirilecek adaptörün 64 karakterlik **küçük harfli onaltılı** SHA-256 özeti |
 
@@ -115,6 +116,17 @@ Koordinatörün anlık durumu.
 
 - `{"bekle": true, "tur": 3}` — işçinin bu tur için sonucu zaten var; bekleyip yeniden sorar.
 - `{"bitti": true}` — eğitim tamamlandı.
+
+## `GET /veri?parca=<i>` — isteğe bağlı
+
+Koordinatör eğitim verisini kendisi dağıtıyorsa (`--veri`), işçinin `parca` değerine karşılık gelen **belirteçlenmiş dilimi** döndürür. Böylece gönüllünün makinesinde önceden bir veri dosyası bulunması gerekmez ve yalnızca kendi dilimini (toplamın 1/`n_parca`'sı) indirir.
+
+- Gövde **safetensors**'tır (pickle yok): `ids` (int32, belirteç dizisi) ve isteğe bağlı `etiket` (int32; kayıp hesaplanmayacak yerler `-100`).
+- `X-Sha256` başlığı gövdenin özetidir ve görevdeki `veri_sha256` ile aynı olmalıdır. İşçi eşleşmezse dilimi **reddeder**.
+- `parca` aralık dışındaysa `400`, koordinatör veri sunmuyorsa `404`.
+- `/bilgi` yanıtında `veri: {"bicim": "safetensors-ids-v1", "parca": N}` görünür.
+
+Veri dosyasını `istemci/veri_donustur.py` üretir. Verinin kaynağı ve lisansı **koordinatörün sorumluluğundadır**.
 
 ## `GET /agirlik` — zorunlu
 
@@ -139,6 +151,7 @@ Güncel **global adaptörü** safetensors olarak döndürür (`application/octet
 | **409** | `{"hata": "bu tur için sonuç zaten var"}` | Aynı işçi aynı tur için ikinci kez gönderdi |
 | **409** | `{"hata": "eğitim bitti"}` | Tüm turlar tamamlandı |
 | **413** | `{"hata": "boyut"}` | Gövde boş ya da çok büyük (referans sınır: 300 MB) |
+| **429** | `{"hata": "çok fazla istek"}` | IP başına hız sınırı aşıldı; `Retry-After` kadar bekleyin |
 | **422** | `{"hata": "anahtar kümesi uyuşmuyor"}` | Tensör adları global adaptörle aynı değil |
 | **422** | `{"hata": "şekil/tür uyuşmuyor: <ad>"}` | Bir tensörün şekli ya da dtype'ı farklı |
 | **422** | `{"hata": "sonlu olmayan değer: <ad>"}` | NaN ya da sonsuz değer var |

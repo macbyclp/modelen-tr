@@ -14,10 +14,11 @@ Bu sayfadakiler **planlanmıştır, uygulanmış değildir**. Tarih sözü veril
 ## Protokol v2 adayları
 
 - **Zengin `/bilgi`**: taban model ve adaptör ayarının tam manifesti; farklı model/LoRA ayarlarını destekleme.
-- **Veri manifestosu**: koordinatörün hangi veri dilimlerini ve lisansları kullandığının makine okunur beyanı.
+- **İmzalı veri manifestosu**: koordinatörün hangi veri dilimlerini ve lisansları kullandığının makine okunur, imzalı beyanı. (Düz dilim dağıtımı artık var: [`/veri`](/protokol/#get-veri-parca-i-istege-bagli).)
 - **Gönüllü başına anahtar**: tek paylaşılan anahtar yerine işçi başına kimlik; Sybil direnci için ilk adım.
 - **Çift hesaplama**: aynı görevin iki işçiye verilip sonuçların karşılaştırılması (zehirlenme direnci).
 - **Eş zamansız / yavaş işçi toleransı**: farklı hızdaki GPU'lar için değişken adım sayısı.
+- **Daha küçük aktarımlar**: gerçek ağ testinde adaptör indirmesi baskın çıktı (~1 MB/sn bağlantıda 40 MB ≈ 38 sn); sıkıştırma, düşük hassasiyet ya da delta aktarımı yardımcı olur.
 
 ## Portal API
 

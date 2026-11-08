@@ -21,7 +21,7 @@ Protokol v1'i uygulayan herhangi bir HTTP servisi koordinatör olabilir: farklı
 
 ### C. Kendi model/veri/eğitim betiğiniz (planlanan, henüz yok)
 
-Farklı taban model, farklı adaptör biçimi ve kendi veri kümeniz için gerekenler: model ve veri **manifestleri**, gönüllüye imzalı veri dilimi dağıtımı ve işçi tarafında sandbox. Bunlar [yol haritasında](/yol-haritasi/) *planlanan* maddelerdir; bugün uygulanmış değildir.
+Farklı taban model ve farklı adaptör biçimi için gerekenler: model **manifesti**, imzalı veri/model dağıtımı ve işçi tarafında sandbox. Bunlar [yol haritasında](/yol-haritasi/) *planlanan* maddelerdir; bugün uygulanmış değildir. (Aynı model ve biçimle **kendi verinizi** dağıtmak ise bugün mümkündür: aşağıdaki tabloya bakın.)
 
 ## Bugün neleri değiştirebilirsiniz?
 
@@ -35,7 +35,8 @@ Farklı taban model, farklı adaptör biçimi ve kendi veri kümeniz için gerek
 | Taban model | **Hayır** | Qwen3-0.6B-Base |
 | Adaptör biçimi | **Hayır** | LoRA r=16, 7 hedef modül, float32, 392 tensör ([ayrıntı](/adaptor-bicimi/)) |
 | Eğitim betiği (kayıp, optimizer, veri yükleme) | **Hayır** | `istemci/isci.py`; AdamW, kosinüs çizelgesi, klip 1,0 |
-| Eğitim verisi | **Hayır (şimdilik)** | İşçi yerel belirteçlenmiş veriyi okur; veri dağıtımı henüz yok |
+| Eğitim verisi | **Evet** | `--veri` ile belirteçlenmiş veriyi (safetensors) sunarsınız; koordinatör onu dilimleyip işçilere [`/veri`](/protokol/#get-veri-parca-i-istege-bagli) ile dağıtır. Belirteçleme **taban modelin** belirteçleyicisiyle yapılmalıdır. Verinin kaynağı ve lisansı sizin sorumluluğunuzdadır |
+| Eğitim türü (`mod`) | **Evet** | `cpt` (ham metinde devam eden ön eğitim) ya da `sft` (talimat ince ayarı) |
 
 :::uyari
 Bu sınırlar yüzünden bugün "başka bir modeli Modelen'e bağlamak" mümkün değildir. Ama aynı model ve biçimle **kendi koordinatörünüzü, kendi gönüllü topluluğunuzla** çalıştırabilirsiniz; portalda listelenmek istemezseniz yalnızca adresinizi gönüllülere verebilirsiniz (uygulamada özel adres girilebilir).

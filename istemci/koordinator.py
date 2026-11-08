@@ -11,6 +11,7 @@ import argparse
 import json
 import math
 import os
+import re
 import sys
 import threading
 import time
@@ -37,9 +38,14 @@ ap.add_argument("--lr", type=float, default=2e-4)
 ap.add_argument("--dis-lr", type=float, default=1.0)
 ap.add_argument("--dis-mom", type=float, default=0.5)
 ap.add_argument("--aykiri-kat", type=float, default=5.0, help="delta normu medyanın bu katını aşan sonuç elenir (>=3 sonuçta)")
-ap.add_argument("--anahtar", default="", help="boş değilse istekler X-Anahtar başlığı taşımalı")
+ap.add_argument("--anahtar", default="", help="boş değilse istekler X-Anahtar başlığı taşımalı; virgülle ayırarak birden çok anahtar verilebilir (işçi başına bir anahtar, tek tek iptal için)")
+ap.add_argument("--sifirdan", action="store_true", help="calisma klasöründeki kayıtlı durumu yok say ve tur 0'dan başla (varsayılan: kayıtlıysa kaldığı yerden devam et)")
+ap.add_argument("--en-cok-isci", type=int, default=1000, help="takip edilen en çok farklı işçi adı (bellek sınırı)")
+ap.add_argument("--istek-siniri", type=int, default=240, help="IP başına dakikada en çok istek (0 = sınırsız; ters vekil arkasında X-Forwarded-For kullanılır)")
+ap.add_argument("--vekil", action="store_true", help="güvenilir bir ters vekil (Caddy/nginx) arkasındayım: istemci IP'sini X-Forwarded-For'dan al")
 ap.add_argument("--calisma", default="istemci/calisma")
 ap.add_argument("--tohum", type=int, default=0)
+ap.add_argument("--veri", default="", help="belirteçlenmiş eğitim verisi (safetensors: ids [+ etiket]); verilirse dilimlenip /veri?parca=i ile işçilere sunulur (istemci/veri_donustur.py ile üretilir)")
 ap.add_argument("--mod", choices=["cpt", "sft"], default="cpt", help="işçilere bildirilen eğitim modu: cpt = ham metinde devam eden ön eğitim, sft = talimat (yanıt-maskeli) ince ayar")
 A = ap.parse_args()
 
@@ -56,6 +62,70 @@ son_gorulme = {}
 gunluk = []
 trafik = {"indirilen_bayt": 0, "yuklenen_bayt": 0}
 os.makedirs(A.calisma, exist_ok=True)
+SURUM = "0.5.0"
+DURUM_DOSYASI = os.path.join(A.calisma, "durum.json")
+MOMENTUM_DOSYASI = os.path.join(A.calisma, "momentum.safetensors")
+ANAHTARLAR = {k.strip() for k in A.anahtar.split(",") if k.strip()}
+VERI_DILIMLERI = {}  # parca -> (bayt, sha256, belirteç sayısı)
+
+
+def veri_hazirla():
+    """--veri verilmişse ids (ve varsa etiket) parça sayısına bölünür; her dilim ayrı safetensors olarak önceden serileştirilir (int32)."""
+    from safetensors.torch import load_file
+    d = load_file(A.veri)
+    if "ids" not in d:
+        sys.exit("--veri dosyasında 'ids' tensörü yok")
+    ids = d["ids"].to(torch.int32)
+    et = d["etiket"].to(torch.int32) if "etiket" in d else None
+    if et is not None and et.shape != ids.shape:
+        sys.exit("--veri: etiket ve ids aynı uzunlukta olmalı")
+    n = len(ids) // A.parca
+    if n < A.seq + 2:
+        sys.exit(f"--veri çok kısa: parça başına {n} belirteç, en az {A.seq + 2} gerekir")
+    for p in range(A.parca):
+        t = {"ids": ids[p * n:(p + 1) * n].contiguous()}
+        if et is not None:
+            t["etiket"] = et[p * n:(p + 1) * n].contiguous()
+        b = ortak.bayta(t)
+        VERI_DILIMLERI[p] = (b, ortak.ozet(b), n)
+    print(f"[koordinatör] veri: {len(ids)} belirteç, {A.parca} dilim x {n}, dilim başına ~{len(VERI_DILIMLERI[0][0]) / 1e6:.1f} MB", flush=True)
+
+
+ISCI_AD = re.compile(r"^[\w.\-]{1,60}$")
+
+
+def durum_kaydet():
+    """Her tur sonunda: momentum tamponu + sayaçlar. Yeniden başlatınca kaldığı yerden devam edilir. Yazım atomik (geçici dosya + yeniden adlandırma)."""
+    gecici = MOMENTUM_DOSYASI + ".yeni"
+    open(gecici, "wb").write(ortak.bayta({n: t.contiguous() for n, t in buf.items()}))
+    os.replace(gecici, MOMENTUM_DOSYASI)
+    gecici = DURUM_DOSYASI + ".yeni"
+    json.dump({"tur": tur, "isci_parca": isci_parca, "gunluk": gunluk[-200:], "trafik": trafik, "mod": A.mod, "tohum": A.tohum}, open(gecici, "w"))
+    os.replace(gecici, DURUM_DOSYASI)
+
+
+def durum_yukle():
+    """calisma klasöründe kayıt varsa glob/buf/tur'u geri yükle. Tutarsızsa (eksik dosya) None döner ve sıfırdan başlanır."""
+    global glob, buf, glob_bytes, glob_ozet, tur, isci_parca, gunluk, trafik
+    if A.sifirdan or not os.path.exists(DURUM_DOSYASI):
+        return False
+    try:
+        d = json.load(open(DURUM_DOSYASI))
+        son = os.path.join(A.calisma, f"tur-{d['tur']}.safetensors")
+        g = ortak.bayttan(open(son, "rb").read())
+        b = ortak.bayttan(open(MOMENTUM_DOSYASI, "rb").read()) if os.path.exists(MOMENTUM_DOSYASI) else {n: torch.zeros_like(t) for n, t in g.items()}
+        if set(g) != set(glob) or any(g[n].shape != glob[n].shape for n in g):
+            print("[koordinatör] kayıtlı durum başlangıç adaptörüyle uyuşmuyor; sıfırdan başlanıyor", flush=True)
+            return False
+    except (OSError, ValueError, KeyError) as e:
+        print(f"[koordinatör] kayıtlı durum okunamadı ({type(e).__name__}); sıfırdan başlanıyor", flush=True)
+        return False
+    glob, buf, tur = g, b, int(d["tur"])
+    glob_bytes = ortak.bayta(glob)
+    glob_ozet = ortak.ozet(glob_bytes)
+    isci_parca, gunluk, trafik = d.get("isci_parca", {}), d.get("gunluk", []), d.get("trafik", trafik)
+    print(f"[koordinatör] kayıtlı durumdan devam: tur {tur}/{A.tur}", flush=True)
+    return True
 
 
 def tur_kapat(neden):
@@ -95,6 +165,7 @@ def tur_kapat(neden):
     json.dump({"gunluk": gunluk, "trafik": trafik}, open(os.path.join(A.calisma, "gunluk.json"), "w"), indent=2)
     sonuclar = {}
     tur_basi = time.time()
+    durum_kaydet()
 
 
 def zaman_asimi_dongusu():
@@ -120,9 +191,37 @@ soru_zamanlari = {}
 SORU_DOSYASI = os.path.join(A.calisma, "sorular.jsonl")
 
 
+ip_istekleri = {}
+
+
 class H(BaseHTTPRequestHandler):
+    timeout = 120  # yavaş/asılı bağlantılar (slowloris) iş parçacığını sonsuza dek tutamaz
+
     def log_message(self, *a):
         pass
+
+    def _ip(self):
+        if A.vekil:
+            xff = self.headers.get("X-Forwarded-For", "")
+            if xff:
+                return xff.split(",")[0].strip()[:64]
+        return self.client_address[0]
+
+    def _hiz_siniri(self):
+        if not A.istek_siniri:
+            return True
+        ip, simdi = self._ip(), time.time()
+        with KIL:
+            son = [t for t in ip_istekleri.get(ip, []) if simdi - t < 60]
+            if len(son) >= A.istek_siniri:
+                ip_istekleri[ip] = son
+                self._yaz(429, {"hata": "çok fazla istek"}, ek={"Retry-After": "30"})
+                return False
+            ip_istekleri[ip] = son + [simdi]
+            if len(ip_istekleri) > 20000:  # bellek sınırı: eski kayıtları at
+                for k in [k for k, v in ip_istekleri.items() if not v or simdi - v[-1] > 60]:
+                    ip_istekleri.pop(k, None)
+        return True
 
     def _yaz(self, kod, govde, tip="application/json", ek=None):
         if isinstance(govde, (dict, list)):
@@ -138,12 +237,25 @@ class H(BaseHTTPRequestHandler):
         self.wfile.write(govde)
 
     def _yetki(self):
-        if A.anahtar and self.headers.get("X-Anahtar") != A.anahtar:
+        if ANAHTARLAR and self.headers.get("X-Anahtar") not in ANAHTARLAR:
             self._yaz(401, {"hata": "yetkisiz"})
             return False
         return True
 
+    def _isci_adi(self, q):
+        """Geçerli işçi adı ya da None (yanıt zaten yazıldı). Yeni adlar `en-cok-isci` sınırına tabidir."""
+        isci = (q.get("isci") or [""])[0]
+        if not isci:
+            self._yaz(400, {"hata": "isci gerekli"})
+            return None
+        if not ISCI_AD.match(isci):
+            self._yaz(400, {"hata": "isci adı 1-60 karakter; harf, rakam, _ . - kullanın"})
+            return None
+        return isci
+
     def do_GET(self):
+        if not self._hiz_siniri():
+            return
         u = urlparse(self.path)
         q = parse_qs(u.query)
         if u.path == "/":
@@ -152,11 +264,11 @@ class H(BaseHTTPRequestHandler):
                              "t();setInterval(t,3000)</script>", "text/html; charset=utf-8")
         if u.path == "/bilgi":  # kimlik gerektirmez: keşif ve uyum denetimi için
             with KIL:
-                return self._yaz(200, {"protokol": "1", "uygulama": "modelen-koordinator", "surum": "0.4.0", "tur": tur, "toplam_tur": A.tur,
+                return self._yaz(200, {"protokol": "1", "uygulama": "modelen-koordinator", "surum": SURUM, "tur": tur, "toplam_tur": A.tur,
                                        "taban_model": "Qwen/Qwen3-0.6B-Base",
                                        "adaptor": {"yontem": "lora", "r": ortak.LORA_R, "alfa": ortak.LORA_ALPHA, "hedef_moduller": ortak.HEDEF,
                                                    "dtype": "float32", "tensor_sayisi": len(glob)},
-                                       "mod": A.mod, "agirlik_boyutu": len(glob_bytes), "agirlik_sha256": glob_ozet, "anahtar_gerekli": bool(A.anahtar)})
+                                       "mod": A.mod, **({"veri": {"bicim": "safetensors-ids-v1", "parca": A.parca}} if VERI_DILIMLERI else {}), "agirlik_boyutu": len(glob_bytes), "agirlik_sha256": glob_ozet, "anahtar_gerekli": bool(ANAHTARLAR)})
         if not self._yetki():
             return
         if u.path == "/durum":
@@ -165,10 +277,12 @@ class H(BaseHTTPRequestHandler):
                                        "isciler": {i: round(time.time() - t, 1) for i, t in son_gorulme.items()},
                                        "trafik": trafik, "gunluk": gunluk[-5:]})
         if u.path == "/gorev":
-            isci = (q.get("isci") or [""])[0]
-            if not isci:
-                return self._yaz(400, {"hata": "isci gerekli"})
+            isci = self._isci_adi(q)
+            if isci is None:
+                return
             with KIL:
+                if isci not in son_gorulme and len(son_gorulme) >= A.en_cok_isci:
+                    return self._yaz(503, {"hata": "koordinatör dolu (işçi sınırı)"}, ek={"Retry-After": "300"})
                 son_gorulme[isci] = time.time()
                 if tur >= A.tur:
                     return self._yaz(200, {"bitti": True})
@@ -178,7 +292,21 @@ class H(BaseHTTPRequestHandler):
                     isci_parca[isci] = len(isci_parca) % A.parca
                 return self._yaz(200, {"tur": tur, "toplam_tur": A.tur, "parca": isci_parca[isci], "n_parca": A.parca,
                                        "ic_adim": A.ic_adim, "bs": A.bs, "seq": A.seq, "lr": A.lr, "tohum": A.tohum, "mod": A.mod,
+                                       **({"veri_sha256": VERI_DILIMLERI[isci_parca[isci]][1], "veri_belirtec": VERI_DILIMLERI[isci_parca[isci]][2]} if VERI_DILIMLERI else {}),
                                        "agirlik_sha256": glob_ozet})
+        if u.path == "/veri":
+            if not VERI_DILIMLERI:
+                return self._yaz(404, {"hata": "bu koordinatör veri sunmuyor"})
+            try:
+                p = int((q.get("parca") or ["-1"])[0])
+            except ValueError:
+                p = -1
+            if p not in VERI_DILIMLERI:
+                return self._yaz(400, {"hata": f"parca 0-{A.parca - 1} olmalı"})
+            b, oz, _ = VERI_DILIMLERI[p]
+            with KIL:
+                trafik["indirilen_bayt"] += len(b)
+            return self._yaz(200, b, "application/octet-stream", {"X-Sha256": oz})
         if u.path == "/agirlik":
             with KIL:
                 veri, oz, t = glob_bytes, glob_ozet, tur
@@ -198,7 +326,7 @@ class H(BaseHTTPRequestHandler):
             return self._yaz(400, {"hata": "geçersiz istek"})
         if not soru or len(soru) > 2000:
             return self._yaz(400, {"hata": "soru 1-2000 karakter olmalı"})
-        ip, simdi = self.client_address[0], time.time()
+        ip, simdi = self._ip(), time.time()
         with KIL:
             son = [t for t in soru_zamanlari.get(ip, []) if simdi - t < 600]
             if len(son) >= 5:
@@ -213,13 +341,17 @@ class H(BaseHTTPRequestHandler):
         self._yaz(200, {"tamam": True, "no": no})
 
     def do_POST(self):
+        if not self._hiz_siniri():
+            return
         u = urlparse(self.path)
         if u.path == "/soru":
             return self._soru()
         if u.path != "/sonuc" or not self._yetki():
             return self._yaz(404, {"hata": "yok"})
         q = parse_qs(u.query)
-        isci = (q.get("isci") or [""])[0]
+        isci = self._isci_adi(q)
+        if isci is None:
+            return
         try:
             t_ist = int((q.get("tur") or ["-1"])[0])
         except ValueError:
@@ -251,7 +383,11 @@ class H(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    if A.veri:
+        veri_hazirla()
+    durum_yukle()
     threading.Thread(target=zaman_asimi_dongusu, daemon=True).start()
+    ThreadingHTTPServer.daemon_threads = True
     srv = ThreadingHTTPServer((A.host, A.port), H)
     print(f"[koordinatör] http://{A.host}:{A.port}  tur=0/{A.tur}  en-az={A.en_az}  sha256={glob_ozet[:16]}", flush=True)
     try:
