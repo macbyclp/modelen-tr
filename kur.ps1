@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   Modelen gönüllü kurulumu (Windows): uygulama + eğitim ortamı + taban model.
 
@@ -37,7 +37,11 @@ param(
   [switch]$ModelAtla,
   [switch]$Dene
 )
-$ErrorActionPreference = "Stop"
+# Yerel komutlar (uv, python) ilerleme çıktısını stderr'e yazar; Windows PowerShell 5.1'de "Stop" bunu hata sayıp betiği keser.
+# Bu yüzden yerel komutlar için "Continue" (çıkış kodunu $LASTEXITCODE ile elle denetleriz), cmdlet'ler için "Stop" kullanılır.
+$ErrorActionPreference = "Continue"
+$PSDefaultParameterValues["*:ErrorAction"] = "Stop"
+try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch {}
 $ProgressPreference = "SilentlyContinue"   # Invoke-WebRequest çok daha hızlı olur
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
@@ -57,7 +61,7 @@ $disk = Get-PSDrive -Name ($Hedef.Substring(0, 1)) -ErrorAction SilentlyContinue
 if ($disk -and ($disk.Free / 1GB) -lt 8) { Hata ("{0}: sürücüsünde en az 8 GB boş yer gerekli (şu an {1:N1} GB)." -f $Hedef.Substring(0, 1), ($disk.Free / 1GB)) }
 Tamam ("Boş disk: {0:N1} GB" -f ($disk.Free / 1GB))
 $gpu = $null
-try { $gpu = (& nvidia-smi --query-gpu=name, memory.total --format=csv, noheader 2>$null) | Select-Object -First 1 } catch {}
+try { $gpu = (& nvidia-smi "--query-gpu=name,memory.total" "--format=csv,noheader" 2>$null) | Select-Object -First 1 } catch {}
 if ($gpu) { Tamam "GPU: $gpu" }
 elseif ($CudaSurumu -ne "cpu") { Write-Host "    UYARI: nvidia-smi bulunamadı. NVIDIA sürücüsünü kurun ya da -CudaSurumu cpu ile yalnızca deneme kurulumu yapın." -ForegroundColor Yellow }
 Tamam "Hedef: $Hedef"
