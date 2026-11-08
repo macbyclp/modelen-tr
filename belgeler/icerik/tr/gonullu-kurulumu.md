@@ -23,6 +23,16 @@ Gönüllü, kendi GPU'sunu bir koordinatöre adayan kişidir. Eğitim yerelde ya
 
 ## Kurulum
 
+### En kolay yol: Modelen-Kurulum.exe
+
+[Sürümler sayfasından](https://github.com/macbyclp/modelen-tr/releases/latest) **`Modelen-Kurulum.exe`** dosyasını indirip çift tıklayın. Bir pencere açılır, aşağıdaki adımları sizin yerinize yapar ve bitince Enter ister. (Aşağıdaki `kur.ps1` betiğinin tek dosyaya gömülmüş halidir; aynı parametreleri alır, örn. `Modelen-Kurulum.exe -Dene`.)
+
+:::not
+Program henüz **dijital olarak imzalı değil**; bu yüzden Windows SmartScreen "Windows bilgisayarınızı korudu" uyarısı gösterebilir. Kaynağı doğruladıktan sonra **Daha fazla bilgi → Yine de çalıştır** diyebilirsiniz. Doğrulama: sürüm sayfasındaki `SHA256SUMS` ile dosyanın özetini karşılaştırın (`Get-FileHash Modelen-Kurulum.exe`) ya da `gh attestation verify Modelen-Kurulum.exe --repo macbyclp/modelen-tr` çalıştırın.
+:::
+
+### PowerShell betiğiyle
+
 `kur.ps1` dosyasını [depodan](https://github.com/macbyclp/modelen-tr/blob/main/kur.ps1) indirin. Önce ne yapacağına bakın (hiçbir şey kurmaz):
 
 ```bash

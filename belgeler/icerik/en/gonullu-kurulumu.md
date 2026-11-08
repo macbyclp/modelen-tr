@@ -23,6 +23,16 @@ A volunteer lends their own GPU to a coordinator. Training happens locally; only
 
 ## Install
 
+### Easiest: Modelen-Kurulum.exe
+
+From the [releases page](https://github.com/macbyclp/modelen-tr/releases/latest) download **`Modelen-Kurulum.exe`** and double-click it. A window opens, performs the steps below for you and waits for Enter at the end. (It is the `kur.ps1` script below embedded in a single file and accepts the same parameters, e.g. `Modelen-Kurulum.exe -Dene`.)
+
+:::not
+The program is **not digitally signed yet**, so Windows SmartScreen may show "Windows protected your PC". After verifying the source you can choose **More info → Run anyway**. To verify: compare the file digest with `SHA256SUMS` on the release page (`Get-FileHash Modelen-Kurulum.exe`) or run `gh attestation verify Modelen-Kurulum.exe --repo macbyclp/modelen-tr`.
+:::
+
+### With the PowerShell script
+
 Download `kur.ps1` from the [repository](https://github.com/macbyclp/modelen-tr/blob/main/kur.ps1). First see what it would do (installs nothing):
 
 ```bash

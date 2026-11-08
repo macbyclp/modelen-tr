@@ -28,10 +28,15 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             uygulama/target
-          key: cargo-${{ hashFiles('uygulama/Cargo.lock') }}
+            kurulum/target
+          key: cargo-${{ hashFiles('uygulama/Cargo.lock', 'kurulum/Cargo.lock') }}
 
       - name: Uygulamayı derle
         working-directory: uygulama
+        run: cargo build --release --locked
+
+      - name: Kurulum programını derle (Modelen-Kurulum.exe)
+        working-directory: kurulum
         run: cargo build --release --locked
 
       - uses: actions/setup-python@v5
@@ -39,7 +44,7 @@ jobs:
           python-version: "3.12"
 
       - name: Sürüm varlıklarını paketle
-        run: python tools/paketle.py --exe uygulama/target/release/modelen.exe
+        run: python tools/paketle.py --exe uygulama/target/release/modelen.exe --kurulum kurulum/target/release/modelen-kurulum.exe
 
       - name: Kaynak kanıtı (attestation)
         uses: actions/attest-build-provenance@v2
@@ -47,6 +52,7 @@ jobs:
           subject-path: |
             dist/modelen.exe
             dist/modelen-istemci.zip
+            dist/Modelen-Kurulum.exe
 
       - uses: actions/upload-artifact@v4
         with:
@@ -60,6 +66,7 @@ jobs:
           files: |
             dist/modelen.exe
             dist/modelen-istemci.zip
+            dist/Modelen-Kurulum.exe
             dist/SHA256SUMS
           generate_release_notes: false
           fail_on_unmatched_files: true

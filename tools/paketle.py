@@ -36,6 +36,7 @@ def sha(yol):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--exe", default="")
+    ap.add_argument("--kurulum", default="", help="Modelen-Kurulum.exe olarak dist/ altına kopyalanacak kurulum programı")
     ap.add_argument("--cikti", default=os.path.join(KOK, "dist"))
     a = ap.parse_args()
     os.makedirs(a.cikti, exist_ok=True)
@@ -49,6 +50,10 @@ def main():
     if a.exe:
         hedef = os.path.join(a.cikti, "modelen.exe")
         shutil.copyfile(a.exe, hedef)
+        varliklar.append(hedef)
+    if a.kurulum:
+        hedef = os.path.join(a.cikti, "Modelen-Kurulum.exe")
+        shutil.copyfile(a.kurulum, hedef)
         varliklar.append(hedef)
     with open(os.path.join(a.cikti, "SHA256SUMS"), "w", encoding="utf-8", newline="\n") as f:
         for v in varliklar:
