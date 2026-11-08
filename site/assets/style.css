@@ -486,3 +486,16 @@ blockquote { margin: 8px 0; padding: 8px 14px; border-left: 2px solid var(--line
   .panel-yan nav a { white-space: nowrap; border-left: 0; border-bottom: 3px solid transparent; }
   .panel-yan nav a.aktif { border-bottom-color: var(--accent); }
 }
+
+/* panel: ferah aralıklar */
+.panel-duzen { gap: 48px; padding-top: 28px; }
+.panel-b { margin-bottom: 28px; }
+.panel-ic > * { margin-top: 0; margin-bottom: 24px; }
+.panel-ic > h2 { margin-top: 40px; margin-bottom: 16px; }
+.panel-ic .pkartlar { gap: 18px; margin-bottom: 36px; }
+.pk { padding: 22px 22px 20px; gap: 10px; }
+.panel-ic .note, .panel-ic blockquote { padding-top: 4px; padding-bottom: 4px; }
+.panel-ic form[method="post"] + p, .panel-ic p + form { margin-top: 12px; }
+.panel-ic .btn { margin: 0 6px 8px 0; }
+.panel-yan nav a { padding-top: 14px; padding-bottom: 14px; }
+.panel-kisi { padding: 22px 18px; }
