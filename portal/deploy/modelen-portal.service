@@ -1,0 +1,28 @@
+[Unit]
+Description=Modelen portali (site + kayit/giris + koordinator paneli)
+After=network.target
+
+[Service]
+User=modelen
+Group=modelen
+WorkingDirectory=/opt/modelen/portal
+Environment=PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 /opt/modelen/portal/portal.py calistir --host 127.0.0.1 --port 8780 --guvenli --vekil --db /opt/modelen/veri/portal.db
+Restart=always
+RestartSec=3
+# Paylasimli sunucuda komsu hizmetleri korumak icin kaynak siniri
+MemoryMax=400M
+CPUQuota=60%
+TasksMax=64
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+ReadWritePaths=/opt/modelen/veri
+
+[Install]
+WantedBy=multi-user.target

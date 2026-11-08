@@ -1,0 +1,12 @@
+# /etc/caddy/Caddyfile icine ekleyin (alan adini kendinize gore degistirin)
+www.ornek.tr {
+    redir https://ornek.tr{uri} permanent
+}
+
+ornek.tr {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:8780
+    header {
+        Strict-Transport-Security "max-age=604800"
+    }
+}
