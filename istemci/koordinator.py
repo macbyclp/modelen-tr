@@ -149,6 +149,13 @@ class H(BaseHTTPRequestHandler):
             return self._yaz(200, "<meta charset=utf-8><title>Modelen koordinatör</title><pre id=d>yükleniyor</pre>"
                              "<script>async function t(){d.textContent=JSON.stringify(await (await fetch('/durum')).json(),null,2)}"
                              "t();setInterval(t,3000)</script>", "text/html; charset=utf-8")
+        if u.path == "/bilgi":  # kimlik gerektirmez: keşif ve uyum denetimi için
+            with KIL:
+                return self._yaz(200, {"protokol": "1", "uygulama": "modelen-koordinator", "surum": "0.4.0", "tur": tur, "toplam_tur": A.tur,
+                                       "taban_model": "Qwen/Qwen3-0.6B-Base",
+                                       "adaptor": {"yontem": "lora", "r": ortak.LORA_R, "alfa": ortak.LORA_ALPHA, "hedef_moduller": ortak.HEDEF,
+                                                   "dtype": "float32", "tensor_sayisi": len(glob)},
+                                       "agirlik_boyutu": len(glob_bytes), "agirlik_sha256": glob_ozet, "anahtar_gerekli": bool(A.anahtar)})
         if not self._yetki():
             return
         if u.path == "/durum":

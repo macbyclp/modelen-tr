@@ -129,12 +129,16 @@ def render(key, lang):
     nav = "".join(
         f'<a href="{fname(k, lang)}"' + (' aria-current="page"' if k == key else "") + f">{html.escape(label)}</a>"
         for k, label in c.NAV)
+    docs_href = "https://docs.modelen.tr/" + ("" if lang == "tr" else "en/")
+    docs_etiket = "Dokümantasyon" if lang == "tr" else "Documentation"
+    nav += f'<a href="{docs_href}" rel="noopener">{docs_etiket}</a>'
     legal = "".join(f'<a href="{fname(k, lang)}">{html.escape(label)}</a>' for k, label in c.FOOT)
     etiket = dict(c.NAV + c.FOOT)
     fcols ="".join(
         f"<div><h3>{html.escape(baslik)}</h3><ul>" + "".join(
             f'<li><a href="{fname(k, lang)}">{html.escape(etiket[k])}</a></li>' for k in keys) + "</ul></div>"
         for baslik, keys in FOOT_COLS[lang])
+    fcols += f'<div><h3>{"Geliştiriciler" if lang == "tr" else "Developers"}</h3><ul><li><a href="{docs_href}" rel="noopener">{docs_etiket}</a></li><li><a href="https://modelen.tr/api/v1/openapi.json" rel="noopener">OpenAPI</a></li><li><a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub</a></li></ul></div>'
     banner = f'<div class="draft" role="note">{ui["draft"]}</div>' if (DRAFT and page.get("legal")) else ""
     govde0, donustu = legalize(page["body"], key, lang)
     if donustu and banner:

@@ -154,6 +154,8 @@ flowchart TB
   U -- "Topluluğa sor" --> K
 ```
 
+**Geliştiriciler için:** koordinatör olmak, kendi eğitim sisteminizi bağlamak ve Portal API'sini kullanmak için **[docs.modelen.tr](https://docs.modelen.tr)** (kaynak: `belgeler/`). Protokol v1 uyum testi (`istemci/uyum_testi.py`), yalnızca standart kütüphaneyle yazılmış örnek koordinatör ve Python API istemcisi (`istemci/ornekler/`) ile OpenAPI şeması (`/api/v1/openapi.json`) bu amaçla eklendi.
+
 **Ayrıca:** `logo/` (100 SVG kavram, seçilen *Halay Halkası* vektör sürümleri ve üretim betikleri), `kurumsal/` (kimlik notları ve avukat onay listesi), `ide/` (eski VS Code eklentisi prototipi, **artık kullanılmıyor**).
 
 ## Güvenlik ve gizlilik ilkeleri
@@ -201,6 +203,7 @@ modelen/
 ├─ sunucu/     yerel OpenAI uyumlu model sunucusu
 ├─ uygulama/   Rust masaüstü uygulaması (egui)
 ├─ site/       modelen.tr statik sitesi (TR+EN) · build.py
+├─ belgeler/   docs.modelen.tr geliştirici dokümantasyonu (TR+EN) · build.py
 ├─ portal/     kayıt/giriş, koordinatör başvurusu, profil/akış, yönetici paneli · deploy/
 ├─ logo/       Halay Halkası ve kavram çalışmaları
 ├─ kurumsal/   kimlik notları, avukat onay listesi

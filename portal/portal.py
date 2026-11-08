@@ -32,6 +32,7 @@ KOK = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.join(os.path.dirname(KOK), "site")
 sys.path.insert(0, SITE)
 import gorsel  # noqa: E402  (görsel doğrulama/temizleme)
+import api  # noqa: E402  (koordinatör API'si)
 import eposta  # noqa: E402  (SMTP gönderimi)
 import hesap  # noqa: E402  (e-posta doğrulama, şifre sıfırlama, bildirimler)
 import sosyal  # noqa: E402  (profil, takip, akış, moderasyon)
@@ -366,6 +367,13 @@ class H(BaseHTTPRequestHandler):
     def _isle(self, yontem):
         u = urlparse(self.path)
         yol, q = unquote(u.path), parse_qs(u.query)
+        if yol.startswith("/api/"):  # API: Bearer anahtarı, çerez ve CSRF yok
+            self.yeni_cerezler, self.kullanici, self.csrf = [], None, ""
+            try:
+                return api.isle(self, yontem, yol, q)
+            except Exception as ex:
+                print("API HATA", yol, repr(ex), file=sys.stderr)
+                return api.hata(self, 500, "sunucu", "Beklenmeyen bir hata oluştu.")
         ck = SimpleCookie(self.headers.get("Cookie", ""))
         self.yeni_cerezler = []
         self.csrf = ck["mc"].value if "mc" in ck and re.fullmatch(r"[A-Za-z0-9_\-]{20,80}", ck["mc"].value) else ""
@@ -374,6 +382,8 @@ class H(BaseHTTPRequestHandler):
             self.yeni_cerezler.append(self._cerez("mc", self.csrf))
         self.kullanici = oturumdan_kullanici(ck["ms"].value if "ms" in ck else "")
         try:
+            if yontem not in ("GET", "POST"):
+                return self._gonder(405, "Yöntem desteklenmiyor", "text/plain; charset=utf-8", ek={"Allow": "GET, POST"})
             if yontem == "POST":
                 return self._post(yol)
             return self._get(yol, q)
@@ -385,6 +395,15 @@ class H(BaseHTTPRequestHandler):
         self._isle("GET")
 
     do_HEAD = do_GET
+
+    def do_PATCH(self):
+        self._isle("PATCH")
+
+    def do_OPTIONS(self):
+        self._isle("OPTIONS")
+
+    def do_DELETE(self):
+        self._isle("DELETE")
 
     def do_POST(self):
         self._isle("POST")
@@ -407,7 +426,7 @@ class H(BaseHTTPRequestHandler):
 
     # ---- GET
     def _get(self, yol, q):
-        if hesap.get(self, yol, q) or sosyal.get(self, yol, q):
+        if hesap.get(self, yol, q) or api.web_get(self, yol, q) or sosyal.get(self, yol, q):
             return
         if yol == "/koordinatorler.json":
             return self._json_dizin()
@@ -595,6 +614,7 @@ class H(BaseHTTPRequestHandler):
             else:
                 icerik += self._basvuru_formu(form or dict(b), hata)
         icerik += ('<h2>Profil ve topluluk</h2><p><a class="btn" href="/profil">Profilimi düzenle</a> <a class="btn ghost" href="/akis">Topluluk akışı</a></p>'
+                   '<h2>Geliştiriciler için</h2><p><a class="btn ghost" href="/panel/api">API anahtarları</a> <a class="btn ghost" href="https://docs.modelen.tr">Dokümantasyon</a></p>'
                    '<h2>Hesap</h2><details><summary>Hesabımı ve verilerimi sil</summary><form class="kform" method="post" action="/hesap-sil">'
                    + csrf_alani(self.csrf) + alan("parola", "Parolanız (onay)", "", "password", 'maxlength="200" required')
                    + '<p class="note">Hesabınız, başvurunuz ve sayfanız kalıcı olarak silinir.</p><button class="btn" type="submit">Hesabı sil</button></form></details>'
@@ -676,7 +696,7 @@ class H(BaseHTTPRequestHandler):
             return self._yonlendir("/giris?m=cikis", [self._cerez("ms", "", 0)])
         if not self.kullanici:
             return self._yonlendir("/giris")
-        if sosyal.post(self, yol, f):
+        if api.web_post(self, yol, f) or sosyal.post(self, yol, f):
             return
         if yol == "/basvuru":
             if self.kullanici["rol"] == "yonetici":
@@ -829,6 +849,7 @@ def yonetici_olustur(eposta, ad, parola):
 
 
 hesap.baglan(sys.modules[__name__])
+api.baglan(sys.modules[__name__])
 sosyal.baglan(sys.modules[__name__])
 
 
