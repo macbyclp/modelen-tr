@@ -18,6 +18,7 @@ a:hover { color: #fff; }
 .ust { position: sticky; top: 0; z-index: 40; height: var(--ust); background: rgba(10,10,12,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .ust-ic { max-width: 1400px; margin: 0 auto; height: 100%; display: flex; align-items: center; gap: 18px; padding: 0 18px; }
 .marka { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--text); font-weight: 650; letter-spacing: -.02em; white-space: nowrap; }
+.marka a { display: flex; align-items: center; gap: 9px; text-decoration: none; color: inherit; }
 .marka em { font-style: normal; font-weight: 500; font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 10px; }
 .arama { position: relative; flex: 1; max-width: 420px; margin-left: auto; }
 .arama input { width: 100%; background: var(--bg2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; color: var(--text); font: inherit; font-size: 14px; }

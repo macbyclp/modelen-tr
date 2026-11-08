@@ -180,9 +180,9 @@ def sayfa_html(dil, sayfalar, s, govde_html, basliklar):
 <body data-dil="{dil}" data-kopyala="{ui['kopyala']}" data-kopyalandi="{ui['kopyalandi']}" data-yok="{ui['sayfa_yok']}">
 <a class="atla" href="#icerik">{'İçeriğe geç' if dil == 'tr' else 'Skip to content'}</a>
 <header class="ust"><div class="ust-ic">
-<a class="marka" href="{on or '/'}/" >{LOGO}<span>modelen</span><em>{ui['ad']}</em></a>
+<div class="marka"><a class="marka-site" href="{SITE}{'/en/' if dil == 'en' else '/'}" aria-label="modelen.tr">{LOGO}<span>modelen</span></a><a class="marka-docs" href="{on or '/'}"><em>{ui['ad']}</em></a></div>
 <div class="arama"><input id="ara" type="search" placeholder="{ui['ara']}" aria-label="{ui['ara_etiket']}" autocomplete="off"><div id="sonuc" class="sonuc" hidden></div></div>
-<nav class="ust-link"><a href="{SITE}">{ui['site']}</a><a href="{SITE}/giris">{ui['portal']}</a><a href="{GITHUB}" rel="noopener">GitHub</a><a class="dil" href="{gecis_href}" hreflang="{diger}" lang="{diger}">{ui['gecis']}</a></nav>
+<nav class="ust-link"><a href="{SITE}/giris">{ui['portal']}</a><a href="{GITHUB}" rel="noopener">GitHub</a><a class="dil" href="{gecis_href}" hreflang="{diger}" lang="{diger}">{ui['gecis']}</a></nav>
 </div></header>
 <div class="duzen">
 <nav class="yan" aria-label="{ui['ad']}"><details class="yan-menu" open><summary>{ui['menu']}</summary>{nav_html(dil, sayfalar, slug)}</details></nav>
