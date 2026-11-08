@@ -62,8 +62,33 @@ if ($disk -and ($disk.Free / 1GB) -lt 8) { Hata ("{0}: sürücüsünde en az 8 G
 Tamam ("Boş disk: {0:N1} GB" -f ($disk.Free / 1GB))
 $gpu = $null
 try { $gpu = (& nvidia-smi "--query-gpu=name,memory.total" "--format=csv,noheader" 2>$null) | Select-Object -First 1 } catch {}
-if ($gpu) { Tamam "GPU: $gpu" }
-elseif ($CudaSurumu -ne "cpu") { Write-Host "    UYARI: nvidia-smi bulunamadı. NVIDIA sürücüsünü kurun ya da -CudaSurumu cpu ile yalnızca deneme kurulumu yapın." -ForegroundColor Yellow }
+if ($gpu) {
+  Tamam "GPU: $gpu"
+  # PyTorch CUDA tekerleri asgari sürücü ister (Windows): cu124 >= 551, cu126 >= 560, cu121 >= 531. Daha eskiyse eğitim başlamaz.
+  $asgari = @{ "cu124" = 551; "cu126" = 560; "cu121" = 531 }[$CudaSurumu]
+  try {
+    $sur = [double](((& nvidia-smi "--query-gpu=driver_version" "--format=csv,noheader" 2>$null) | Select-Object -First 1).Trim().Split(".")[0])
+    if ($asgari -and $sur -lt $asgari) {
+      Hata ("NVIDIA sürücünüz ({0}) PyTorch {1} için çok eski (en az {2} gerekir). https://www.nvidia.com/drivers adresinden güncelleyin ya da -CudaSurumu cu121 deneyin." -f $sur, $CudaSurumu, $asgari)
+    }
+  } catch { }
+}
+elseif ($CudaSurumu -ne "cpu") {
+  Hata "NVIDIA GPU ya da sürücüsü bulunamadı (nvidia-smi çalışmıyor). Eğitim NVIDIA GPU gerektirir. Sürücüyü https://www.nvidia.com/drivers adresinden kurup yeniden deneyin; yalnızca denemek için -CudaSurumu cpu kullanabilirsiniz."
+}
+
+# PyTorch (Windows) Microsoft Visual C++ çalışma zamanı ister; temiz bir Windows'ta olmayabilir.
+if (-not ((Test-Path (Join-Path $env:SystemRoot "System32\vcruntime140.dll")) -and (Test-Path (Join-Path $env:SystemRoot "System32\msvcp140.dll")))) {
+  Write-Host "    Visual C++ çalışma zamanı eksik; Microsoft'tan indirilip kuruluyor (yönetici izni isteyebilir)." -ForegroundColor Yellow
+  if ($Dene) { Tamam "(-Dene: kurulmadı)" }
+  else {
+    $vc = Join-Path $env:TEMP "vc_redist.x64.exe"
+    Invoke-WebRequest -Uri "https://aka.ms/vs/17/release/vc_redist.x64.exe" -OutFile $vc
+    $p = Start-Process -FilePath $vc -ArgumentList "/install", "/quiet", "/norestart" -Verb RunAs -Wait -PassThru
+    if ($p.ExitCode -notin 0, 1638, 3010) { Hata "Visual C++ çalışma zamanı kurulamadı (kod $($p.ExitCode)). https://aka.ms/vs/17/release/vc_redist.x64.exe adresinden elle kurup yeniden deneyin." }
+    Tamam "Visual C++ çalışma zamanı kuruldu"
+  }
+}
 Tamam "Hedef: $Hedef"
 
 if ($Dene) {
