@@ -2,7 +2,7 @@
 name = "modelen"
 version = "0.1.0"
 edition = "2021"
-description = "Modelen: gönüllü GPU istemcisi ve Türkçe kodlama yardımcısı (tek masaüstü uygulaması)"
+description = "Modelen: gönüllü GPU istemcisi ve kodlama yardımcısı (tek masaüstü uygulaması)"
 license = "Apache-2.0"
 
 [dependencies]

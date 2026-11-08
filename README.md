@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/kapak.png" alt="Modelen: Türkçe için, topluluğun birlikte eğittiği açık yapay zekâ" width="100%">
+  <img src="docs/assets/kapak.png" alt="Modelen: topluluğun birlikte eğittiği açık yapay zekâ" width="100%">
 </p>
 
 <p align="center">
@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <b>Boştaki ekran kartlarını birleştirip Türkçe modelleri birlikte eğitiyoruz. Sonuç açık lisansla, herkesin kullanımına.</b><br>
+  <b>Boştaki ekran kartlarını birleştirip açık dil modellerini birlikte eğitiyoruz. İlk dilimiz Türkçe. Sonuç açık lisansla, herkesin kullanımına.</b><br>
   <sub>Dürüst başlangıç: bu bir araştırma projesi. Yayınlanmış bir modelimiz henüz yok; bu depo, şimdiye kadar <i>ne yaptığımızı, ne ölçtüğümüzü ve ne ölçemediğimizi</i> gösteriyor.</sub>
 </p>
 
@@ -27,12 +27,12 @@
 
 ## Fikir
 
-Türkçe için açık, yerelde çalışabilen ve şeffaf biçimde eğitilmiş dil modellerine ihtiyaç var. Büyük bir sunucu salonumuz yok; ama binlerce insanın bilgisayarında günün çoğunda boş duran ekran kartları var.
+Her dilin açık, yerelde çalışabilen ve şeffaf biçimde eğitilmiş dil modellerine ihtiyacı var. Büyük bir sunucu salonumuz yok; ama binlerce insanın bilgisayarında günün çoğunda boş duran ekran kartları var.
 
 **Modelen**, bu boş GPU'ları gönüllü katkıyla birleştirmeyi hedefliyor:
 
 - 🔓 **Açık:** kod ve model ağırlıkları Apache-2.0. Veri kaynakları ve lisansları açıkça listelenir.
-- 🇹🇷 **Türkçe öncelikli:** Türkçenin eklemeli yapısını ölçerek geliştiriyoruz (tokenizer, bayt başına bit, TurkishMMLU).
+- 🌍 **Dil odaklı, ilk dil Türkçe:** her dilin yapısını ölçerek ilerliyoruz; pilot dilimiz Türkçe (tokenizer, bayt başına bit, TurkishMMLU). Sırada diğer diller var.
 - 🤝 **Topluluk sahipli:** katkılar kayıt altında; para ya da kripto ödülü yok, söz hakkı ve şeffaflık var.
 - 🔒 **Gizliliğe saygılı:** gönüllünün bilgisayarında yalnızca *sabit bir eğitim betiği* çalışır; dosyalara erişmez, keyfi kod çalıştırılmaz.
 - 📉 **Haberleşme dostu:** tüm modeli değil yalnızca küçük bir **LoRA adaptörünü** (~40 MB) taşıyoruz.
@@ -246,7 +246,7 @@ modelen/
 
 ## English summary
 
-**Modelen** is a community effort to train open **Turkish** language models on volunteers' idle GPUs. The approach is **adapter-DiLoCo**: a frozen open base model (Qwen3-0.6B-Base) with a small **LoRA adapter (~40 MB)** trained locally for *H* steps and synchronised only every *H* steps with a coordinator, cutting traffic ~25× with no measurable loss in our small-scale tests.
+**Modelen** is an international community effort to train open language models on volunteers' idle GPUs. **Turkish is our first language**; others follow. The approach is **adapter-DiLoCo**: a frozen open base model (Qwen3-0.6B-Base) with a small **LoRA adapter (~40 MB)** trained locally for *H* steps and synchronised only every *H* steps with a coordinator, cutting traffic ~25× with no measurable loss in our small-scale tests.
 
 **What is here (all small scale, one RTX 4060 laptop):** research scripts and raw results; a working volunteer protocol (coordinator + worker, safetensors only, no pickle); a **Rust desktop app** (one-click "Easy mode", coordinator picker, tray); a static **TR+EN website** and a zero-dependency Python **portal** (registration, coordinator applications with admin approval, profiles — private by default — a short-post feed and moderation).
 

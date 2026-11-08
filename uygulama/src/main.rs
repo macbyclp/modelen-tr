@@ -1,5 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-//! Modelen: gönüllü GPU istemcisi + Türkçe kodlama yardımcısı, tek masaüstü uygulaması.
+//! Modelen: gönüllü GPU istemcisi + kodlama yardımcısı, tek masaüstü uygulaması.
 
 mod ayar;
 mod dizin;
@@ -205,7 +205,7 @@ impl Uygulama {
                 ui.add_space((ui.available_height() * 0.03).max(6.0));
                 ui.add(egui::Image::new(&self.logo).fit_to_exact_size(egui::vec2(110.0, 110.0)));
                 ui.label(RichText::new("modelen").size(30.0).strong().color(KIRMIZI));
-                ui.label("GPU'nuzu ortak Türkçe model eğitimine verin.");
+                ui.label("GPU'nuzu ortak model eğitimine verin.");
                 ui.add_space(16.0);
                 let d = 200.0;
                 let (rect, yanit) = ui.allocate_exact_size(egui::vec2(d, d), egui::Sense::click());
@@ -518,7 +518,7 @@ impl Uygulama {
         egui::CentralPanel::default().show(ctx, |ui| {
             egui::ScrollArea::vertical().show(ui, |ui| {
                 ui.heading("Gönüllü GPU");
-                ui.label("GPU'nuzu ortak Türkçe model eğitimine verin. Yalnızca LoRA adaptörü (~40 MB) ağa çıkar; taban model ve veri yerelde kalır.");
+                ui.label("GPU'nuzu ortak model eğitimine verin. Yalnızca LoRA adaptörü (~40 MB) ağa çıkar; taban model ve veri yerelde kalır.");
                 ui.horizontal(|ui| {
                     ui.label(RichText::new("GPU:").strong());
                     ui.label(&self.gpu);
