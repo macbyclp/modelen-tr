@@ -53,7 +53,7 @@ class Duzenleme(unittest.TestCase):
         ilk_gorsel = portal.tek("SELECT id FROM gorseller ORDER BY id DESC LIMIT 1")["id"]
         self.assertIn("Duzen Bir", anon.get("/koordinatorler")[1])
         # panelde düzenleme formu var
-        self.assertIn("Düzenlemeyi incelemeye gönder", o.get("/panel")[1])
+        self.assertIn("Düzenlemeyi incelemeye gönder", o.get("/panel?s=basvuru")[1])
         # düzenleme gönder: yeni ad, yeni özet, HF bağlantısı ve yeni görsel
         d, _, _ = multipart(o, "/basvuru", self.alanlar(o, ad="Duzen Bir Yeni", kisa="Güncellenmiş özet burada yer alıyor", ayrinti="yeni ayrıntı",
                                                           hf="https://huggingface.co/yeni-org"), [("yeni.png", png(2, 2))])
