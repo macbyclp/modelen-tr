@@ -499,3 +499,4 @@ blockquote { margin: 8px 0; padding: 8px 14px; border-left: 2px solid var(--line
 .panel-ic .btn { margin: 0 6px 8px 0; }
 .panel-yan nav a { padding-top: 14px; padding-bottom: 14px; }
 .panel-kisi { padding: 22px 18px; }
+.yan-baslik { padding: 14px 18px 8px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.02); }

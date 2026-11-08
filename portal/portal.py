@@ -592,7 +592,8 @@ class H(BaseHTTPRequestHandler):
             + csrf_alani(self.csrf) + f'<input type="hidden" name="id" value="{g["id"]}"><button class="btn ghost sm" type="submit">Sil</button></form></div>'
             for g in satirlar) + "</div>")
 
-    PANEL_SEKMELER = [("genel", "Genel bakış"), ("basvuru", "Başvuru"), ("profil", "Profil ve topluluk"), ("gelistirici", "Geliştiriciler"), ("hesap", "Hesap")]
+    PANEL_SEKMELER = [("genel", "Genel bakış"), ("basvuru", "Başvuru"), ("hesap", "Hesap")]
+    PANEL_KISAYOLLAR = [("/profil", "Profilim", False), ("/akis", "Topluluk akışı", False), ("/panel/api", "API anahtarları", False), ("https://docs.modelen.tr", "Dokümantasyon", True)]
 
     def _panel_genel(self, b, k):
         def kart(baslik, deger, alt=""):
@@ -616,8 +617,6 @@ class H(BaseHTTPRequestHandler):
                 icerik += f'<p>Sayfanız yayında: <a href="/koordinator/{e(b["slug"])}">/koordinator/{e(b["slug"])}</a></p>'
                 if b["taslak"]:
                     icerik += '<p class="note"><b>Düzenlemeniz incelemede.</b> Yönetici onaylayana kadar yayındaki sayfa değişmez.</p>'
-        icerik += ('<h2>Hızlı işlemler</h2><p><a class="btn" href="/panel?s=basvuru">Başvuruyu düzenle</a> <a class="btn ghost" href="/profil">Profilim</a> '
-                   '<a class="btn ghost" href="/akis">Topluluk akışı</a> <a class="btn ghost" href="https://docs.modelen.tr" rel="noopener">Dokümantasyon</a></p>')
         return icerik
 
     def _panel(self, q, hata="", form=None):
@@ -631,7 +630,13 @@ class H(BaseHTTPRequestHandler):
         ust = self._mesaj(q) + hesap.dogrulama_notu(self)
         yan = ('<aside class="panel-yan"><div class="panel-kisi"><span class="avatar bos" aria-hidden="true">' + e((k["ad"] or "?")[:1].upper()) + '</span>'
                f'<div><b>{e(k["ad"])}</b><span>{e(k["eposta"])}</span></div></div><nav aria-label="Panel bölümleri">'
-               + "".join(f'<a href="/panel?s={ad}"' + (' aria-current="page" class="aktif"' if ad == sekme else "") + f">{e(et)}</a>" for ad, et in self.PANEL_SEKMELER)
+               + "".join(f'<a href="/panel?s={ad}"' + (' aria-current="page" class="aktif"' if ad == sekme else "") + f">{e(et)}</a>"
+                         for ad, et in self.PANEL_SEKMELER[:2])
+               + '<span class="yan-baslik">Kısayollar</span>'
+               + "".join(f'<a href="{e(h)}"' + (' rel="noopener"' if dis else "") + f">{e(et)}" + (' <span aria-hidden="true">↗</span>' if dis else "") + "</a>"
+                         for h, et, dis in self.PANEL_KISAYOLLAR)
+               + '<span class="yan-baslik">Hesap</span>'
+               + f'<a href="/panel?s=hesap"' + (' aria-current="page" class="aktif"' if sekme == "hesap" else "") + ">Hesap ayarları</a>"
                + '</nav></aside>')
         if sekme == "genel":
             baslik, icerik = f"Merhaba, {k['ad']}.", self._panel_genel(b, k)
@@ -655,14 +660,6 @@ class H(BaseHTTPRequestHandler):
                                + self._basvuru_formu(form or {**dict(b), **(taslak or {})}, hata, duzenleme=True) + '</details>')
                 else:
                     icerik += self._basvuru_formu(form or dict(b), hata)
-        elif sekme == "profil":
-            baslik = "Profil ve topluluk"
-            icerik = ('<p>Profiliniz varsayılan olarak özeldir; paylaşmayı siz seçersiniz.</p>'
-                      '<p><a class="btn" href="/profil">Profilimi düzenle</a> <a class="btn ghost" href="/akis">Topluluk akışı</a></p>')
-        elif sekme == "gelistirici":
-            baslik = "Geliştiriciler"
-            icerik = ('<p>Koordinatörünüzü portala programla bağlayın: API anahtarları, nabız ve adres doğrulama.</p>'
-                      '<p><a class="btn" href="/panel/api">API anahtarları</a> <a class="btn ghost" href="https://docs.modelen.tr" rel="noopener">Dokümantasyon</a></p>')
         else:
             baslik = "Hesap"
             icerik = ((f'<p class="note">{e(hata)}</p>' if hata else "")
