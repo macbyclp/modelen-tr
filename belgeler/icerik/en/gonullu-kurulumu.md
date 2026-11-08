@@ -5,7 +5,7 @@ sira: 4
 ozet: Windows setup for lending your GPU to a coordinator: requirements, the install script, what gets installed, how to remove it.
 ---
 
-# Volunteer setup (Windows)
+# Volunteer setup
 
 A volunteer lends their own GPU to a coordinator. Training happens locally; only the small LoRA adapter (~40 MB) and the data shard served by the coordinator cross the network.
 
@@ -13,7 +13,7 @@ A volunteer lends their own GPU to a coordinator. Training happens locally; only
 **Status: the install script is written but has not yet been tested end to end on a clean machine**, and the release packages (`modelen.exe`, `modelen-istemci.zip`) will be produced with the first tagged release. Try the script at your own risk, with `-Dene` first; report problems on [GitHub](https://github.com/macbyclp/modelen-tr/issues).
 :::
 
-## Requirements
+## Requirements (Windows)
 
 - Windows 10/11 (64-bit)
 - An **NVIDIA GPU** with at least 6 GB VRAM (tested with 8 GB) and a current NVIDIA driver
@@ -21,7 +21,7 @@ A volunteer lends their own GPU to a coordinator. Training happens locally; only
 - An internet connection (downloads are hundreds of MB; mind metered connections)
 - Administrator rights are **not** needed
 
-## Install
+## Install (Windows)
 
 ### Easiest: Modelen-Kurulum.exe
 
@@ -54,7 +54,7 @@ powershell -ExecutionPolicy Bypass -File kur.ps1
 | `-ModelAtla` | Skip the base model download |
 | `-Dene` | Only check prerequisites and print the plan |
 
-## What gets installed?
+## What gets installed? (Windows)
 
 Everything lives in one folder (`%LOCALAPPDATA%\Modelen`); your system Python is untouched.
 
@@ -68,7 +68,7 @@ Everything lives in one folder (`%LOCALAPPDATA%\Modelen`); your system Python is
 
 The script compares the SHA-256 of release assets with `SHA256SUMS`. A **Modelen** shortcut is added to the Start menu.
 
-## Use
+## Use (Windows)
 
 1. Open **Modelen** from the Start menu (Easy mode).
 2. Choose a **coordinator** ([approved directory](https://modelen.tr/koordinatorler)). The coordinator decides which data and mode to train with; read its description before choosing.
@@ -76,12 +76,46 @@ The script compares the SHA-256 of release assets with `SHA256SUMS`. A **Modelen
 
 The worker downloads the coordinator's data shard in the first round and caches it under `%USERPROFILE%\.modelen\veri`; later rounds do not download it again.
 
+## Ubuntu / Linux
+
+There is no graphical app on Linux; the worker runs from the command line. `kur.sh` installs the same things (Python, PyTorch, the base model) without sudo under `~/.local/share/modelen`.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/macbyclp/modelen-tr/main/kur.sh -o kur.sh
+bash kur.sh --dene     # see what it would do first (installs nothing)
+bash kur.sh
+```
+
+Then start the worker:
+
+```bash
+modelen-isci --koordinator https://coordinator.example.org --isci your-pseudonym
+```
+
+| Option | Meaning |
+|---|---|
+| `--hedef` | Install folder (default `~/.local/share/modelen`) |
+| `--surum` | GitHub release tag (default: latest) |
+| `--cuda` | PyTorch wheel: `cu124` (default), `cu121`, `cu126`, `cpu` (testing only) |
+| `--model-atla` | Skip the base model download |
+| `--dene` | Only check prerequisites and print the plan |
+
+Requirements: x86_64 Linux, an NVIDIA GPU (at least 6 GB) and a current driver (≥ 550 for `cu124`; on Ubuntu `sudo ubuntu-drivers install`), ~8 GB free disk, `curl`. To remove: `rm -rf ~/.local/share/modelen ~/.local/bin/modelen-isci`.
+
+:::not
+`kur.sh` is tested automatically on a clean GitHub Ubuntu machine (no GPU, `--cuda cpu`, no model); GPU training is outside that test.
+:::
+
+## macOS
+
+**Not supported.** The worker needs NVIDIA/CUDA today, and Macs have no NVIDIA graphics cards. Apple Silicon (MPS) support could be planned but does not exist yet.
+
 ## Privacy and security
 
 - Training happens on **your GPU**; only the trained adapter goes to the coordinator. No personal data other than the pseudonym is sent.
 - Weights and data from the network are read only as **safetensors** (no pickle, no code execution), and their digests are checked.
 - Think about who a coordinator is before trusting it: it chooses the training data. See [Security](/en/guvenlik/).
 
-## Removal
+## Removal (Windows)
 
 Delete the `%LOCALAPPDATA%\Modelen` folder and the `Modelen.lnk` shortcut in the Start menu. Settings live in `%APPDATA%\Modelen` (API keys are in the Windows credential store).

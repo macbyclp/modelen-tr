@@ -157,6 +157,7 @@ TR["katil"] = dict(
 <p>Tek dosya, çift tıklayın. Python, PyTorch ve taban modeli kurulum programı sizin yerinize kurar; yönetici yetkisi gerekmez.</p>
 <a class="btn accent big" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/Modelen-Kurulum.exe"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7L3 18.5zM11.6 12.6H21V21l-9.4-1.3z"/></svg> İndir</a>
 <p class="indir-alt">Modelen-Kurulum.exe · kendisi küçüktür; kurulum sırasında birkaç GB indirir<br><a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">SHA-256 ile doğrula</a> · <a href="https://docs.modelen.tr/gonullu-kurulumu/" rel="noopener">Kurulum rehberi</a></p>
+<p class="indir-alt"><b>Ubuntu / Linux:</b> <a href="https://docs.modelen.tr/gonullu-kurulumu/#ubuntu-linux" rel="noopener">komut satırı kurulumu</a> · <b>macOS:</b> şimdilik desteklenmiyor (Mac'lerde NVIDIA ekran kartı yok)</p>
 </div>
 <ol class="indir-adim">
 <li><b>İndirin ve çalıştırın.</b> Windows SmartScreen uyarırsa "Daha fazla bilgi", sonra "Yine de çalıştır" deyin (program henüz imzalı değil).</li>
@@ -363,6 +364,7 @@ EN["katil"] = dict(
 <p>One file, double-click. It installs Python, PyTorch and the base model for you; no administrator rights needed.</p>
 <a class="btn accent big" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/Modelen-Kurulum.exe"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7L3 18.5zM11.6 12.6H21V21l-9.4-1.3z"/></svg> Download</a>
 <p class="indir-alt">Modelen-Kurulum.exe · the file itself is small; setup downloads a few GB<br><a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">Verify with SHA-256</a> · <a href="https://docs.modelen.tr/en/gonullu-kurulumu/" rel="noopener">Setup guide</a></p>
+<p class="indir-alt"><b>Ubuntu / Linux:</b> <a href="https://docs.modelen.tr/en/gonullu-kurulumu/#ubuntu-linux" rel="noopener">command-line install</a> · <b>macOS:</b> not supported yet (Macs have no NVIDIA graphics cards)</p>
 </div>
 <ol class="indir-adim">
 <li><b>Download and run it.</b> If Windows SmartScreen warns, choose "More info", then "Run anyway" (the program is not signed yet).</li>
