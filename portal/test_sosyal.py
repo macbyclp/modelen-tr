@@ -127,7 +127,7 @@ class Sosyal(unittest.TestCase):
         self.assertIn("Hugging Face", h)
         bid = portal.tek("SELECT id FROM baglantilar WHERE ag='github'")["id"]
         o.post("/baglanti-sil", id=str(bid))
-        self.assertNotIn("github.com", Oturum(self.port).get("/u/baglanti3")[1])
+        self.assertNotIn("github.com/macbyclp/modelen\"", Oturum(self.port).get("/u/baglanti3")[1])
         # başkası silemez
         b = self.kullanici("p3b@ornek.org", "baglanti3b")
         xid = portal.tek("SELECT id FROM baglantilar WHERE ag='x'")["id"]

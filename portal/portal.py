@@ -592,36 +592,52 @@ class H(BaseHTTPRequestHandler):
             + csrf_alani(self.csrf) + f'<input type="hidden" name="id" value="{g["id"]}"><button class="btn ghost sm" type="submit">Sil</button></form></div>'
             for g in satirlar) + "</div>")
 
+    PANEL_SEKMELER = [("basvuru", "Başvuru"), ("profil", "Profil ve topluluk"), ("gelistirici", "Geliştiriciler"), ("hesap", "Hesap")]
+
     def _panel(self, q, hata="", form=None):
         k = self.kullanici
         b = tek("SELECT * FROM basvurular WHERE kullanici_id=?", k["id"])
+        sekme = (q.get("s") or ["basvuru"])[0]
+        if sekme not in dict(self.PANEL_SEKMELER):
+            sekme = "basvuru"
         ust = pages.phead("Panel", f"Merhaba, {e(k['ad'])}.", e(k["eposta"])) + self._mesaj(q) + hesap.dogrulama_notu(self)
-        if b is None:
-            icerik = "<h2>Koordinatör başvurusu</h2><p>Başvurunuz yönetici tarafından incelenir; sonuç bu sayfada görünür.</p>" + self._basvuru_formu(form, hata)
-        else:
-            icerik = f'<h2>Başvurunuz</h2><p>Durum: {durum_rozeti(b["durum"])}</p>'
-            if b["yonetici_notu"]:
-                icerik += f'<p class="note"><b>Yönetici notu:</b> {e(b["yonetici_notu"])}</p>'
-            if b["durum"] == "onaylandi":
-                icerik += (f'<p>Sayfanız yayında: <a href="/koordinator/{e(b["slug"])}">/koordinator/{e(b["slug"])}</a></p>'
-                           + pages.kv([("Proje", e(b["ad"])), ("Özet", e(b["kisa"])), ("Hugging Face", e(b["hf"]) or "yok"), ("Adres", e(b["adres"]) or "yok")])
-                           + self._gorseller_html(b["id"], b["ad"]))
-                taslak = json.loads(b["taslak"]) if b["taslak"] else None
-                icerik += ('<h2>Bilgilerinizi düzenleyin</h2>'
-                           + ('<p class="note"><b>Düzenlemeniz incelemede.</b> Yönetici onaylayana kadar yayındaki sayfa değişmez; yeniden gönderirseniz önceki düzenlemenin yerine geçer.</p>' if taslak else
-                              '<p class="note">Değişiklikleriniz yönetici onayından sonra yayına girer; o zamana kadar yayındaki sayfa değişmez.</p>')
-                           + self._basvuru_formu(form or {**dict(b), **(taslak or {})}, hata, duzenleme=True))
+        cubuk = '<nav class="panel-sekme" aria-label="Panel bölümleri">' + " ".join(
+            f'<a class="btn{"" if ad == sekme else " ghost"}" href="/panel?s={ad}"' + (' aria-current="page"' if ad == sekme else "") + f">{e(et)}</a>"
+            for ad, et in self.PANEL_SEKMELER) + "</nav>"
+        if sekme == "basvuru":
+            if b is None:
+                icerik = "<h2>Koordinatör başvurusu</h2><p>Başvurunuz yönetici tarafından incelenir; sonuç bu sayfada görünür.</p>" + self._basvuru_formu(form, hata)
             else:
-                icerik += self._basvuru_formu(form or dict(b), hata)
-        icerik += ('<h2>Profil ve topluluk</h2><p><a class="btn" href="/profil">Profilimi düzenle</a> <a class="btn ghost" href="/akis">Topluluk akışı</a></p>'
-                   '<h2>Geliştiriciler için</h2><p><a class="btn ghost" href="/panel/api">API anahtarları</a> <a class="btn ghost" href="https://docs.modelen.tr">Dokümantasyon</a></p>'
-                   '<h2>Hesap</h2><details><summary>Hesabımı ve verilerimi sil</summary><form class="kform" method="post" action="/hesap-sil">'
-                   + csrf_alani(self.csrf) + alan("parola", "Parolanız (onay)", "", "password", 'maxlength="200" required')
-                   + '<p class="note">Hesabınız, başvurunuz ve sayfanız kalıcı olarak silinir.</p><button class="btn" type="submit">Hesabı sil</button></form></details>'
-                   '<form method="post" action="/cikis">' + csrf_alani(self.csrf) + '<button class="btn ghost" type="submit">Çıkış yap</button></form>')
+                icerik = f'<h2>Başvurunuz</h2><p>Durum: {durum_rozeti(b["durum"])}</p>'
+                if b["yonetici_notu"]:
+                    icerik += f'<p class="note"><b>Yönetici notu:</b> {e(b["yonetici_notu"])}</p>'
+                if b["durum"] == "onaylandi":
+                    icerik += (f'<p>Sayfanız yayında: <a href="/koordinator/{e(b["slug"])}">/koordinator/{e(b["slug"])}</a></p>'
+                               + pages.kv([("Proje", e(b["ad"])), ("Özet", e(b["kisa"])), ("Hugging Face", e(b["hf"]) or "yok"), ("Adres", e(b["adres"]) or "yok")])
+                               + self._gorseller_html(b["id"], b["ad"]))
+                    taslak = json.loads(b["taslak"]) if b["taslak"] else None
+                    acik = " open" if (hata or form or taslak) else ""
+                    icerik += (f'<details class="duzenle"{acik}><summary><b>Bilgilerinizi düzenleyin</b></summary>'
+                               + ('<p class="note"><b>Düzenlemeniz incelemede.</b> Yönetici onaylayana kadar yayındaki sayfa değişmez; yeniden gönderirseniz önceki düzenlemenin yerine geçer.</p>' if taslak else
+                                  '<p class="note">Değişiklikleriniz yönetici onayından sonra yayına girer; o zamana kadar yayındaki sayfa değişmez.</p>')
+                               + self._basvuru_formu(form or {**dict(b), **(taslak or {})}, hata, duzenleme=True) + '</details>')
+                else:
+                    icerik += self._basvuru_formu(form or dict(b), hata)
+        elif sekme == "profil":
+            icerik = ('<h2>Profil ve topluluk</h2><p>Profiliniz varsayılan olarak özeldir; paylaşmayı siz seçersiniz.</p>'
+                      '<p><a class="btn" href="/profil">Profilimi düzenle</a> <a class="btn ghost" href="/akis">Topluluk akışı</a></p>')
+        elif sekme == "gelistirici":
+            icerik = ('<h2>Geliştiriciler için</h2><p>Koordinatörünüzü portala programla bağlayın: API anahtarları, nabız ve adres doğrulama.</p>'
+                      '<p><a class="btn" href="/panel/api">API anahtarları</a> <a class="btn ghost" href="https://docs.modelen.tr">Dokümantasyon</a></p>')
+        else:
+            icerik = ('<h2>Hesap</h2>' + (f'<p class="note">{e(hata)}</p>' if hata else "")
+                      + '<form method="post" action="/cikis">' + csrf_alani(self.csrf) + '<button class="btn ghost" type="submit">Çıkış yap</button></form>'
+                      '<details><summary>Hesabımı ve verilerimi sil</summary><form class="kform" method="post" action="/hesap-sil">'
+                      + csrf_alani(self.csrf) + alan("parola", "Parolanız (onay)", "", "password", 'maxlength="200" required')
+                      + '<p class="note">Hesabınız, başvurunuz ve sayfanız kalıcı olarak silinir.</p><button class="btn" type="submit">Hesabı sil</button></form></details>')
         if k["rol"] == "yonetici":
             icerik += '<p><a class="btn accent" href="/yonetim">Yönetici paneli</a></p>'
-        self._html(200, "Panel", self._cerceve(ust + icerik))
+        self._html(200, "Panel", self._cerceve(ust + cubuk + icerik))
 
     # ---- yönetici paneli
     def _yonetim(self, q):
@@ -794,9 +810,9 @@ class H(BaseHTTPRequestHandler):
     def _hesap_sil(self, f):
         k = self.kullanici
         if hiz_asildi(("sil", k["id"]), 5, 600) or not parola_dogru(f.get("parola", ""), k["parola"]):
-            return self._panel({}, "Parola hatalı; hesap silinmedi.")
+            return self._panel({"s": ["hesap"]}, "Parola hatalı; hesap silinmedi.")
         if k["rol"] == "yonetici" and tek("SELECT COUNT(*) n FROM kullanicilar WHERE rol='yonetici'")["n"] <= 1:
-            return self._panel({}, "Son yönetici hesabı silinemez.")
+            return self._panel({"s": ["hesap"]}, "Son yönetici hesabı silinemez.")
         yurut("DELETE FROM kullanicilar WHERE id=?", k["id"])
         self._yonlendir("/giris?m=silindi", [self._cerez("ms", "", 0)])
 
