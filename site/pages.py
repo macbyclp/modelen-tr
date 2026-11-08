@@ -96,7 +96,7 @@ TR["sss"] = dict(
     desc="Modelen hakkında sık sorulan sorular: gönüllülük, ödeme, güvenlik, lisans ve veri.",
     body=phead("SSS", "Sık sorulan sorular.") + """
 <details><summary>Yayınlanmış bir modeliniz var mı?</summary><p>Hayır. Araştırma aşamasındayız. İlk modeli yayınlarken ne olduğunu, nasıl ölçüldüğünü ve sınırlarını açıkça yazacağız.</p></details>
-<details><summary>Gönüllü olmak için ne gerekiyor?</summary><p>İlk hedef, en az 8 GB belleğe sahip bir NVIDIA ekran kartı. Bu değişebilir. İstemci henüz yayınlanmadı; <a href="katil.html">Katıl sayfasından</a> yazabilirsiniz.</p></details>
+<details><summary>Gönüllü olmak için ne gerekiyor?</summary><p>İlk hedef, en az 8 GB belleğe sahip bir NVIDIA ekran kartı. Bu değişebilir. Windows kurulum programı yayında; <a href="katil.html">Katıl sayfasından</a> indirebilirsiniz.</p></details>
 <details><summary>Para ya da kripto kazanır mıyım?</summary><p>Başlangıçta hayır. Katkınız şeffaf bir kayıtta tutulur ve modelin yönünde söz hakkınız olur. Para ya da token dağıtmayı planlamıyoruz.</p></details>
 <details><summary>Bilgisayarıma zarar verir mi?</summary><p>Yoğun ekran kartı kullanımı elektrik tüketimini, ısıyı ve fan gürültüsünü artırır; donanım ömrüne etkisi olabilir. İstemci bunu sınırlayan ayarlar sunacak. Karar sizde; istediğiniz an durdurabilirsiniz.</p></details>
 <details><summary>Kişisel verilerime erişiliyor mu?</summary><p>Tasarım ilkemiz: istemci yalnızca eğitim işini çalıştırır, dosyalarınıza ve kişisel verilerinize erişmez. Yalnızca teknik bilgiler (ör. ekran kartı modeli, bellek, sürüm) paylaşılır. Ayrıntı: <a href="kvkk.html">Aydınlatma Metni</a>.</p></details>
@@ -147,21 +147,32 @@ TR["topluluk-kurallari"] = dict(
 
 TR["katil"] = dict(
     title="Katıl · Modelen",
-    desc="Modelen'e gönüllü ya da katkıcı olarak katılmak için bilgi: istemci henüz yayınlanmadı, ilgilenenler e-posta ile ulaşabilir.",
-    body=phead("Katıl", "Gönüllü istemcisi henüz yok.",
-               "Hazır olunca buradan duyuracağız. Şimdilik yazın, listeye alalım.")
-    + """<div class="cards2">
-<div><h3>Gönüllü ol</h3><ul>
-<li>En az 8 GB belleğe sahip NVIDIA ekran kartı (değişebilir).</li>
+    desc="Modelen'e gönüllü ya da katkıcı olarak katılmak için bilgi: Windows kurulum programını indirin; gereksinimler, kurulum ve dürüst durum.",
+    body=phead("Katıl", "GPU'nuzu açık modellere adayın.",
+               "Kurulum programı yayında. Aşağıdan indirip birkaç dakikada kurabilirsiniz.")
+    + """<p><a class="btn accent" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/Modelen-Kurulum.exe">Windows için indir: Modelen-Kurulum.exe</a> <a class="btn" href="https://docs.modelen.tr/gonullu-kurulumu/" rel="noopener">Kurulum rehberi</a></p>
+<p class="note"><b>Dürüst durum:</b> Modelen araştırma aşamasındadır. Şu an dizinde onaylı bir koordinatör yok; ilk koordinatörler katıldığında <a href="koordinatorler.html">Koordinatörler</a> sayfasında listelenecek ve uygulamadan seçilebilecek. Kurulumu şimdi yapabilir, hazır olduğunda katkı verebilirsiniz.</p>
+<div class="cards2">
+<div><h3>Gereksinimler</h3><ul>
+<li>Windows 10/11 (64 bit).</li>
+<li>NVIDIA ekran kartı (en az 6 GB bellek; 8 GB ile denendi) ve güncel sürücü.</li>
+<li>Yaklaşık 8 GB boş disk ve internet. Yönetici yetkisi gerekmez.</li>
 <li>18 yaşından küçükler için veli ya da vasi onayı.</li>
-<li>Para ya da kripto ödülü yok; katkı kaydı ve söz hakkı var.</li></ul>
-<a class="btn accent" href="mailto:%%EPOSTA%%?subject=Gönüllü%20ilgisi">Haber verin</a></div>
+<li>Para ya da kripto ödülü yok; katkı kaydı ve söz hakkı var.</li></ul></div>
+<div><h3>Kurulum hakkında</h3><ul>
+<li>Program henüz <b>dijital olarak imzalı değil</b>; Windows SmartScreen uyarı gösterebilir. Dosya özetini <a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">sürüm sayfasındaki</a> SHA256SUMS ile karşılaştırabilirsiniz.</li>
+<li>Her şey tek klasöre kurulur (<code>%LOCALAPPDATA%\\Modelen</code>); silerek kaldırılır.</li>
+<li>Eğitim sizin kartınızda yapılır; ağdan yalnızca küçük bir adaptör (~40 MB) geçer. Kaynak kod <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub'da</a> açıktır.</li></ul></div>
+<div><h3>Koordinatör ol</h3><ul>
+<li>Kendi topluluğunuzla eğitim çalıştırın.</li>
+<li>Hangi veriyle eğitileceğini siz seçersiniz.</li></ul>
+<a class="btn" href="koordinator-ol.html">Koordinatör ol</a></div>
 <div><h3>Katkı ver</h3><ul>
 <li>Kod ve dil kıyas testleri (önce Türkçe).</li>
 <li>Veri değerlendirmesi.</li>
 <li>Hukuki ve güvenlik incelemesi.</li></ul>
 <a class="btn" href="katki-sartlari.html">Katkı şartları</a></div></div>
-<p class="note">E-posta adresinizi yalnızca Modelen duyuruları için kullanırız. <a href="kvkk.html">Aydınlatma Metni</a> · <a href="gonullu-sartlari.html">Gönüllü şartları</a></p>""")
+<p class="note">Haber almak için <a href="mailto:%%EPOSTA%%?subject=Gönüllü%20ilgisi">%%EPOSTA%%</a> adresine yazın; e-postanızı yalnızca Modelen duyuruları için kullanırız. <a href="kvkk.html">Aydınlatma Metni</a> · <a href="gonullu-sartlari.html">Gönüllü şartları</a></p>""")
 
 TR["hakkinda"] = dict(
     title="Hakkında · Modelen",
@@ -285,7 +296,7 @@ EN["sss"] = dict(
     desc="Frequently asked questions about Modelen: volunteering, payment, security, licence and data.",
     body=phead("FAQ", "Frequently asked questions.") + """
 <details><summary>Do you have a released model?</summary><p>No. We are at the research stage. When we release a first model we will state clearly what it is, how it was measured and its limits.</p></details>
-<details><summary>What do I need to volunteer?</summary><p>The initial target is an NVIDIA graphics card with at least 8 GB of memory. This may change. The client is not released yet; you can write to us from the <a href="join.html">Join page</a>.</p></details>
+<details><summary>What do I need to volunteer?</summary><p>The initial target is an NVIDIA graphics card with at least 8 GB of memory. This may change. The Windows installer is available; download it from the <a href="join.html">Join page</a>.</p></details>
 <details><summary>Will I earn money or crypto?</summary><p>Not to begin with. Your contribution is kept in a transparent record and you get a say in the model's direction. We do not plan to distribute money or tokens.</p></details>
 <details><summary>Can it harm my computer?</summary><p>Heavy graphics-card use increases power draw, heat and fan noise and may affect hardware lifespan. The client will offer settings to limit this. The decision is yours and you can stop at any time.</p></details>
 <details><summary>Does it access my personal data?</summary><p>Our design principle: the client runs only the training job and does not access your files or personal data. Only technical information (e.g. graphics card model, memory, version) is shared. Details: <a href="kvkk-notice.html">Data Notice</a>.</p></details>
@@ -336,21 +347,32 @@ EN["topluluk-kurallari"] = dict(
 
 EN["katil"] = dict(
     title="Join · Modelen",
-    desc="How to join Modelen as a volunteer or contributor: the client is not released yet; interested people can write by email.",
-    body=phead("Join", "The volunteer client doesn't exist yet.",
-               "We will announce it here when it is ready. For now, write to us and we will put you on the list.")
-    + """<div class="cards2">
-<div><h3>Volunteer</h3><ul>
-<li>An NVIDIA graphics card with at least 8 GB of memory (may change).</li>
+    desc="How to join Modelen as a volunteer or contributor: download the Windows installer; requirements, setup and honest status.",
+    body=phead("Join", "Lend your GPU to open models.",
+               "The installer is available. Download it below and set up in a few minutes.")
+    + """<p><a class="btn accent" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/Modelen-Kurulum.exe">Download for Windows: Modelen-Kurulum.exe</a> <a class="btn" href="https://docs.modelen.tr/en/gonullu-kurulumu/" rel="noopener">Setup guide</a></p>
+<p class="note"><b>Honest status:</b> Modelen is at the research stage. There is no approved coordinator in the directory yet; once the first coordinators join they will be listed on the <a href="koordinatorler.html">Coordinators</a> page and selectable from the app. You can install now and contribute when one is ready.</p>
+<div class="cards2">
+<div><h3>Requirements</h3><ul>
+<li>Windows 10/11 (64-bit).</li>
+<li>An NVIDIA graphics card (at least 6&nbsp;GB of memory; tested with 8&nbsp;GB) and a current driver.</li>
+<li>About 8&nbsp;GB of free disk and internet. No administrator rights needed.</li>
 <li>For under-18s, parental or guardian consent.</li>
-<li>No money or crypto reward; a contribution record and a say in direction.</li></ul>
-<a class="btn accent" href="mailto:%%EPOSTA%%?subject=Volunteer%20interest">Let us know</a></div>
+<li>No money or crypto reward; there is a contribution record and a say in direction.</li></ul></div>
+<div><h3>About the installer</h3><ul>
+<li>The program is <b>not digitally signed yet</b>; Windows SmartScreen may show a warning. Compare the file digest with SHA256SUMS on the <a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">release page</a>.</li>
+<li>Everything is installed in one folder (<code>%LOCALAPPDATA%\\Modelen</code>) and removed by deleting it.</li>
+<li>Training happens on your card; only a small adapter (~40&nbsp;MB) crosses the network. The source is open on <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub</a>.</li></ul></div>
+<div><h3>Become a coordinator</h3><ul>
+<li>Run training with your own community.</li>
+<li>You choose which data to train on.</li></ul>
+<a class="btn" href="become-coordinator.html">Become a coordinator</a></div>
 <div><h3>Contribute</h3><ul>
 <li>Code and language benchmarks (Turkish first).</li>
 <li>Data evaluation.</li>
 <li>Legal and security review.</li></ul>
 <a class="btn" href="contributing.html">Contribution terms</a></div></div>
-<p class="note">We use your email address only for Modelen announcements. <a href="kvkk-notice.html">Data Notice</a> · <a href="volunteer-terms.html">Volunteer terms</a></p>""")
+<p class="note">To stay informed, write to <a href="mailto:%%EPOSTA%%?subject=Volunteer%20interest">%%EPOSTA%%</a>; we use your email only for Modelen announcements. <a href="kvkk-notice.html">KVKK notice</a> · <a href="volunteer-terms.html">Volunteer terms</a></p>""")
 
 EN["hakkinda"] = dict(
     title="About · Modelen",
