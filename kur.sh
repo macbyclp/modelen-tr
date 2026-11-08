@@ -157,7 +157,7 @@ case ":$PATH:" in *":$BIN:"*) ;; *) tamam "UYARI: $BIN PATH'inizde değil; ekley
 
 # ---------------------------------------------------------------- doğrulama
 adim "Doğrulama"
-"$PY" -c "import torch; print('torch', torch.__version__, '| CUDA kullanılabilir:', torch.cuda.is_available()); import transformers, peft, safetensors; print('paketler tamam')" 2>&1 | sed 's/^/    /' || hata "Python ortamı doğrulanamadı."
+"$PY" -c "import torch; print('torch', torch.__version__, '| CUDA available:', torch.cuda.is_available()); import transformers, peft, safetensors; print('packages ok')" 2>&1 | sed 's/^/    /' || hata "Python ortamı doğrulanamadı."
 "$PY" "$HEDEF/istemci/isci.py" --help >/dev/null 2>&1 || hata "isci.py çalıştırılamadı."
 
 printf '\nKurulum tamam: %s\n' "$HEDEF"

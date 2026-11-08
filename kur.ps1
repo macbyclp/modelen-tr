@@ -183,7 +183,8 @@ try {
 
   # ---------------------------------------------------------------- doğrulama
   Adim "Doğrulama"
-  $dogrula = "import torch; print('torch', torch.__version__, '| CUDA kullanılabilir:', torch.cuda.is_available()); import transformers, peft, safetensors; print('paketler tamam')"
+  $env:PYTHONIOENCODING = "utf-8"
+  $dogrula = "import torch; print('torch', torch.__version__, '| CUDA available:', torch.cuda.is_available()); import transformers, peft, safetensors; print('packages ok')"
   & $py -c $dogrula 2>&1 | ForEach-Object { Tamam $_ }
   if ($LASTEXITCODE -ne 0) { Hata "Python ortamı doğrulanamadı." }
 

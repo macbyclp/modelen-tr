@@ -20,6 +20,12 @@ from urllib.parse import parse_qs, urlparse
 
 import torch
 
+for _akis in (sys.stdout, sys.stderr):  # İngilizce Windows'ta konsol cp1252'dir; Türkçe karakterler UnicodeEncodeError verirdi
+    try:
+        _akis.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 sys.path.insert(0, os.path.dirname(__file__))
 import ortak  # noqa: E402
 
