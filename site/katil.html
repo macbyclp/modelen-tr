@@ -32,20 +32,29 @@
 </div></header>
 <main id="icerik">
 <div class="frame"><div class="page"><div class="phead"><p class="label">Katıl</p><h1>GPU'nuzu açık modellere adayın.</h1><p class="lead">Kurulum programı yayında. Gerisini o halleder.</p></div><div class="indir">
+<div class="indir-os">
 <div class="indir-ana">
 <span class="indir-et">Windows 10/11 · 64 bit</span>
-<h2>Modelen Kurulum</h2>
+<h2>Windows</h2>
 <p>Tek dosya, çift tıklayın. Python, PyTorch ve taban modeli kurulum programı sizin yerinize kurar; yönetici yetkisi gerekmez.</p>
 <a class="btn accent big" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/Modelen-Kurulum.exe"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7L3 18.5zM11.6 12.6H21V21l-9.4-1.3z"/></svg> İndir</a>
 <p class="indir-alt">Modelen-Kurulum.exe · kendisi küçüktür; kurulum sırasında birkaç GB indirir<br><a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">SHA-256 ile doğrula</a> · <a href="https://docs.modelen.tr/gonullu-kurulumu/" rel="noopener">Kurulum rehberi</a></p>
-<p class="indir-alt"><b>Ubuntu / Linux:</b> <a href="https://docs.modelen.tr/gonullu-kurulumu/#ubuntu-linux" rel="noopener">komut satırı kurulumu</a> · <b>macOS:</b> şimdilik desteklenmiyor (Mac'lerde NVIDIA ekran kartı yok)</p>
+</div>
+<div class="indir-ana">
+<span class="indir-et">Ubuntu / Linux · x86_64</span>
+<h2>Linux</h2>
+<p>Tek betik. Python, PyTorch ve taban modeli kurar; sudo gerekmez. Grafik arayüz yoktur, işçi komut satırından çalışır.</p>
+<a class="btn accent big" href="https://github.com/macbyclp/modelen-tr/releases/latest/download/kur.sh"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm2.6 4.2L5.5 9.3 8.2 12l-2.7 2.7 1.1 1.1L10.4 12zM11.5 15h6v-1.6h-6z"/></svg> kur.sh</a>
+<p class="indir-alt"><code>bash kur.sh</code> ile çalıştırın · <code>--dene</code> hiçbir şey kurmaz<br><a href="https://github.com/macbyclp/modelen-tr/releases/latest" rel="noopener">SHA-256 ile doğrula</a> · <a href="https://docs.modelen.tr/gonullu-kurulumu/#ubuntu-linux" rel="noopener">Kurulum rehberi</a></p>
+</div>
 </div>
 <ol class="indir-adim">
-<li><b>İndirin ve çalıştırın.</b> Windows SmartScreen uyarırsa "Daha fazla bilgi", sonra "Yine de çalıştır" deyin (program henüz imzalı değil).</li>
+<li><b>İndirin ve çalıştırın.</b> Windows: çift tıklayın; SmartScreen uyarırsa "Daha fazla bilgi", sonra "Yine de çalıştır" deyin (program henüz imzalı değil). Linux: <code>bash kur.sh</code>.</li>
 <li><b>Kurulumu bekleyin.</b> Süre, internet hızınıza bağlıdır.</li>
-<li><b>Modelen'i açın,</b> bir koordinatör seçip AÇIK'a basın.</li>
+<li><b>Başlatın.</b> Windows: Modelen'i açıp bir koordinatör seçin ve AÇIK'a basın. Linux: <code>modelen-isci --koordinator &lt;adres&gt; --isci &lt;takma ad&gt;</code>.</li>
 </ol>
 </div>
+<p class="indir-mac"><b>macOS:</b> şimdilik desteklenmiyor (Mac'lerde NVIDIA ekran kartı yok).</p>
 <p class="note"><b>Dürüst durum:</b> Modelen araştırma aşamasındadır. Şu an dizinde onaylı bir koordinatör yok; ilk koordinatörler katıldığında <a href="koordinatorler.html">Koordinatörler</a> sayfasında listelenecek ve uygulamadan seçilebilecek. Kurulumu şimdi yapabilir, hazır olduğunda katkı verebilirsiniz.</p>
 <div class="cards2">
 <div><h3>Gereksinimler</h3><ul>

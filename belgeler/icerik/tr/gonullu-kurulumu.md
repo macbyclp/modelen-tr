@@ -78,10 +78,10 @@ Betik, sürüm varlıklarının SHA-256 özetini `SHA256SUMS` ile karşılaştı
 
 ## Ubuntu / Linux
 
-Linux'ta grafik arayüz yoktur; işçi komut satırından çalışır. `kur.sh` aynı şeyi (Python, PyTorch, taban model) sudo gerektirmeden `~/.local/share/modelen` altına kurar.
+Linux'ta grafik arayüz yoktur; işçi komut satırından çalışır. `kur.sh`, her sürümle birlikte [Sürümler sayfasında](https://github.com/macbyclp/modelen-tr/releases/latest) SHA-256 özeti (`SHA256SUMS`) ve kaynak kanıtıyla (`gh attestation verify kur.sh --repo macbyclp/modelen-tr`) yayınlanır. `kur.sh` aynı şeyi (Python, PyTorch, taban model) sudo gerektirmeden `~/.local/share/modelen` altına kurar.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/macbyclp/modelen-tr/main/kur.sh -o kur.sh
+curl -fsSL https://github.com/macbyclp/modelen-tr/releases/latest/download/kur.sh -o kur.sh
 bash kur.sh --dene     # önce ne yapacağına bak (hiçbir şey kurmaz)
 bash kur.sh
 ```

@@ -78,10 +78,10 @@ The worker downloads the coordinator's data shard in the first round and caches 
 
 ## Ubuntu / Linux
 
-There is no graphical app on Linux; the worker runs from the command line. `kur.sh` installs the same things (Python, PyTorch, the base model) without sudo under `~/.local/share/modelen`.
+There is no graphical app on Linux; the worker runs from the command line. `kur.sh` is published with every release on the [releases page](https://github.com/macbyclp/modelen-tr/releases/latest) with a SHA-256 digest (`SHA256SUMS`) and build-provenance attestation (`gh attestation verify kur.sh --repo macbyclp/modelen-tr`). `kur.sh` installs the same things (Python, PyTorch, the base model) without sudo under `~/.local/share/modelen`.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/macbyclp/modelen-tr/main/kur.sh -o kur.sh
+curl -fsSL https://github.com/macbyclp/modelen-tr/releases/latest/download/kur.sh -o kur.sh
 bash kur.sh --dene     # see what it would do first (installs nothing)
 bash kur.sh
 ```
