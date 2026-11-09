@@ -46,6 +46,7 @@ ap.add_argument("--dis-mom", type=float, default=0.5)
 ap.add_argument("--aykiri-kat", type=float, default=5.0, help="delta normu medyanın bu katını aşan sonuç elenir (>=3 sonuçta)")
 ap.add_argument("--anahtar", default="", help="boş değilse istekler X-Anahtar başlığı taşımalı; virgülle ayırarak birden çok anahtar verilebilir (işçi başına bir anahtar, tek tek iptal için)")
 ap.add_argument("--sifirdan", action="store_true", help="calisma klasöründeki kayıtlı durumu yok say ve tur 0'dan başla (varsayılan: kayıtlıysa kaldığı yerden devam et)")
+ap.add_argument("--anahtar-basina-isci", type=int, default=0, help="çoklu anahtarla: bir anahtarın kullanabileceği en çok farklı işçi adı; bir ad ilk kullanan anahtara bağlanır (0 = sınırsız). 1 verirseniz bir anahtar = bir oy (kayıt yeniden başlatmada sıfırlanır)")
 ap.add_argument("--en-cok-isci", type=int, default=1000, help="takip edilen en çok farklı işçi adı (bellek sınırı)")
 ap.add_argument("--istek-siniri", type=int, default=240, help="IP başına dakikada en çok istek (0 = sınırsız; ters vekil arkasında X-Forwarded-For kullanılır)")
 ap.add_argument("--vekil", action="store_true", help="güvenilir bir ters vekil (Caddy/nginx) arkasındayım: istemci IP'sini X-Forwarded-For'dan al")
@@ -56,6 +57,9 @@ ap.add_argument("--mod", choices=["cpt", "sft"], default="cpt", help="işçilere
 A = ap.parse_args()
 
 KIL = threading.Lock()
+ANAHTAR_ISCI = {}  # anahtar -> {işçi adları}; ad -> anahtar ILK_ANAHTAR
+ILK_ANAHTAR = {}
+ANAHTAR_KIL = threading.Lock()
 glob = ortak.bayttan(open(A.baslangic, "rb").read())
 buf = {n: torch.zeros_like(t) for n, t in glob.items()}
 glob_bytes = ortak.bayta(glob)
@@ -257,6 +261,19 @@ class H(BaseHTTPRequestHandler):
         if not ISCI_AD.match(isci):
             self._yaz(400, {"hata": "isci adı 1-60 karakter; harf, rakam, _ . - kullanın"})
             return None
+        if A.anahtar_basina_isci > 0 and ANAHTARLAR:  # bir anahtar = en çok N işçi adı; ad başka anahtara geçemez
+            k = self.headers.get("X-Anahtar", "")
+            with ANAHTAR_KIL:
+                sahip = ILK_ANAHTAR.get(isci)
+                if sahip is None:
+                    if len(ANAHTAR_ISCI.get(k, ())) >= A.anahtar_basina_isci:
+                        sahip = ""
+                    else:
+                        ILK_ANAHTAR[isci] = sahip = k
+                        ANAHTAR_ISCI.setdefault(k, set()).add(isci)
+                if sahip != k:
+                    self._yaz(403, {"hata": "bu işçi adı bu anahtara ait değil ya da anahtarın işçi sınırı doldu"})
+                    return None
         return isci
 
     def do_GET(self):

@@ -146,6 +146,21 @@ class Testler(unittest.TestCase):
         self.assertEqual(k.istek("/durum", None, {"X-Anahtar": "yanlis"})[0], 401)
         self.assertEqual(k.istek("/bilgi")[0], 200)  # keşif anahtarsız
 
+    def test_anahtar_basina_isci(self):
+        k = Koordinator(self, "--anahtar", "k1,k2", "--anahtar-basina-isci", "1")
+        h1, h2 = {"X-Anahtar": "k1"}, {"X-Anahtar": "k2"}
+        self.assertEqual(k.istek("/gorev?isci=ali", None, h1)[0], 200)
+        self.assertEqual(k.istek("/gorev?isci=ali", None, h1)[0], 200)      # aynı ad, aynı anahtar: serbest
+        self.assertEqual(k.istek("/gorev?isci=ali2", None, h1)[0], 403)     # anahtar başına tek ad
+        self.assertEqual(k.istek("/gorev?isci=ali", None, h2)[0], 403)      # ad başka anahtara geçemez
+        self.assertEqual(k.istek("/gorev?isci=veli", None, h2)[0], 200)     # ikinci anahtarın kendi adı
+        self.assertEqual(k.istek("/durum", None, h1)[0], 200)               # işçi adı gerektirmeyen yol etkilenmez
+
+    def test_anahtar_basina_isci_kapali_varsayilan(self):
+        k = Koordinator(self, "--anahtar", "k1,k2")
+        for ad in ("a", "b", "c"):
+            self.assertEqual(k.istek(f"/gorev?isci={ad}", None, {"X-Anahtar": "k1"})[0], 200)
+
     def veri_dosyasi(self, k, n=2400, etiketli=False):
         from safetensors.torch import save_file
         t = {"ids": torch.arange(n, dtype=torch.int32) % 1000}
