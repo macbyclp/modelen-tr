@@ -207,9 +207,12 @@ cd "$HEDEF" || exit 1
 . ./koordinator.conf
 anahtar_oku() { sed -n 's/^MODELEN_ANAHTAR=//p' ./koordinator.env | head -n1; }
 curl_k() { local a; a="$(anahtar_oku)"; if [ -n "$a" ]; then curl -s -H "X-Anahtar: $a" "$@"; else curl -s "$@"; fi; }
+env_izin() {  # servis kullanıcısı (systemd) anahtar dosyasını okuyabilmeli, başkaları okuyamamalı; root yeniden yazınca izinler sıfırlanır
+  if [ "$SISTEMSIZ" = "1" ]; then chmod 600 koordinator.env; else chgrp modelen-koordinator koordinator.env 2>/dev/null; chmod 640 koordinator.env; fi
+}
 yeniden() {
   if [ "$SISTEMSIZ" = "1" ]; then "$0" durdur >/dev/null 2>&1 || true; "$0" baslat
-  else systemctl restart modelen-koordinator; fi
+  else systemctl restart modelen-koordinator; systemctl try-restart modelen-nabiz 2>/dev/null || true; fi   # nabız servisi de yeni anahtarı alsın
 }
 case "${1:-}" in
   durum)
@@ -217,8 +220,8 @@ case "${1:-}" in
     else systemctl --no-pager --lines=0 status modelen-koordinator | sed -n '1,4p'; fi
     echo "--- /durum"; curl_k "http://127.0.0.1:$PORT/durum" | head -c 600; echo ;;
   anahtar) a="$(anahtar_oku)"; [ -n "$a" ] && echo "$a" || echo "(anahtar yok: koordinatör AÇIK; herkes katılabilir)" ;;
-  acik)  printf 'MODELEN_ANAHTAR=\n' > koordinator.env; chmod 600 koordinator.env; yeniden; echo "Koordinatör artık AÇIK: anahtar istemez, herkes katılabilir." ;;
-  kapat) a="$(head -c 24 /dev/urandom | base64 | tr -d '=+/\n' | cut -c1-32)"; printf 'MODELEN_ANAHTAR=%s\n' "$a" > koordinator.env; chmod 600 koordinator.env; yeniden; echo "Koordinatör artık KAPALI. Yeni anahtar: $a" ;;
+  acik)  printf 'MODELEN_ANAHTAR=\n' > koordinator.env; env_izin; yeniden; echo "Koordinatör artık AÇIK: anahtar istemez, herkes katılabilir." ;;
+  kapat) a="$(head -c 24 /dev/urandom | base64 | tr -d '=+/\n' | cut -c1-32)"; printf 'MODELEN_ANAHTAR=%s\n' "$a" > koordinator.env; env_izin; yeniden; echo "Koordinatör artık KAPALI. Yeni anahtar: $a" ;;
   dogrulama)
     [ -n "${2:-}" ] || { echo "Kullanım: modelen-koordinator dogrulama <portalın verdiği içerik>"; exit 1; }
     case "$2" in *[!A-Za-z0-9._-]*) echo "Geçersiz içerik (yalnızca harf, rakam, . _ - olmalı)"; exit 1 ;; esac
@@ -236,6 +239,7 @@ After=modelen-koordinator.service
 [Service]
 User=modelen-koordinator
 EnvironmentFile=$HEDEF/nabiz.env
+EnvironmentFile=$HEDEF/koordinator.env
 ExecStart=$HEDEF/.venv/bin/python $HEDEF/istemci/ornekler/modelen_api.py nabiz-dongusu --koordinator http://127.0.0.1:$PORT --aralik 300
 Restart=always
 RestartSec=30
@@ -244,7 +248,7 @@ NoNewPrivileges=true
 WantedBy=multi-user.target
 UNIT
     chown modelen-koordinator "$HEDEF/nabiz.env" 2>/dev/null || true
-    systemctl daemon-reload && systemctl enable --now modelen-nabiz >/dev/null 2>&1 && echo "Nabız servisi başladı (5 dakikada bir). Koordinatörünüz onaylıysa modelen.tr dizininde 'çevrimiçi' görünür." ;;
+    systemctl daemon-reload && systemctl enable modelen-nabiz >/dev/null 2>&1 && systemctl restart modelen-nabiz && echo "Nabız servisi başladı (5 dakikada bir). Koordinatörünüz onaylıysa modelen.tr dizininde 'çevrimiçi' görünür." ;;
   gunluk) if [ "$SISTEMSIZ" = "1" ]; then tail -n 60 koordinator.log; else journalctl -u modelen-koordinator -n 60 --no-pager; fi ;;
   baslat)
     if [ "$SISTEMSIZ" = "1" ]; then nohup ./calistir.sh > koordinator.log 2>&1 & echo $! > koordinator.pid; echo "başlatıldı (pid $(cat koordinator.pid))"

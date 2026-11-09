@@ -17,6 +17,7 @@ sys.path.insert(0, AD)
 sys.path.insert(0, os.path.dirname(AD))
 
 import minimal_koordinator as mk  # noqa: E402
+import modelen_api  # noqa: E402
 import uyum_testi  # noqa: E402
 
 
@@ -88,6 +89,57 @@ class MinimalKoordinator(unittest.TestCase):
         self.assertEqual(json.loads(get(self.url, "/gorev?isci=a")[2]), {"bitti": True})
         self.assertEqual(post(self.url, "/sonuc?isci=a&tur=2", adaptor(1.0)[0])[0], 409)
         self.assertEqual(json.loads(get(self.url, "/durum")[2])["tur"], 2)
+
+class NabizAnahtari(unittest.TestCase):
+    """Nabız betiği anahtar isteyen (kapalı) koordinatörde de çalışmalı; anahtar yoksa /bilgi'ye düşmeli."""
+
+    @classmethod
+    def setUpClass(cls):
+        import http.server
+
+        class H(http.server.BaseHTTPRequestHandler):
+            def log_message(self, *a):
+                pass
+
+            def do_GET(self):
+                if self.path == "/durum":
+                    if self.headers.get("X-Anahtar") != "gizli":
+                        self.send_response(401)
+                        self.end_headers()
+                        return
+                    govde = json.dumps({"tur": 3, "toplam_tur": 9, "isciler": {"a": 1, "b": 2}}).encode()
+                elif self.path == "/bilgi":
+                    govde = json.dumps({"tur": 3, "toplam_tur": 9}).encode()
+                else:
+                    self.send_response(404)
+                    self.end_headers()
+                    return
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(govde)))
+                self.end_headers()
+                self.wfile.write(govde)
+
+        cls.sunucu = http.server.ThreadingHTTPServer(("127.0.0.1", 0), H)
+        cls.url = f"http://127.0.0.1:{cls.sunucu.server_address[1]}"
+        threading.Thread(target=cls.sunucu.serve_forever, daemon=True).start()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.sunucu.shutdown()
+
+    def test_dogru_anahtarla_isci_sayisi_gelir(self):
+        self.assertEqual(modelen_api.koordinator_durumu(self.url, anahtar="gizli"), {"tur": 3, "toplam_tur": 9, "aktif_isci": 2})
+
+    def test_ortam_degiskeninden_anahtar(self):
+        os.environ["MODELEN_ANAHTAR"] = "gizli"
+        try:
+            self.assertEqual(modelen_api.koordinator_durumu(self.url)["aktif_isci"], 2)
+        finally:
+            os.environ.pop("MODELEN_ANAHTAR", None)
+
+    def test_anahtar_yoksa_ya_da_yanlissa_bilgiye_duser(self):
+        self.assertEqual(modelen_api.koordinator_durumu(self.url), {"tur": 3, "toplam_tur": 9})
+        self.assertEqual(modelen_api.koordinator_durumu(self.url, anahtar="yanlis"), {"tur": 3, "toplam_tur": 9})
 
 if __name__ == "__main__":
     unittest.main()

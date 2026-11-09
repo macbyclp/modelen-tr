@@ -76,11 +76,23 @@ class ModelenApi:
         return self._istek("POST", "/koordinator/adres-dogrula/kontrol")
 
 
-def koordinator_durumu(url, zaman=10):
-    """Referans koordinatörün /durum çıktısından nabız alanlarını türetir."""
-    with urllib.request.urlopen(url.rstrip("/") + "/durum", timeout=zaman) as y:
+def koordinator_durumu(url, zaman=10, anahtar=""):
+    """Referans koordinatörün /durum çıktısından nabız alanlarını türetir.
+    Koordinatör anahtar istiyorsa (X-Anahtar) `anahtar` ya da MODELEN_ANAHTAR ortam değişkeni kullanılır; anahtar yoksa/reddedilirse
+    anahtarsız açılan /bilgi'ye (tur, toplam_tur) düşülür; koordinatör ayakta olduğu sürece "durdu" bildirilmez."""
+    anahtar = anahtar or os.environ.get("MODELEN_ANAHTAR", "")
+    taban = url.rstrip("/")
+    try:
+        r = urllib.request.Request(taban + "/durum", headers={"X-Anahtar": anahtar} if anahtar else {})
+        with urllib.request.urlopen(r, timeout=zaman) as y:
+            d = json.loads(y.read().decode("utf-8"))
+        return {"tur": d["tur"], "toplam_tur": d["toplam_tur"], "aktif_isci": len(d.get("isciler", {}))}
+    except urllib.error.HTTPError as e:
+        if e.code not in (401, 403):
+            raise
+    with urllib.request.urlopen(taban + "/bilgi", timeout=zaman) as y:
         d = json.loads(y.read().decode("utf-8"))
-    return {"tur": d["tur"], "toplam_tur": d["toplam_tur"], "aktif_isci": len(d.get("isciler", {}))}
+    return {"tur": d["tur"], "toplam_tur": d["toplam_tur"]}
 
 
 def nabiz_dongusu(api, koordinator_url, aralik=300, once=False):
