@@ -300,8 +300,8 @@ PAGES["gonullu-sartlari"] = dict(
     body="""
 <div class="prose">
 <h1>Volunteer participation terms</h1>
-<p><small>Last updated: %%TARIH_EN%% · Not binding until the client is released · Convenience translation; the Turkish text prevails.</small></p>
-<p>These terms are for people who will provide computing power to Modelen's volunteer training network ("Volunteer"). The volunteer client has not been released; this text shows the planned conditions.</p>
+<p><small>Last updated: %%TARIH_EN%% · Convenience translation; the Turkish text prevails.</small></p>
+<p>These terms are for people who will provide computing power to Modelen's volunteer training network ("Volunteer"). The volunteer client has been released (alpha); this text shows the volunteer participation terms.</p>
 <h2>1. Voluntary and unpaid</h2>
 <p>Participation is optional and unpaid. No money, crypto asset or other payment is made. Your contributions appear in a transparent contribution record (under a pseudonym if you wish).</p>
 <h2>2. Age</h2>

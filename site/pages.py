@@ -63,9 +63,9 @@ TR["nasil-calisir"] = dict(
     ])
     + """<h2>Bilgisayarınıza ne olur</h2>
 <ul>
-<li>İstemci açık kaynak olacak; ne çalıştırdığını okuyabilirsiniz.</li>
-<li>Güncellemeler imzalı olacak.</li>
-<li>İstemci yalnızca eğitim işini çalıştırır; dosyalarınıza ve kişisel verilerinize erişmez. Bu bir tasarım ilkesi; istemci yayınlandığında doğrulanabilir olmalı.</li>
+<li>İstemci açık kaynaktır; ne çalıştırdığını okuyabilirsiniz.</li>
+<li>İmzalı güncellemeler hedefimizdir; şu an sürümler SHA-256 özetiyle ve kaynak kanıtıyla (attestation) doğrulanabilir.</li>
+<li>İstemci yalnızca eğitim işini çalıştırır; dosyalarınıza ve kişisel verilerinize erişmez. Bu bir tasarım ilkesidir; kodu <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub'da</a> okuyup doğrulayabilirsiniz.</li>
 <li>İstediğiniz an durdurursunuz.</li>
 </ul>
 <h2>Bilmediklerimiz</h2>
@@ -80,7 +80,7 @@ TR["yol-haritasi"] = dict(
         ("done", "00 · YAPILDI", "Araştırma", "Küçük modelde seyrek senkronizasyon ve adaptör ölçeğinde DiLoCo simülasyonu."),
         ("done", "01 · İLK DENEY", "İlk dil: Türkçe", "Qwen3-0.6B-Base üzerinde 8 GB'ta LoRA ile kısa sürekli ön eğitim."),
         ("", "02 · SIRADA", "Veri ve ölçüm", "Daha çok Türkçe veri, İngilizce tekrar karışımı, tokenizer, 1,7B taban."),
-        ("", "03", "Gönüllü istemcisi", "Açık kaynak, imzalı güncelleme, katkı doğrulama; alfa."),
+        ("", "03 · YAYINDA (ALFA)", "Gönüllü istemcisi", "Açık kaynak; Windows ve Ubuntu. Sırada: imzalı güncelleme, katkı doğrulama."),
         ("", "04", "Kapalı pilot", "Küçük bir gönüllü grubuyla gerçek ağda eğitim."),
         ("", "05", "Açık ağ ve ilk yayın", "Ağırlıklar, kod ve veri kaynakları listesi; Apache-2.0 / ilgili lisanslarla."),
     ])
@@ -270,9 +270,9 @@ EN["nasil-calisir"] = dict(
     ])
     + """<h2>What happens on your computer</h2>
 <ul>
-<li>The client will be open source; you can read what it runs.</li>
-<li>Updates will be signed.</li>
-<li>The client runs only the training job and does not access your files or personal data. This is a design principle; it must be verifiable once the client is released.</li>
+<li>The client is open source; you can read what it runs.</li>
+<li>Signed updates are our goal; for now releases can be verified with a SHA-256 digest and build-provenance attestation.</li>
+<li>The client runs only the training job and does not access your files or personal data. This is a design principle; you can verify it by reading the code on <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub</a>.</li>
 <li>You can stop at any time.</li>
 </ul>
 <h2>What we don't know</h2>
@@ -287,7 +287,7 @@ EN["yol-haritasi"] = dict(
         ("done", "00 · DONE", "Research", "Sparse synchronisation on a small model and an adapter-scale DiLoCo simulation."),
         ("done", "01 · FIRST EXPERIMENT", "First language: Turkish", "Short continued pre-training with LoRA on Qwen3-0.6B-Base on 8 GB."),
         ("", "02 · NEXT", "Data and evaluation", "More Turkish data, English replay mix, tokenizer, a 1.7B base."),
-        ("", "03", "Volunteer client", "Open source, signed updates, contribution verification; alpha."),
+        ("", "03 · LIVE (ALPHA)", "Volunteer client", "Open source; Windows and Ubuntu. Next: signed updates, contribution verification."),
         ("", "04", "Closed pilot", "Training over a real network with a small group of volunteers."),
         ("", "05", "Open network and first release", "Weights, code and list of data sources under Apache-2.0 / applicable licences."),
     ])

@@ -33,7 +33,7 @@ Derleme: `cd uygulama && cargo build --release` → `target/release/modelen.exe`
 ## Doğrulanmayanlar / dürüst eksikler
 
 - **Arayüz etkileşimleri elle tıklanarak denenmedi** (dosya açma, gönder, katkıya başla, anahtar kasası). Bunlar kodla yazıldı ve altındaki mantık testli, ama düğmelerin gerçek davranışını gözle görmedim.
-- **Kurulunca "her şey çalışır" henüz doğru değil:** eğitim ve yerel model hâlâ Python (`torch`) alt süreci olarak çalışıyor; uygulama bir Python ortamına ve Modelen proje klasörüne (`istemci/`, `sunucu/`, `models/`) ihtiyaç duyar. Gerçek tek-exe kurulum için eğitim çalışma zamanı Rust'a (candle/burn) ya da paketli bir çalışma zamanına taşınmalı: ayrı ve büyük iş. Yükleyici (MSI/imza) da yok.
+- **Kurulum:** `Modelen-Kurulum.exe` (kök dizindeki `kur.ps1`'i gömer) Python 3.12, PyTorch, taban model ve istemci betiklerini `%LOCALAPPDATA%\Modelen` altına kurar; uygulama bu düzeni kendiliğinden bulur. Eğitim ve yerel model hâlâ Python (`torch`) alt süreci olarak çalışır (Rust'a taşınmadı). Kurulum betikleri GitHub'ın temiz makinelerinde GPU'suz sınanır; GPU'lu uçtan uca kurulum ve imza henüz yok.
 - Model kalitesi: 0.6B taban model sohbet asistanı değil (örnek: soruya devam cümlesi yazıyor).
 - Ajan özellikleri (araç çağırma, çok dosyalı düzenleme, satır içi tamamlama), söz dizimi renklendirme, dosya oluşturma/silme, sekmeler: yok.
 - Koordinatör bağlantısı düz HTTP; genel ağ için TLS + hesap + zehirleme önlemi gerekir (`istemci/ISTEMCI.md`).

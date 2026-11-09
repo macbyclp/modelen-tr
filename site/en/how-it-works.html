@@ -37,9 +37,9 @@
 <div class="box">Volunteers<small>each on its own data slice</small></div><span>→</span>
 <div class="box hot">Merge<small>every 25 steps</small></div></div><div class="steps2"><div><div><h3>We start from an open base</h3><p>We take a suitably licensed model; in our first experiment Qwen3-0.6B-Base (Apache-2.0). Training from scratch takes months on one graphics card and does not fit in 8 GB of memory.</p></div></div><div><div><h3>We train only a small adapter</h3><p>With LoRA the base stays frozen. In our experiment the adapter was ≈ 40 MB and peak memory 5.2 GB. That fits on a laptop graphics card.</p></div></div><div><div><h3>We merge updates sparsely</h3><p>Each volunteer works on its own data slice for a while; only adapter differences are collected (DiLoCo). In our simulation about 25 times less data moved.</p></div></div><div><div><h3>We verify contributions</h3><p>Faulty or malicious updates can arrive. Our plan: verify the same work on several machines, check update size and consistency, and add small known test tasks. These mechanisms are still under development.</p></div></div></div><h2>What happens on your computer</h2>
 <ul>
-<li>The client will be open source; you can read what it runs.</li>
-<li>Updates will be signed.</li>
-<li>The client runs only the training job and does not access your files or personal data. This is a design principle; it must be verifiable once the client is released.</li>
+<li>The client is open source; you can read what it runs.</li>
+<li>Signed updates are our goal; for now releases can be verified with a SHA-256 digest and build-provenance attestation.</li>
+<li>The client runs only the training job and does not access your files or personal data. This is a design principle; you can verify it by reading the code on <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub</a>.</li>
 <li>You can stop at any time.</li>
 </ul>
 <h2>What we don't know</h2>

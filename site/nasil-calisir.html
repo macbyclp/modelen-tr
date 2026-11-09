@@ -37,9 +37,9 @@
 <div class="box">Gönüllüler<small>her biri kendi veri dilimiyle</small></div><span>→</span>
 <div class="box hot">Birleştirme<small>25 adımda bir</small></div></div><div class="steps2"><div><div><h3>Açık bir tabandan başlarız</h3><p>Lisansı uygun bir model alırız; ilk deneyimizde Qwen3-0.6B-Base (Apache-2.0). Sıfırdan eğitim tek ekran kartında aylar sürer ve 8 GB belleğe sığmaz.</p></div></div><div><div><h3>Yalnızca küçük bir adaptörü eğitiriz</h3><p>LoRA ile taban donuk kalır. Denememizde adaptör ≈ 40 MB, tepe bellek 5,2 GB oldu. Bu, bir dizüstü ekran kartına sığar.</p></div></div><div><div><h3>Güncellemeleri seyrek birleştiririz</h3><p>Her gönüllü bir süre kendi veri diliminde çalışır; yalnızca adaptör farkları toplanır (DiLoCo). Simülasyonumuzda yaklaşık 25 kat az veri taşındı.</p></div></div><div><div><h3>Katkıyı doğrularız</h3><p>Hatalı ya da kötü niyetli güncelleme gelebilir. Planımız: aynı işi birden fazla makinede doğrulamak, güncelleme büyüklüğünü ve uyumunu denetlemek, bilinen küçük kontrol görevleri eklemek. Bu mekanizmalar henüz geliştirme aşamasında.</p></div></div></div><h2>Bilgisayarınıza ne olur</h2>
 <ul>
-<li>İstemci açık kaynak olacak; ne çalıştırdığını okuyabilirsiniz.</li>
-<li>Güncellemeler imzalı olacak.</li>
-<li>İstemci yalnızca eğitim işini çalıştırır; dosyalarınıza ve kişisel verilerinize erişmez. Bu bir tasarım ilkesi; istemci yayınlandığında doğrulanabilir olmalı.</li>
+<li>İstemci açık kaynaktır; ne çalıştırdığını okuyabilirsiniz.</li>
+<li>İmzalı güncellemeler hedefimizdir; şu an sürümler SHA-256 özetiyle ve kaynak kanıtıyla (attestation) doğrulanabilir.</li>
+<li>İstemci yalnızca eğitim işini çalıştırır; dosyalarınıza ve kişisel verilerinize erişmez. Bu bir tasarım ilkesidir; kodu <a href="https://github.com/macbyclp/modelen-tr" rel="noopener">GitHub'da</a> okuyup doğrulayabilirsiniz.</li>
 <li>İstediğiniz an durdurursunuz.</li>
 </ul>
 <h2>Bilmediklerimiz</h2>

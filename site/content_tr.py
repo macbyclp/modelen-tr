@@ -294,8 +294,8 @@ PAGES["gonullu-sartlari"] = dict(
     body="""
 <div class="prose">
 <h1>Gönüllü katılım şartları</h1>
-<p><small>Son güncelleme: %%TARIH%% · İstemci yayınlanana kadar bağlayıcı değildir.</small></p>
-<p>Bu şartlar, Modelen'in gönüllü eğitim ağına bilgisayar gücü sağlayacak kişiler (“Gönüllü”) içindir. Gönüllü istemcisi henüz yayınlanmamıştır; bu metin planlanan koşulları gösterir.</p>
+<p><small>Son güncelleme: %%TARIH%% </small></p>
+<p>Bu şartlar, Modelen'in gönüllü eğitim ağına bilgisayar gücü sağlayacak kişiler (“Gönüllü”) içindir. Gönüllü istemcisi yayınlanmıştır (alfa sürüm); bu metin gönüllü katılım koşullarını gösterir.</p>
 <h2>1. Gönüllülük ve karşılıksızlık</h2>
 <p>Katılım isteğe bağlıdır ve karşılıksızdır. Para, kripto varlık ya da başka bir ödeme yapılmaz. Katkılarınız şeffaf bir katkı kaydında (isterseniz takma adla) görünür.</p>
 <h2>2. Yaş</h2>

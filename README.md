@@ -225,15 +225,15 @@ modelen/
 
 ## Dürüst durum ve yol haritası
 
-**Çalışan:** protokol uçtan uca (tek makinede), Rust uygulama (derleniyor, testler geçiyor, ekran görüntüleri gerçek), portal canlıda, site yayında.
+**Çalışan:** protokol uçtan uca (tek makinede ve internet üzerinden VDS↔PC), Rust uygulama (derleniyor, testler geçiyor), portal ve API canlıda, site ve [docs](https://docs.modelen.tr) yayında, **gönüllü kurulumu yayında (alfa)**: Windows için `Modelen-Kurulum.exe`, Ubuntu için `kur.sh` ([Sürümler](../../releases/latest)).
 
 **Henüz yok / eksik:**
 
 - [ ] Yayınlanmış model. 0,6B taban sohbet asistanı değil; talimat ayarı (SFT) ayrı bir adım.
-- [ ] Eğitimin Python'dan çıkması (şimdi alt süreç; tek-exe kurulum, yükleyici ve imza yok).
+- [ ] Eğitimin Python'dan çıkması (şimdi alt süreç; Windows kurulum programı ve Ubuntu betiği Python ortamını kendisi kurar, ama imzalı sürüm yok).
 - [ ] Koordinatör tarafında kimlik doğrulama, gerçek zehirlenme koruması (tekrarlı doğrulama), TLS.
 - [ ] Çok tohumlu ve IID olmayan veriyle deneyler; DiLoCo → DDP uyumu sorusu.
-- [ ] Gerçek gönüllülerle (farklı donanımlar) uçtan uca deneme.
+- [ ] Gerçek gönüllülerle (farklı donanımlar) uçtan uca deneme. (Kurulum betikleri GitHub'ın temiz Windows/Ubuntu makinelerinde GPU'suz sınanıyor; GPU'lu gerçek eğitim henüz değil.)
 - [ ] Portalda İngilizce arayüz, iki adımlı doğrulama. (E-posta doğrulama, şifre sıfırlama ve başvuru bildirimleri SMTP ile **yapıldı**.)
 - [ ] Avukat incelemesi (yasal metinlerden "taslak" uyarısı kaldırıldı; hukuki inceleme yapılmadı).
 - [ ] Uygulamada tüm düğmelerin elle test edilmesi (altındaki mantık testli; etkileşimler görsel olarak denendi ama kapsamlı el testi yok).

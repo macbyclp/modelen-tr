@@ -9,8 +9,8 @@ ozet: Windows setup for lending your GPU to a coordinator: requirements, the ins
 
 A volunteer lends their own GPU to a coordinator. Training happens locally; only the small LoRA adapter (~40 MB) and the data shard served by the coordinator cross the network.
 
-:::uyari
-**Status: the install script is written but has not yet been tested end to end on a clean machine**, and the release packages (`modelen.exe`, `modelen-istemci.zip`) will be produced with the first tagged release. Try the script at your own risk, with `-Dene` first; report problems on [GitHub](https://github.com/macbyclp/modelen-tr/issues).
+:::not
+**Status (alpha):** The install scripts are tested automatically on clean GitHub Windows and Ubuntu machines (no GPU, no model). Real GPU training and the model download are outside that test; if you run into problems, report them on [GitHub](https://github.com/macbyclp/modelen-tr/issues). The coordinators volunteers connect to are run by the community; see the [approved directory](https://modelen.tr/koordinatorler).
 :::
 
 ## Requirements (Windows)

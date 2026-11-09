@@ -9,8 +9,8 @@ ozet: GPU'nuzu bir koordinatöre adamak için Windows kurulumu: gereksinimler, k
 
 Gönüllü, kendi GPU'sunu bir koordinatöre adayan kişidir. Eğitim yerelde yapılır; ağdan yalnızca küçük LoRA adaptörü (~40 MB) ve koordinatörün sunduğu veri dilimi geçer.
 
-:::uyari
-**Durum: kurulum betiği yazıldı ama henüz temiz bir makinede uçtan uca denenmedi**, sürüm paketleri (`modelen.exe`, `modelen-istemci.zip`) ise ilk etiketli sürümle birlikte üretilecek. Betiği kendi sorumluluğunuzda ve önce `-Dene` ile deneyin; sorun yaşarsanız [GitHub'da](https://github.com/macbyclp/modelen-tr/issues) bildirin.
+:::not
+**Durum (alfa):** Kurulum betikleri GitHub'ın temiz Windows ve Ubuntu makinelerinde otomatik olarak sınanır (GPU'suz, modelsiz). GPU'lu gerçek eğitim ve model indirme bu testin kapsamında değildir; sorun yaşarsanız [GitHub'da](https://github.com/macbyclp/modelen-tr/issues) bildirin. Gönüllülerin bağlanacağı koordinatörler topluluk tarafından işletilir; [onaylı dizine](https://modelen.tr/koordinatorler) bakın.
 :::
 
 ## Gereksinimler (Windows)
