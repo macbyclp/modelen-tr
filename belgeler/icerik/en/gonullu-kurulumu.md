@@ -76,7 +76,7 @@ The script compares the SHA-256 of release assets with `SHA256SUMS`. A **Modelen
 
 The worker downloads the coordinator's data shard in the first round and caches it under `%USERPROFILE%\.modelen\veri`; later rounds do not download it again.
 
-## Ubuntu / Linux
+## Linux (Ubuntu, Arch and others)
 
 There is no graphical app on Linux; the worker runs from the command line. `kur.sh` is published with every release on the [releases page](https://github.com/macbyclp/modelen-tr/releases/latest) with a SHA-256 digest (`SHA256SUMS`) and build-provenance attestation (`gh attestation verify kur.sh --repo macbyclp/modelen-tr`). `kur.sh` installs the same things (Python, PyTorch, the base model) without sudo under `~/.local/share/modelen`.
 
@@ -100,10 +100,10 @@ modelen-isci --koordinator https://coordinator.example.org --isci your-pseudonym
 | `--model-atla` | Skip the base model download |
 | `--dene` | Only check prerequisites and print the plan |
 
-Requirements: x86_64 Linux, an NVIDIA GPU (at least 6 GB) and a current driver (≥ 550 for `cu124`; on Ubuntu `sudo ubuntu-drivers install`), ~8 GB free disk, `curl`. To remove: `rm -rf ~/.local/share/modelen ~/.local/bin/modelen-isci`.
+Requirements: x86_64 Linux (glibc), an NVIDIA GPU (at least 6 GB) and a current driver (≥ 550 for `cu124`), ~8 GB free disk, `curl`. Driver install: `sudo ubuntu-drivers install` on Ubuntu, `sudo pacman -S nvidia-open nvidia-utils` on Arch, RPM Fusion `akmod-nvidia` on Fedora; if no GPU is found the script prints the matching hint for your distribution. To remove: `rm -rf ~/.local/share/modelen ~/.local/bin/modelen-isci`.
 
 :::not
-`kur.sh` is tested automatically on a clean GitHub Ubuntu machine (no GPU, `--cuda cpu`, no model); GPU training is outside that test.
+`kur.sh` is tested automatically on a clean GitHub **Ubuntu** machine and an **Arch Linux** container (no GPU, `--cuda cpu`, no model); GPU training is outside that test. Other glibc-based distributions such as Debian or Fedora will most likely work but are untested. musl-based distributions (Alpine) are not supported.
 :::
 
 ## macOS

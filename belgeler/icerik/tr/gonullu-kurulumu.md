@@ -76,7 +76,7 @@ Betik, sürüm varlıklarının SHA-256 özetini `SHA256SUMS` ile karşılaştı
 
 İşçi, koordinatörün sunduğu veri dilimini ilk turda indirip `%USERPROFILE%\.modelen\veri` altında önbelleğe alır; sonraki turlarda yeniden indirmez.
 
-## Ubuntu / Linux
+## Linux (Ubuntu, Arch ve diğerleri)
 
 Linux'ta grafik arayüz yoktur; işçi komut satırından çalışır. `kur.sh`, her sürümle birlikte [Sürümler sayfasında](https://github.com/macbyclp/modelen-tr/releases/latest) SHA-256 özeti (`SHA256SUMS`) ve kaynak kanıtıyla (`gh attestation verify kur.sh --repo macbyclp/modelen-tr`) yayınlanır. `kur.sh` aynı şeyi (Python, PyTorch, taban model) sudo gerektirmeden `~/.local/share/modelen` altına kurar.
 
@@ -100,10 +100,10 @@ modelen-isci --koordinator https://koordinator.ornek.org --isci takma-adiniz
 | `--model-atla` | Taban modeli indirme |
 | `--dene` | Yalnızca ön koşulları denetle ve planı yaz |
 
-Gereksinimler: x86_64 Linux, NVIDIA GPU (en az 6 GB) ve güncel sürücü (`cu124` için ≥ 550; Ubuntu'da `sudo ubuntu-drivers install`), ~8 GB boş disk, `curl`. Kaldırmak için `rm -rf ~/.local/share/modelen ~/.local/bin/modelen-isci`.
+Gereksinimler: x86_64 Linux (glibc), NVIDIA GPU (en az 6 GB) ve güncel sürücü (`cu124` için ≥ 550), ~8 GB boş disk, `curl`. Sürücü kurulumu: Ubuntu'da `sudo ubuntu-drivers install`, Arch'ta `sudo pacman -S nvidia-open nvidia-utils`, Fedora'da RPM Fusion `akmod-nvidia`; betik, GPU bulamazsa dağıtımınıza uygun ipucunu kendisi gösterir. Kaldırmak için `rm -rf ~/.local/share/modelen ~/.local/bin/modelen-isci`.
 
 :::not
-`kur.sh`, GitHub'ın temiz bir Ubuntu makinesinde (GPU'suz, `--cuda cpu`, modelsiz) otomatik olarak sınanır; GPU'lu eğitim bu testin kapsamında değildir.
+`kur.sh`, GitHub'ın temiz bir **Ubuntu** makinesinde ve bir **Arch Linux** konteynerinde (GPU'suz, `--cuda cpu`, modelsiz) otomatik olarak sınanır; GPU'lu eğitim bu testin kapsamında değildir. Debian, Fedora gibi diğer glibc tabanlı dağıtımlarda büyük olasılıkla çalışır ama sınanmamıştır. musl tabanlı dağıtımlar (Alpine) desteklenmez.
 :::
 
 ## macOS
