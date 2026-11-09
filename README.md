@@ -11,6 +11,7 @@
   <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-1f6feb?style=for-the-badge">
   <img alt="Status" src="https://img.shields.io/badge/status-research%20stage-f0a500?style=for-the-badge">
   <img alt="Rust" src="https://img.shields.io/badge/app-Rust%20%2F%20egui-b7410e?style=for-the-badge&logo=rust&logoColor=white">
+  <a href="https://www.npmjs.com/package/modelen"><img alt="npm" src="https://img.shields.io/npm/v/modelen?style=for-the-badge&logo=npm&color=cb3837"></a>
   <img alt="Python" src="https://img.shields.io/badge/research-Python%20%2F%20PyTorch-3776ab?style=for-the-badge&logo=python&logoColor=white">
 </p>
 
@@ -178,6 +179,14 @@ flowchart TB
 
 ## Quick start
 
+**Volunteer install (Windows 10/11 or Linux x86_64, NVIDIA GPU):**
+
+```bash
+npx modelen
+```
+
+This downloads the official installer from the latest [release](../../releases/latest), verifies its SHA-256 against `SHA256SUMS`, and runs it (`npx modelen --dene` / `-Dene` on Windows only checks prerequisites and installs nothing; `npx modelen coordinator` sets up a coordinator on a Linux server). Requires Node.js 18+. Package: [`modelen` on npm](https://www.npmjs.com/package/modelen) (source in [`npm/`](npm/)). Prefer not to use npm? Download `Modelen-Kurulum.exe` or `kur.sh` from the [Releases](../../releases/latest) page.
+
 **Desktop app** (Windows; Rust stable):
 
 ```bash
@@ -201,6 +210,7 @@ modelen/            (web side — site, portal, docs — in a separate private r
 ├─ uygulama/   Rust desktop app (egui)
 ├─ kurulum/    Modelen-Kurulum.exe (Rust installer that embeds kur.ps1)
 ├─ kur.ps1 · kur.sh   Windows and Linux (Ubuntu, Arch) install scripts
+├─ npm/        the `modelen` npm package (npx modelen: verified installer launcher)
 ├─ tools/      release packaging (paketle.py)
 ├─ .github/    release pipeline and install tests (CI)
 ├─ ide/        old VS Code prototype (unused)

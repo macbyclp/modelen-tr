@@ -11,6 +11,7 @@
   <img alt="Lisans" src="https://img.shields.io/badge/lisans-Apache--2.0-1f6feb?style=for-the-badge">
   <img alt="Durum" src="https://img.shields.io/badge/durum-ara%C5%9Ft%C4%B1rma%20a%C5%9Famas%C4%B1-f0a500?style=for-the-badge">
   <img alt="Rust" src="https://img.shields.io/badge/uygulama-Rust%20%2F%20egui-b7410e?style=for-the-badge&logo=rust&logoColor=white">
+  <a href="https://www.npmjs.com/package/modelen"><img alt="npm" src="https://img.shields.io/npm/v/modelen?style=for-the-badge&logo=npm&color=cb3837"></a>
   <img alt="Python" src="https://img.shields.io/badge/ara%C5%9Ft%C4%B1rma-Python%20%2F%20PyTorch-3776ab?style=for-the-badge&logo=python&logoColor=white">
 </p>
 
@@ -174,6 +175,14 @@ flowchart TB
 
 ## Hızlı başlangıç
 
+**Gönüllü kurulumu (Windows 10/11 ya da Linux x86_64, NVIDIA ekran kartı):**
+
+```bash
+npx modelen
+```
+
+Bu komut resmi kurulum programını son [sürümden](../../releases/latest) indirir, SHA-256'sını `SHA256SUMS` ile doğrular ve çalıştırır (`npx modelen --dene` / Windows'ta `-Dene` hiçbir şey kurmaz, yalnızca ön koşulları denetler; `npx modelen coordinator` bir Linux sunucusunda koordinatör kurar). Node.js 18+ gerekir. Paket: [npm'de `modelen`](https://www.npmjs.com/package/modelen) (kaynak: [`npm/`](npm/)). npm kullanmak istemezseniz [Sürümler](../../releases/latest) sayfasından `Modelen-Kurulum.exe` ya da `kur.sh` dosyasını indirebilirsiniz.
+
 **Masaüstü uygulaması** (Windows; Rust stable):
 
 ```bash
@@ -198,6 +207,7 @@ modelen/            (web tarafı — site, portal, docs — ayrı özel depoda)
 ├─ uygulama/   Rust masaüstü uygulaması (egui)
 ├─ kurulum/    Modelen-Kurulum.exe (kur.ps1'i gömen Rust kurulum programı)
 ├─ kur.ps1 · kur.sh   Windows ve Linux (Ubuntu, Arch) kurulum betikleri
+├─ npm/        `modelen` npm paketi (npx modelen: doğrulamalı kurulum başlatıcı)
 ├─ tools/      sürüm paketleme (paketle.py)
 ├─ .github/    sürüm hattı ve kurulum testleri (CI)
 ├─ ide/        eski VS Code prototipi (kullanılmıyor)
