@@ -1,0 +1,15 @@
+{
+  "name": "modelen",
+  "version": "0.5.7",
+  "description": "Install Modelen, the community-trained open AI volunteer client, with one command: npx modelen",
+  "bin": { "modelen": "bin/modelen.js" },
+  "files": ["bin", "lib", "README.md"],
+  "scripts": { "test": "node --test test/" },
+  "engines": { "node": ">=18" },
+  "os": ["win32", "linux"],
+  "keywords": ["modelen", "volunteer-computing", "distributed-training", "lora", "diloco", "open-source-ai"],
+  "license": "Apache-2.0",
+  "homepage": "https://modelen.tr",
+  "repository": { "type": "git", "url": "git+https://github.com/macbyclp/modelen-tr.git", "directory": "npm" },
+  "bugs": { "url": "https://github.com/macbyclp/modelen-tr/issues" }
+}
