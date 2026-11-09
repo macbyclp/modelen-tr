@@ -1,141 +1,145 @@
 <p align="center">
-  <img src="docs/assets/kapak.png" alt="Modelen: topluluğun birlikte eğittiği açık yapay zekâ" width="100%">
+  <img src="docs/assets/kapak-en.png" alt="Modelen: open AI trained together by the community" width="100%">
 </p>
 
 <p align="center">
-  <b>Türkçe</b> · <a href="README.en.md">English</a>
+  <a href="README.tr.md">Türkçe</a> · <b>English</b>
 </p>
 
 <p align="center">
   <a href="https://modelen.tr"><img alt="Site" src="https://img.shields.io/badge/site-modelen.tr-e30a17?style=for-the-badge"></a>
-  <img alt="Lisans" src="https://img.shields.io/badge/lisans-Apache--2.0-1f6feb?style=for-the-badge">
-  <img alt="Durum" src="https://img.shields.io/badge/durum-ara%C5%9Ft%C4%B1rma%20a%C5%9Famas%C4%B1-f0a500?style=for-the-badge">
-  <img alt="Rust" src="https://img.shields.io/badge/uygulama-Rust%20%2F%20egui-b7410e?style=for-the-badge&logo=rust&logoColor=white">
-  <img alt="Python" src="https://img.shields.io/badge/ara%C5%9Ft%C4%B1rma-Python%20%2F%20PyTorch-3776ab?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-1f6feb?style=for-the-badge">
+  <img alt="Status" src="https://img.shields.io/badge/status-research%20stage-f0a500?style=for-the-badge">
+  <img alt="Rust" src="https://img.shields.io/badge/app-Rust%20%2F%20egui-b7410e?style=for-the-badge&logo=rust&logoColor=white">
+  <img alt="Python" src="https://img.shields.io/badge/research-Python%20%2F%20PyTorch-3776ab?style=for-the-badge&logo=python&logoColor=white">
 </p>
 
 <p align="center">
-  <b>Boştaki ekran kartlarını birleştirip açık dil modellerini birlikte eğitiyoruz. İlk dilimiz Türkçe. Sonuç açık lisansla, herkesin kullanımına.</b><br>
-  <sub>Dürüst başlangıç: bu bir araştırma projesi. Yayınlanmış bir modelimiz henüz yok; bu depo, şimdiye kadar <i>ne yaptığımızı, ne ölçtüğümüzü ve ne ölçemediğimizi</i> gösteriyor.</sub>
+  <b>We pool idle GPUs to train open language models together. Our first language is Turkish. The result is released under an open license for everyone to use.</b><br>
+  <sub>An honest start: this is a research project. We have no released model yet; this repository shows <i>what we did, what we measured and what we could not measure</i> so far.</sub>
 </p>
 
 <p align="center">
-  <img src="docs/assets/tur.gif" alt="Modelen turu: site, masaüstü uygulaması, portal" width="760">
+  <img src="docs/assets/tur-en.gif" alt="Modelen tour: website, desktop app, portal (app and portal UIs are Turkish)" width="760">
 </p>
 
 ---
 
-## İçindekiler
+## Contents
 
-[Fikir](#fikir) · [Nasıl çalışır](#nasıl-çalışır) · [Ne ölçtük](#ne-ölçtük-ve-ne-ölçemedik) · [Bileşenler](#bileşenler) · [Güvenlik ve gizlilik](#güvenlik-ve-gizlilik-ilkeleri) · [Hızlı başlangıç](#hızlı-başlangıç) · [Depo haritası](#depo-haritası) · [Sürümler ve tarihçe](#sürümler-ve-tarihçe) · [Dürüst durum](#dürüst-durum-ve-yol-haritası) · [English](#english-summary)
+[Idea](#idea) · [How it works](#how-it-works) · [What we measured](#what-we-measured-and-what-we-could-not) · [Components](#components) · [Security and privacy](#security-and-privacy-principles) · [Quick start](#quick-start) · [Repository map](#repository-map) · [Releases and history](#releases-and-history) · [Honest status](#honest-status-and-roadmap)
 
-## Fikir
+> Every in-repo document has an English version (`*.en.md`). The docs site also has English pages: [docs.modelen.tr](https://docs.modelen.tr).
 
-Her dilin açık, yerelde çalışabilen ve şeffaf biçimde eğitilmiş dil modellerine ihtiyacı var. Büyük bir sunucu salonumuz yok; ama binlerce insanın bilgisayarında günün çoğunda boş duran ekran kartları var.
+## Idea
 
-**Modelen**, bu boş GPU'ları gönüllü katkıyla birleştirmeyi hedefliyor:
+Every language needs open, locally runnable, transparently trained language models. We do not have a server room; but thousands of people have GPUs that sit idle for most of the day.
 
-- 🔓 **Açık:** kod ve model ağırlıkları Apache-2.0. Veri kaynakları ve lisansları açıkça listelenir.
-- 🌍 **Dil odaklı, ilk dil Türkçe:** her dilin yapısını ölçerek ilerliyoruz; pilot dilimiz Türkçe (tokenizer, bayt başına bit, TurkishMMLU). Sırada diğer diller var.
-- 🤝 **Topluluk sahipli:** katkılar kayıt altında; para ya da kripto ödülü yok, söz hakkı ve şeffaflık var.
-- 🔒 **Gizliliğe saygılı:** gönüllünün bilgisayarında yalnızca *sabit bir eğitim betiği* çalışır; dosyalara erişmez, keyfi kod çalıştırılmaz.
-- 📉 **Haberleşme dostu:** tüm modeli değil yalnızca küçük bir **LoRA adaptörünü** (~40 MB) taşıyoruz.
+**Modelen** aims to pool these idle GPUs through voluntary contribution:
 
-> **Şirket yok.** Bu bir topluluk girişimi: *Modelen Alternatif Eğitim Topluluğu*.
+- 🔓 **Open:** code and model weights are Apache-2.0. Data sources and their licenses are listed openly.
+- 🌍 **Language-focused, Turkish first:** we advance by measuring each language's structure; our pilot language is Turkish (tokenizer, bits per byte, TurkishMMLU). Other languages come next.
+- 🤝 **Community-owned:** contributions are recorded; there are no money or crypto rewards, there is a voice and transparency.
+- 🔒 **Privacy-respecting:** only a *fixed training script* runs on a volunteer's computer; it does not access files, and no arbitrary code is executed.
+- 📉 **Communication-friendly:** instead of the whole model we carry only a small **LoRA adapter** (~40 MB).
 
-<p align="center"><img src="docs/assets/logo-nabiz.gif" alt="Modelen logosu: Halay Halkası" width="220"><br><sub>Logo: <b>Halay Halkası</b>. Beş kol, el ele tutuşmuş; beş fener. Boştaki GPU'ların ortak ışığı.</sub></p>
+> **No company.** This is a community initiative: the *Modelen Alternative Training Community*.
 
-## Nasıl çalışır
+<p align="center"><img src="docs/assets/logo-nabiz.gif" alt="Modelen logo: Halay Ring" width="220"><br><sub>Logo: the <b>Halay Ring</b>. Five arms, hand in hand; five lanterns. The shared light of idle GPUs.</sub></p>
 
-Yöntem iki bilinen fikri birleştirir: **LoRA** (taban modeli dondurup yalnızca küçük bir adaptör eğitmek) ve **DiLoCo** (işçilerin her adımda değil, her *H* adımda bir senkronize olması). Sonuç: 8 GB'lık tek bir tüketici kartı katkı verebilir ve ağda dolaşan veri ~25 kat azalır.
+## How it works
+
+The method combines two known ideas: **LoRA** (freeze the base model and train only a small adapter) and **DiLoCo** (workers synchronise every *H* steps, not every step). The result: a single 8 GB consumer card can contribute, and the data moving over the network drops about 25×.
 
 ```mermaid
 flowchart LR
-  subgraph G["Gönüllünün bilgisayarı"]
-    D[("Veri dilimi<br/>yerelde kalır")] --> T["LoRA eğitimi<br/>H = 25 adım"]
-    M["Dondurulmuş taban<br/>Qwen3-0.6B-Base"] --> T
+  subgraph G["Volunteer's computer"]
+    D[("Data shard<br/>stays local")] --> T["LoRA training<br/>H = 25 steps"]
+    M["Frozen base<br/>Qwen3-0.6B-Base"] --> T
   end
-  T -- "yalnızca adaptör<br/>~40 MB" --> K{{"Koordinatör"}}
-  K -- "ortalama + dış adım<br/>(Nesterov, lr 1.0, m 0.5)" --> N["Yeni global adaptör"]
-  N -- "indir" --> T
-  K --> R[("tur-N.safetensors<br/>her turun kaydı")]
+  T -- "adapter only<br/>~40 MB" --> K{{"Coordinator"}}
+  K -- "average + outer step<br/>(Nesterov, lr 1.0, m 0.5)" --> N["New global adapter"]
+  N -- "download" --> T
+  K --> R[("round-N.safetensors<br/>record of every round")]
 ```
 
-1. Koordinatör bir **görev** verir (hangi veri dilimi, kaç adım, hangi öğrenme oranı).
-2. Gönüllü, global adaptörü indirir (sha256 doğrulanır), **H adım yerelde eğitir**, yeni adaptörü yükler.
-3. Koordinatör sonuçları doğrular (şekil, tür, NaN, aykırı norm), ortalar ve **dış adımı** uygular.
-4. Tur biter, yeni global adaptör kaydedilir; döngü sürer.
+1. The coordinator hands out a **task** (which data shard, how many steps, which learning rate).
+2. The volunteer downloads the global adapter (sha256 verified), **trains H steps locally**, and uploads the new adapter.
+3. The coordinator validates the results (shape, type, NaN, outlier norm), averages them and applies the **outer step**.
+4. The round ends, the new global adapter is saved; the loop continues.
 
-Ağdan yalnızca **safetensors** okunur: `pickle` yok, kod çalıştırılamaz. Ayrıntılı protokol ve dürüst eksik listesi: [`istemci/ISTEMCI.md`](istemci/ISTEMCI.md).
+Only **safetensors** is read from the network: no `pickle`, no code can be executed. Detailed protocol and an honest list of gaps: [`istemci/ISTEMCI.en.md`](istemci/ISTEMCI.en.md).
 
-## Ne ölçtük (ve ne ölçemedik)
+## What we measured (and what we could not)
 
-Her şey küçük ölçekte, **tek RTX 4060 Laptop (8 GB)** üstünde. Ham çıktılar ve betikler bu depoda. Tam yöntem ve sınırlar: [`ADAPTASYON.md`](ADAPTASYON.md) ve [sitedeki Ölçümler sayfası](https://modelen.tr/olcumler.html).
+Everything is small scale, on a **single RTX 4060 Laptop (8 GB)**. Raw outputs and scripts are in this repository. Full method and limits: [`ADAPTASYON.en.md`](ADAPTASYON.en.md) and the [Measurements page on the site](https://modelen.tr/olcumler.html).
 
 <p align="center">
-  <img src="docs/assets/grafik-diloco.png" alt="Adaptör-DiLoCo ile her adımda senkron referansın bit/bayt eğrisi neredeyse üst üste" width="49%">
-  <img src="docs/assets/grafik-lora.png" alt="20 dakikalık LoRA: Türkçede bayt başına bit düştü, İngilizcede hafif yükseldi" width="49%">
+  <img src="docs/assets/grafik-diloco-en.png" alt="With adapter-DiLoCo, the bits/byte curve almost overlaps the reference that synchronises every step" width="49%">
+  <img src="docs/assets/grafik-lora-en.png" alt="20-minute LoRA: bits per byte dropped in Turkish and rose slightly in English" width="49%">
 </p>
 
-| # | Soru | Sonuç | Güvenilirlik |
+| # | Question | Result | Reliability |
 |---|---|---|---|
-| 1 | Seyrek senkronizasyon (oyuncak GPT) ne kadar kaybettirir? | +0,07…+0,23 nat (veriye ve *H*'ye göre) | 3 tohum, küçük model |
-| 2 | 20 dakikalık LoRA Türkçeyi iyileştirir mi? | Türkçe bit/bayt **1,297 → 1,241 (−%4,3)**; İngilizce +%1,4 (hafif unutma); **TurkishMMLU değişmedi** (%35,6 → %34,7, gürültü içinde) | tek koşu, tek tohum |
-| 3 | Adaptörde seyrek senkronizasyonun bedeli? | 8 turda fark **0,0011 bit/bayt (−%0,09)**; **~25× az** veri (≈32 GB → ≈1,3 GB) | tek tohum, 200 adım, 60 bin token ölçüm |
-| 4 | Protokol uçtan uca çalışıyor mu? | 2 işçi × 3 tur, hiçbir sonuç reddedilmedi; 1,2714 → 1,2613 bit/bayt | tek makine, tek tohum |
+| 1 | How much does sparse synchronisation (toy GPT) cost? | +0.07…+0.23 nat (depending on data and *H*) | 3 seeds, small model |
+| 2 | Does a 20-minute LoRA improve Turkish? | Turkish bits/byte **1.297 → 1.241 (−4.3%)**; English +1.4% (mild forgetting); **TurkishMMLU unchanged** (35.6% → 34.7%, within noise) | single run, single seed |
+| 3 | What is the cost of sparse synchronisation on the adapter? | After 8 rounds the difference is **0.0011 bits/byte (−0.09%)**; **~25× less** data (≈32 GB → ≈1.3 GB) | single seed, 200 steps, 60k-token evaluation |
+| 4 | Does the protocol work end to end? | 2 workers × 3 rounds, no result rejected; 1.2714 → 1.2613 bits/byte | single machine, single seed |
 
-> ⚠️ **Ne iddia etmiyoruz:** "Türkçe model iyileşti" demiyoruz. Dil modelleme kaybı düştü, ama bilgi/muhakeme kıyası kıpırdamadı; bunun için milyarlarca token ve çeşitli veri gerekir. Elimizdeki kanıt şu: *yöntem çalışıyor, bellek ve hız bütçesi ölçüldü, seyrek senkronizasyonun bedeli bu ölçekte ihmal edilebilir.* Daha fazlasını kanıtlamadan söylemeyeceğiz.
+> ⚠️ **What we do not claim:** we are not saying "the Turkish model improved". Language-modelling loss went down, but the knowledge/reasoning benchmark did not move; that needs billions of tokens and diverse data. The evidence we have is: *the method works, the memory and speed budget has been measured, and the cost of sparse synchronisation is negligible at this scale.* We will not claim more until we can prove it.
 
-## Bileşenler
+## Components
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### 🖥️ Masaüstü uygulaması (Rust)
-Tek exe (~10 MB, egui). **Kolay mod:** tek sayfa, büyük AÇIK/KAPALI düğmesi; GPU'nuzu bir koordinatöre adarsınız. **Gelişmiş:** koordinatör, takma ad, yerel model sunucusu, günlükler; **Topluluğa sor** paneli. Sistem tepsisine gizlenir, API anahtarları yalnızca Windows kimlik kasasında.
+### 🖥️ Desktop app (Rust)
+A single exe (~10 MB, egui). **Easy mode:** one page, a big ON/OFF button; you dedicate your GPU to a coordinator. **Advanced:** coordinator, nickname, local model server, logs; an **Ask the community** panel. It hides in the system tray, and API keys live only in the Windows credential vault.
 
-`uygulama/` · [`UYGULAMA.md`](uygulama/UYGULAMA.md) · 15 birim testi
+*(The app and portal interfaces are currently Turkish only, so their screenshots are Turkish.)*
+
+`uygulama/` · [`UYGULAMA.en.md`](uygulama/UYGULAMA.en.md) · 15 unit tests
 
 </td>
 <td width="50%" valign="top">
-<img src="docs/assets/uygulama-kolay.png" alt="Kolay mod: büyük AÇIK/KAPALI düğmesi ve koordinatör seçme tablosu" width="100%">
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<img src="docs/assets/site-ana.png" alt="modelen.tr ana sayfa" width="100%">
-</td>
-<td width="50%" valign="top">
-
-### 🌐 Site ve portal (modelen.tr)
-34 sayfa, TR + EN, çerezsiz, üçüncü taraf kaynaksız. **Portal** (tek dosya Python, SQLite): kayıt/giriş, **e-posta doğrulama ve şifre sıfırlama (SMTP)**, **koordinatör başvurusu** (adres isteğe bağlı, Hugging Face bağlantısı, görseller, onaylı profil düzenleme), herkese açık **Koordinatörler** sayfaları, **yönetici paneli**, **profiller**, sosyal bağlantılar, takip, kısa gönderi **akışı**, engel/bildirim ve moderasyon. Profil varsayılan **gizli**.
-
-Web tarafı (site, portal, docs kaynağı) ayrı, özel bir depoda tutulur; bu depo ürünün kendisidir.
-
+<img src="docs/assets/uygulama-kolay.png" alt="Easy mode: big ON/OFF button and coordinator picker table" width="100%">
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-
-### 🔁 Gönüllü istemci ve koordinatör (Python)
-Adaptör-DiLoCo protokolü: koordinatör (`/gorev`, `/agirlik`, `/sonuc`), işçi, değerlendirme. Safetensors, sha256, aykırı delta elemesi, tur başına tek sonuç. Yerel **OpenAI uyumlu model sunucusu** (`sunucu/`).
-
-`istemci/` · `sunucu/` · [`ISTEMCI.md`](istemci/ISTEMCI.md)
-
+<img src="docs/assets/en-site-ana.png" alt="modelen.tr home page" width="100%">
 </td>
 <td width="50%" valign="top">
-<img src="docs/assets/uygulama-gonullu.png" alt="Gelişmiş görünüm: Gönüllü sekmesi" width="100%">
+
+### 🌐 Website and portal (modelen.tr)
+34 pages, TR + EN, cookie-free, no third-party resources. **Portal** (single-file Python, SQLite): sign-up/login, **e-mail verification and password reset (SMTP)**, **coordinator applications** (address optional, Hugging Face link, images, approved profile editing), public **Coordinators** pages, an **admin panel**, **profiles**, social links, following, a short-post **feed**, blocking/notifications and moderation. Profiles are **private** by default.
+
+The web side (site, portal, docs source) is kept in a separate private repository; this repository is the product itself.
+
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src="docs/assets/site-koordinatorler.png" alt="Koordinatörler sayfası" width="100%">
+
+### 🔁 Volunteer client and coordinator (Python)
+The adapter-DiLoCo protocol: coordinator (`/gorev`, `/agirlik`, `/sonuc`), worker, evaluation. Safetensors, sha256, outlier-delta elimination, one result per round. A local **OpenAI-compatible model server** (`sunucu/`).
+
+`istemci/` · `sunucu/` · [`ISTEMCI.md`](istemci/ISTEMCI.en.md)
+
+</td>
+<td width="50%" valign="top">
+<img src="docs/assets/uygulama-gonullu.png" alt="Advanced view: Volunteer tab" width="100%">
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<img src="docs/assets/site-koordinatorler.png" alt="Coordinators page" width="100%">
 </td>
 <td width="50%" valign="top">
 
-### 🧪 Araştırma betikleri
-DiLoCo benzetimi, LoRA sürekli ön eğitim, Türkçe/İngilizce/TurkishMMLU ölçümleri, tohum × senkron aralığı taraması, dış optimizer ızgarası, adaptör-DiLoCo. Ham sonuçlar JSON/günlük olarak depoda.
+### 🧪 Research scripts
+DiLoCo simulation, LoRA continued pre-training, Turkish/English/TurkishMMLU evaluations, seed × sync-interval sweeps, an outer-optimizer grid, adapter-DiLoCo. Raw results are in the repository as JSON/logs.
 
 `diloco_sim.py` · `lora_cpt.py` · `olc_*.py` · `adaptor_diloco.py` · `sweep*/` · `grid-wiki/`
 
@@ -144,109 +148,96 @@ DiLoCo benzetimi, LoRA sürekli ön eğitim, Türkçe/İngilizce/TurkishMMLU öl
 </table>
 
 <p align="center">
-  <img src="docs/assets/site-akis.png" alt="Topluluk akışı" width="32%">
-  <img src="docs/assets/site-kayit.png" alt="Kayıt sayfası" width="32%">
-  <img src="docs/assets/uygulama-kod.png" alt="Uygulamada Topluluğa sor paneli" width="32%">
+  <img src="docs/assets/site-akis.png" alt="Community feed" width="32%">
+  <img src="docs/assets/site-kayit.png" alt="Sign-up page" width="32%">
+  <img src="docs/assets/uygulama-kod.png" alt="Ask the community panel in the app" width="32%">
 </p>
 
 ```mermaid
 flowchart TB
-  U["Gönüllü<br/>masaüstü uygulaması"] -- "görev · ağırlık · sonuç" --> K["Koordinatör"]
-  C["Koordinatör adayı"] -- "kayıt + başvuru" --> P["Portal · modelen.tr"]
-  A["Yönetici"] -- "onay · moderasyon" --> P
-  P -- "onaylı ve adresli koordinatörler (JSON)" --> U
-  U -- "Topluluğa sor" --> K
+  U["Volunteer<br/>desktop app"] -- "task · weights · result" --> K["Coordinator"]
+  C["Prospective coordinator"] -- "sign-up + application" --> P["Portal · modelen.tr"]
+  A["Admin"] -- "approval · moderation" --> P
+  P -- "approved coordinators with addresses (JSON)" --> U
+  U -- "Ask the community" --> K
 ```
 
-**Geliştiriciler için:** koordinatör olmak, kendi eğitim sisteminizi bağlamak ve Portal API'sini kullanmak için **[docs.modelen.tr](https://docs.modelen.tr)**. Protokol v1 uyum testi (`istemci/uyum_testi.py`), yalnızca standart kütüphaneyle yazılmış örnek koordinatör ve Python API istemcisi (`istemci/ornekler/`) ile OpenAPI şeması (`/api/v1/openapi.json`) bu amaçla eklendi.
+**For developers:** to become a coordinator, plug in your own training system and use the Portal API, see **[docs.modelen.tr](https://docs.modelen.tr)**. For this purpose we added a protocol v1 conformance test (`istemci/uyum_testi.py`), a sample coordinator and a Python API client written with the standard library only (`istemci/ornekler/`), and an OpenAPI schema (`/api/v1/openapi.json`).
 
-**Ayrıca:** `ide/` (eski VS Code eklentisi prototipi, **artık kullanılmıyor**).
+**Also:** `ide/` (an old VS Code extension prototype, **no longer used**).
 
-## Güvenlik ve gizlilik ilkeleri
+## Security and privacy principles
 
-- Gönüllü bilgisayarında **yalnızca yayımlanmış eğitim betiği** çalışır; koordinatör keyfi kod gönderemez.
-- Ağırlıklar yalnızca **safetensors**; sonuçlarda şekil/tür/NaN/aykırı norm kontrolü.
-- Portal: scrypt parola özeti, çerezler `HttpOnly + SameSite + Secure`, CSRF belirteci, giriş/kayıt hız sınırı, tüm kullanıcı metni HTML kaçışlı, parametreli SQL, CSP başlıkları, görsellerden **EXIF/konum silme**, e-posta yalnızca yöneticide.
-- **Profil varsayılan gizlidir.** Kişi "herkese açık" yapmadıkça adı, fotoğrafı ve gönderileri görünmez.
-- API anahtarları (uygulamada) yalnızca işletim sistemi kimlik kasasında; ayar dosyasına yazılmaz.
+- Only the **published training script** runs on a volunteer's computer; a coordinator cannot send arbitrary code.
+- Weights are **safetensors only**; results are checked for shape/type/NaN/outlier norm.
+- Portal: scrypt password hashes, `HttpOnly + SameSite + Secure` cookies, CSRF token, login/sign-up rate limiting, all user text HTML-escaped, parameterised SQL, CSP headers, **EXIF/location stripping** from images, e-mail visible to admins only.
+- **Profiles are private by default.** Until someone makes it "public", their name, photo and posts are not visible.
+- API keys (in the app) live only in the operating system's credential vault; they are not written to the settings file.
 
-> Yasal metinler (KVKK, gizlilik, çerez, topluluk kuralları, koşullar) sitede yayındadır; **bir avukat tarafından incelenmemiştir**.
+> The legal texts (KVKK, privacy, cookies, community rules, terms) are published on the site; **they have not been reviewed by a lawyer**.
 
-## Hızlı başlangıç
+## Quick start
 
-**Masaüstü uygulaması** (Windows; Rust stable):
+**Desktop app** (Windows; Rust stable):
 
 ```bash
 cd uygulama
 cargo build --release
-./target/release/modelen.exe          # --tepside ile tepside başlar
-cargo test --release                  # 15 test
+./target/release/modelen.exe          # --tepside starts it in the tray
+cargo test --release                  # 15 tests
 ```
 
-**Gönüllü protokolünü yerelde dene** (CUDA'lı GPU, PyTorch, `transformers`, `peft`, `safetensors`; Qwen3-0.6B-Base `models/qwen3-0.6b-base` altında): adım adım komutlar [`istemci/ISTEMCI.md`](istemci/ISTEMCI.md) içinde. Veri ve model dosyaları depoda yok (büyük ve lisanslı); Vikipedi metnini `wiki_to_txt.py` üretir.
+**Try the volunteer protocol locally** (CUDA GPU, PyTorch, `transformers`, `peft`, `safetensors`; Qwen3-0.6B-Base under `models/qwen3-0.6b-base`): step-by-step commands are in [`istemci/ISTEMCI.en.md`](istemci/ISTEMCI.en.md). Data and model files are not in the repository (large and licensed); `wiki_to_txt.py` produces the Wikipedia text.
 
-
-## Depo haritası
+## Repository map
 
 ```
-modelen/            (web tarafı — site, portal, docs — ayrı özel depoda)
-├─ README.md · ADAPTASYON.md · LICENSE · NOTICE
-├─ diloco_sim.py · lora_cpt.py · olc_*.py · adaptor_diloco.py · wiki_to_txt.py   araştırma betikleri
-├─ sweep/ · sweep-wiki/ · grid-wiki/ · *.json · olcum-sonuc.txt                  ham sonuçlar
-├─ istemci/    gönüllü istemci: koordinatör, işçi, değerlendirme, ISTEMCI.md
-├─ sunucu/     yerel OpenAI uyumlu model sunucusu
-├─ uygulama/   Rust masaüstü uygulaması (egui)
-├─ kurulum/    Modelen-Kurulum.exe (kur.ps1'i gömen Rust kurulum programı)
-├─ kur.ps1 · kur.sh   Windows ve Linux (Ubuntu, Arch) kurulum betikleri
-├─ tools/      sürüm paketleme (paketle.py)
-├─ .github/    sürüm hattı ve kurulum testleri (CI)
-├─ ide/        eski VS Code prototipi (kullanılmıyor)
-└─ docs/       çalışma notları, görsel üretim betiği, README görselleri
+modelen/            (web side — site, portal, docs — in a separate private repository)
+├─ README.md · README.tr.md · ADAPTASYON.md · LICENSE · NOTICE
+├─ diloco_sim.py · lora_cpt.py · olc_*.py · adaptor_diloco.py · wiki_to_txt.py   research scripts
+├─ sweep/ · sweep-wiki/ · grid-wiki/ · *.json · olcum-sonuc.txt                  raw results
+├─ istemci/    volunteer client: coordinator, worker, evaluation, ISTEMCI.md
+├─ sunucu/     local OpenAI-compatible model server
+├─ uygulama/   Rust desktop app (egui)
+├─ kurulum/    Modelen-Kurulum.exe (Rust installer that embeds kur.ps1)
+├─ kur.ps1 · kur.sh   Windows and Linux (Ubuntu, Arch) install scripts
+├─ tools/      release packaging (paketle.py)
+├─ .github/    release pipeline and install tests (CI)
+├─ ide/        old VS Code prototype (unused)
+└─ docs/       working notes, image generation script, README images
 ```
 
-## Sürümler ve tarihçe
+## Releases and history
 
-> **Not:** Çalışma klasörü başlangıçta git altında değildi. Bu depo, **dosya zaman damgalarından yeniden kurulmuş** bir tarihçedir: her commit, o bileşenin çalışmaya başlandığı günün ve saatin (yaklaşık) değerini taşır ve bileşenin *bugünkü* hâlini içerir. Ara sürümler (ör. sitenin 9 tasarım turu) ayrı ayrı saklanmamıştır. Sürüm etiketleri milestone'lardır.
+> **Note:** The working folder was originally not under git. This repository is a history **reconstructed from file timestamps**: each commit carries (approximately) the date and time work on that component began, and contains the component's *current* state. Intermediate versions (e.g. the site's 9 design rounds) were not stored separately. Release tags are milestones.
 
-| Sürüm | Tarih | Ne var |
+| Version | Date | What's in it |
 |---|---|---|
-| [`v0.1.0`](../../releases/tag/v0.1.0) | 2026-11-06 | **Araştırma:** DiLoCo benzetimi, tohum×aralık taramaları, Türkçe Vikipedi ile tekrar, 20 dk LoRA uyarlaması, unutma ve TurkishMMLU ölçümü, adaptör-DiLoCo |
-| [`v0.2.0`](../../releases/tag/v0.2.0) | 2026-11-07 | **Kimlik ve istemci:** logo (Halay Halkası), TR+EN site, gönüllü istemci prototipi, yerel model sunucusu, Rust masaüstü uygulaması, kurumsal belgeler, Apache-2.0 |
-| [`v0.3.0`](../../releases/tag/v0.3.0) | 2026-11-08 | **Portal ve topluluk:** koordinatör dizini ve başvurusu, yönetici paneli, profiller, sosyal bağlantılar, takip, akış, moderasyon; modelen.tr canlıya alındı |
-| [`v0.3.1`](../../releases/tag/v0.3.1) | 2026-11-08 | **Belgeler:** README, görseller, dağıtım örnekleri |
-| [`v0.4.0`](../../releases/tag/v0.4.0) | 2026-11-08 | **E-posta:** SMTP ile e-posta doğrulama, şifre sıfırlama ve başvuru durumu bildirimleri; uluslararası konumlandırma |
+| [`v0.1.0`](../../releases/tag/v0.1.0) | 2026-11-06 | **Research:** DiLoCo simulation, seed×interval sweeps, replication with Turkish Wikipedia, 20-min LoRA adaptation, forgetting and TurkishMMLU measurement, adapter-DiLoCo |
+| [`v0.2.0`](../../releases/tag/v0.2.0) | 2026-11-07 | **Identity and client:** logo (Halay Ring), TR+EN site, volunteer client prototype, local model server, Rust desktop app, corporate documents, Apache-2.0 |
+| [`v0.3.0`](../../releases/tag/v0.3.0) | 2026-11-08 | **Portal and community:** coordinator directory and application, admin panel, profiles, social links, following, feed, moderation; modelen.tr went live |
+| [`v0.3.1`](../../releases/tag/v0.3.1) | 2026-11-08 | **Documentation:** README, images, deployment examples |
+| [`v0.4.0`](../../releases/tag/v0.4.0) | 2026-11-08 | **E-mail:** e-mail verification via SMTP, password reset and application-status notifications; international positioning |
 
-## Dürüst durum ve yol haritası
+## Honest status and roadmap
 
-**Çalışan:** protokol uçtan uca (tek makinede ve internet üzerinden VDS↔PC), Rust uygulama (derleniyor, testler geçiyor), portal ve API canlıda, site ve [docs](https://docs.modelen.tr) yayında, **gönüllü kurulumu yayında (alfa)**: Windows için `Modelen-Kurulum.exe`, Ubuntu için `kur.sh` ([Sürümler](../../releases/latest)).
+**Working:** the protocol end to end (on one machine and over the internet, VDS↔PC), the Rust app (builds, tests pass), the portal and API live, the site and [docs](https://docs.modelen.tr) published, **volunteer installation available (alpha)**: `Modelen-Kurulum.exe` for Windows, `kur.sh` for Ubuntu ([Releases](../../releases/latest)).
 
-**Henüz yok / eksik:**
+**Not yet / missing:**
 
-- [ ] Yayınlanmış model. 0,6B taban sohbet asistanı değil; talimat ayarı (SFT) ayrı bir adım.
-- [ ] Eğitimin Python'dan çıkması (şimdi alt süreç; Windows kurulum programı ve Ubuntu betiği Python ortamını kendisi kurar, ama imzalı sürüm yok).
-- [ ] Koordinatör tarafında kimlik doğrulama, gerçek zehirlenme koruması (tekrarlı doğrulama), TLS.
-- [ ] Çok tohumlu ve IID olmayan veriyle deneyler; DiLoCo → DDP uyumu sorusu.
-- [ ] Gerçek gönüllülerle (farklı donanımlar) uçtan uca deneme. (Kurulum betikleri GitHub'ın temiz Windows/Ubuntu makinelerinde GPU'suz sınanıyor; GPU'lu gerçek eğitim henüz değil.)
-- [ ] Portalda İngilizce arayüz, iki adımlı doğrulama. (E-posta doğrulama, şifre sıfırlama ve başvuru bildirimleri SMTP ile **yapıldı**.)
-- [ ] Avukat incelemesi (yasal metinlerden "taslak" uyarısı kaldırıldı; hukuki inceleme yapılmadı).
-- [ ] Uygulamada tüm düğmelerin elle test edilmesi (altındaki mantık testli; etkileşimler görsel olarak denendi ama kapsamlı el testi yok).
+- [ ] A released model. The 0.6B base is not a chat assistant; instruction tuning (SFT) is a separate step.
+- [ ] Training moving out of Python (currently a subprocess; the Windows installer and the Ubuntu script set up the Python environment themselves, but there is no signed release).
+- [ ] Authentication on the coordinator side, real poisoning protection (repeated verification), TLS.
+- [ ] Experiments with multiple seeds and non-IID data; the DiLoCo → DDP compatibility question.
+- [ ] An end-to-end trial with real volunteers (different hardware). (The install scripts are tested on GitHub's clean Windows/Ubuntu machines without a GPU; real GPU training is not yet.)
+- [ ] An English portal interface, two-step verification. (E-mail verification, password reset and application notifications via SMTP are **done**.)
+- [ ] Lawyer review (the "draft" warning was removed from the legal texts; no legal review has been done).
+- [ ] Manual testing of every button in the app (the logic underneath is tested; interactions were tried visually but there is no thorough manual test).
 
-## Katıl
+## Join
 
-- 🌐 **Site:** [modelen.tr](https://modelen.tr) · koordinatör olmak için [kayıt ol](https://modelen.tr/kayit)
-- 📬 **İletişim:** iletisim@modelen.tr
-- 🐞 Hata ya da öneri için bu depoda *issue* açabilirsiniz.
+- 🌐 **Site:** [modelen.tr](https://modelen.tr) · to become a coordinator, [sign up](https://modelen.tr/kayit)
+- 📬 **Contact:** iletisim@modelen.tr
+- 🐞 For bugs or suggestions you can open an *issue* in this repository.
 
-**Lisans:** [Apache-2.0](LICENSE) (kod ve model). Üçüncü taraf bileşenler ve veri lisansları için [`NOTICE`](NOTICE) ve [`ADAPTASYON.md`](ADAPTASYON.md). Taban model: Qwen3-0.6B-Base (Apache-2.0). Türkçe Vikipedi metni CC BY-SA/GFDL'dir; bu depoda dağıtılmaz.
-
----
-
-## English summary
-
-**Modelen** is an international community effort to train open language models on volunteers' idle GPUs. **Turkish is our first language**; others follow. The approach is **adapter-DiLoCo**: a frozen open base model (Qwen3-0.6B-Base) with a small **LoRA adapter (~40 MB)** trained locally for *H* steps and synchronised only every *H* steps with a coordinator, cutting traffic ~25× with no measurable loss in our small-scale tests.
-
-**What is here (all small scale, one RTX 4060 laptop):** research scripts and raw results; a working volunteer protocol (coordinator + worker, safetensors only, no pickle); a **Rust desktop app** (one-click "Easy mode", coordinator picker, tray); a static **TR+EN website** and a zero-dependency Python **portal** (registration, coordinator applications with admin approval, profiles — private by default — a short-post feed and moderation).
-
-**Honest status:** research stage, **no released model**. Perplexity-style loss improved by 4.3% after a 20-minute LoRA run, but TurkishMMLU did not move (within noise); we make no "better model" claim. See [`ADAPTASYON.md`](ADAPTASYON.md) (Turkish) for methods and limits. The history of this repository was **reconstructed from file timestamps**; see [Sürümler ve tarihçe](#sürümler-ve-tarihçe).
-
-License: Apache-2.0.
+**License:** [Apache-2.0](LICENSE) (code and model). For third-party components and data licenses see [`NOTICE`](NOTICE) and [`ADAPTASYON.en.md`](ADAPTASYON.en.md). Base model: Qwen3-0.6B-Base (Apache-2.0). Turkish Wikipedia text is CC BY-SA/GFDL; it is not distributed in this repository.
