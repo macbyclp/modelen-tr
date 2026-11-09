@@ -54,6 +54,7 @@ jobs:
             dist/modelen-istemci.zip
             dist/Modelen-Kurulum.exe
             dist/kur.sh
+            dist/koordinator-kur.sh
 
       - uses: actions/upload-artifact@v4
         with:
@@ -69,6 +70,7 @@ jobs:
             dist/modelen-istemci.zip
             dist/Modelen-Kurulum.exe
             dist/kur.sh
+            dist/koordinator-kur.sh
             dist/SHA256SUMS
           generate_release_notes: false
           fail_on_unmatched_files: true

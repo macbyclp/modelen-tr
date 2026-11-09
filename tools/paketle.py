@@ -55,12 +55,13 @@ def main():
         hedef = os.path.join(a.cikti, "Modelen-Kurulum.exe")
         shutil.copyfile(a.kurulum, hedef)
         varliklar.append(hedef)
-    kur_sh = os.path.join(KOK, "kur.sh")
-    if os.path.exists(kur_sh):  # Linux kurulum betiği: indirilebilir sürüm varlığı (LF satır sonlu kalmalı)
-        hedef = os.path.join(a.cikti, "kur.sh")
-        veri = open(kur_sh, "rb").read().replace(bytes([13, 10]), bytes([10]))
-        open(hedef, "wb").write(veri)
-        varliklar.append(hedef)
+    for betik in ("kur.sh", "koordinator-kur.sh"):  # Linux kurulum betikleri: indirilebilir sürüm varlıkları (LF satır sonlu kalmalı)
+        kaynak = os.path.join(KOK, betik)
+        if os.path.exists(kaynak):
+            hedef = os.path.join(a.cikti, betik)
+            veri = open(kaynak, "rb").read().replace(bytes([13, 10]), bytes([10]))
+            open(hedef, "wb").write(veri)
+            varliklar.append(hedef)
     with open(os.path.join(a.cikti, "SHA256SUMS"), "w", encoding="utf-8", newline="\n") as f:
         for v in varliklar:
             f.write(f"{sha(v)}  {os.path.basename(v)}\n")

@@ -5,9 +5,9 @@ name: kurulum-testi
 on:
   workflow_dispatch:
   push:
-    paths: ["kur.sh", "kur.ps1", "kurulum/**", ".github/workflows/kurulum-testi.yml"]
+    paths: ["kur.sh", "kur.ps1", "kurulum/**", "koordinator-kur.sh", "tools/koordinator_kurulum_testi.sh", "istemci/adaptor_uret.py", "istemci/veri_hazirla.py", "istemci/koordinator.py", ".github/workflows/kurulum-testi.yml"]
   pull_request:
-    paths: ["kur.sh", "kur.ps1", "kurulum/**"]
+    paths: ["kur.sh", "kur.ps1", "kurulum/**", "koordinator-kur.sh"]
 
 jobs:
   ubuntu:
@@ -65,6 +65,23 @@ jobs:
           "$PY" /tmp/modelen/istemci/isci.py --help
           test -x "$HOME/.local/bin/modelen-isci"
           "$HOME/.local/bin/modelen-isci" --help
+
+  koordinator-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Koordinatör kurulumu uçtan uca (--sistemsiz, CPU)
+        run: bash tools/koordinator_kurulum_testi.sh
+
+  koordinator-arch:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Temel araçlar (minimal Arch imajında)
+        run: pacman -Syu --noconfirm --needed bash curl tar gzip coreutils findutils gawk sed grep git python procps-ng
+      - uses: actions/checkout@v4
+      - name: Koordinatör kurulumu uçtan uca (--sistemsiz, CPU)
+        run: bash tools/koordinator_kurulum_testi.sh
 
   windows:
     runs-on: windows-latest

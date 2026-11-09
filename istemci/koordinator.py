@@ -71,7 +71,7 @@ os.makedirs(A.calisma, exist_ok=True)
 SURUM = "0.5.0"
 DURUM_DOSYASI = os.path.join(A.calisma, "durum.json")
 MOMENTUM_DOSYASI = os.path.join(A.calisma, "momentum.safetensors")
-ANAHTARLAR = {k.strip() for k in A.anahtar.split(",") if k.strip()}
+ANAHTARLAR = {k.strip() for k in (A.anahtar or os.environ.get("MODELEN_ANAHTAR", "")).split(",") if k.strip()}  # ortam değişkeni: anahtar süreç listesinde (ps) görünmesin
 VERI_DILIMLERI = {}  # parca -> (bayt, sha256, belirteç sayısı)
 
 

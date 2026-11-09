@@ -190,6 +190,17 @@ class Testler(unittest.TestCase):
         self.assertEqual(k.istek("/veri?parca=0")[0], 401)
         self.assertEqual(k.istek("/veri?parca=0", None, {"X-Anahtar": "gizli"})[0], 200)
 
+    def test_anahtar_ortam_degiskeninden(self):
+        os.environ["MODELEN_ANAHTAR"] = "ortam-bir,ortam-iki"
+        try:
+            k = Koordinator(self)  # alt süreç ortamı devralır; --anahtar verilmedi
+        finally:
+            os.environ.pop("MODELEN_ANAHTAR", None)
+        self.assertEqual(k.istek("/durum")[0], 401)
+        self.assertEqual(k.istek("/durum", None, {"X-Anahtar": "ortam-bir"})[0], 200)
+        self.assertEqual(k.istek("/durum", None, {"X-Anahtar": "ortam-iki"})[0], 200)
+        self.assertTrue(k.al("/bilgi")["anahtar_gerekli"])
+
     def test_bilgi_surum(self):
         k = Koordinator(self)
         b = k.al("/bilgi")
