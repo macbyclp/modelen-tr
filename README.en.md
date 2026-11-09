@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/kapak.png" alt="Modelen: open AI trained together by the community" width="100%">
+  <img src="docs/assets/kapak-en.png" alt="Modelen: open AI trained together by the community" width="100%">
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/tur.gif" alt="Modelen tour: website, desktop app, portal" width="760">
+  <img src="docs/assets/tur-en.gif" alt="Modelen tour: website, desktop app, portal (app and portal UIs are Turkish)" width="760">
 </p>
 
 ---
@@ -75,8 +75,8 @@ Only **safetensors** is read from the network: no `pickle`, no code can be execu
 Everything is small scale, on a **single RTX 4060 Laptop (8 GB)**. Raw outputs and scripts are in this repository. Full method and limits: [`ADAPTASYON.en.md`](ADAPTASYON.en.md) and the [Measurements page on the site](https://modelen.tr/olcumler.html).
 
 <p align="center">
-  <img src="docs/assets/grafik-diloco.png" alt="With adapter-DiLoCo, the bits/byte curve almost overlaps the reference that synchronises every step" width="49%">
-  <img src="docs/assets/grafik-lora.png" alt="20-minute LoRA: bits per byte dropped in Turkish and rose slightly in English" width="49%">
+  <img src="docs/assets/grafik-diloco-en.png" alt="With adapter-DiLoCo, the bits/byte curve almost overlaps the reference that synchronises every step" width="49%">
+  <img src="docs/assets/grafik-lora-en.png" alt="20-minute LoRA: bits per byte dropped in Turkish and rose slightly in English" width="49%">
 </p>
 
 | # | Question | Result | Reliability |
@@ -97,6 +97,8 @@ Everything is small scale, on a **single RTX 4060 Laptop (8 GB)**. Raw outputs a
 ### 🖥️ Desktop app (Rust)
 A single exe (~10 MB, egui). **Easy mode:** one page, a big ON/OFF button; you dedicate your GPU to a coordinator. **Advanced:** coordinator, nickname, local model server, logs; an **Ask the community** panel. It hides in the system tray, and API keys live only in the Windows credential vault.
 
+*(The app and portal interfaces are currently Turkish only, so their screenshots are Turkish.)*
+
 `uygulama/` · [`UYGULAMA.en.md`](uygulama/UYGULAMA.en.md) · 15 unit tests
 
 </td>
@@ -106,7 +108,7 @@ A single exe (~10 MB, egui). **Easy mode:** one page, a big ON/OFF button; you d
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src="docs/assets/site-ana.png" alt="modelen.tr home page" width="100%">
+<img src="docs/assets/en-site-ana.png" alt="modelen.tr home page" width="100%">
 </td>
 <td width="50%" valign="top">
 
