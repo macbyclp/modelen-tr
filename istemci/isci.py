@@ -32,7 +32,7 @@ ap.add_argument("--isci", default="isci-1", help="gönüllü takma adı (kişise
 ap.add_argument("--model", default="models/qwen3-0.6b-base")
 ap.add_argument("--veri", default="data/tok-wiki30.pt", help="belirteçlenmiş eğitim verisi (prototip: yerel dosya)")
 ap.add_argument("--sft-veri", default="data/sft-oasst2.pt", help="talimat (SFT) verisi: istemci/sft_veri.py çıktısı; yalnızca görev mod=sft ise kullanılır")
-ap.add_argument("--anahtar", default="")
+ap.add_argument("--anahtar", default=os.environ.get("MODELEN_ANAHTAR", ""), help="koordinatör anahtarı (kapalı grup); tercihen MODELEN_ANAHTAR ortam değişkeni: komut satırı ps ile görünür")
 ap.add_argument("--en-cok-tur", type=int, default=0, help="0 = bitene kadar")
 ap.add_argument("--bekleme", type=float, default=3.0)
 A = ap.parse_args()

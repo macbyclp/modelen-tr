@@ -57,6 +57,7 @@ struct Uygulama {
     acilis: Option<Instant>,
     // ayarlar
     anahtar_girdi: String,
+    koord_anahtar_girdi: String,
 }
 
 impl Uygulama {
@@ -94,6 +95,7 @@ impl Uygulama {
             baslat_bekle: None,
             acilis: None,
             anahtar_girdi: String::new(),
+            koord_anahtar_girdi: String::new(),
             ayar,
         };
         u.agaci_yenile();
@@ -133,9 +135,16 @@ impl Uygulama {
         self.isci_dogrudan_baslat();
     }
 
+    /// Kimlik kasasındaki koordinatör anahtarının adı (adrese göre; kapalı gruplar için).
+    fn koord_anahtar_adi(&self) -> String {
+        format!("koordinator:{}", self.ayar.koordinator.trim().trim_end_matches('/'))
+    }
+
     fn isci_dogrudan_baslat(&mut self) {
         let args = ["istemci/isci.py".to_string(), "--koordinator".into(), self.ayar.koordinator.clone(), "--isci".into(), self.ayar.takma_ad.clone()];
-        match Surec::baslat(&self.ayar.python, &self.ayar.modelen_klasoru, &args) {
+        let anahtar = ayar::anahtar_oku(&self.koord_anahtar_adi()).unwrap_or_default();
+        let ortam: Vec<(&str, &str)> = if anahtar.is_empty() { vec![] } else { vec![("MODELEN_ANAHTAR", anahtar.as_str())] };
+        match Surec::baslat_env(&self.ayar.python, &self.ayar.modelen_klasoru, &args, &ortam) {
             Ok(s) => {
                 self.isci = Some(s);
                 self.acilis = Some(Instant::now());
@@ -170,8 +179,9 @@ impl Uygulama {
         if self.son_durum.elapsed() > Duration::from_secs(5) {
             self.son_durum = Instant::now();
             let (adres, hedef, ctx2) = (self.ayar.koordinator.clone(), self.koord_durum.clone(), ctx.clone());
+            let anahtar = ayar::anahtar_oku(&self.koord_anahtar_adi()).unwrap_or_default();
             std::thread::spawn(move || {
-                let s = surec::koordinator_durumu(&adres, "").unwrap_or_else(|e| if surec::dostca(&e) != e { "ulaşılamıyor · sunucu kapalı olabilir ya da adres yanlış".to_string() } else { format!("ulaşılamıyor ({e})") });
+                let s = surec::koordinator_durumu(&adres, &anahtar).unwrap_or_else(|e| if surec::dostca(&e) != e { "ulaşılamıyor · sunucu kapalı olabilir ya da adres yanlış".to_string() } else { format!("ulaşılamıyor ({e})") });
                 *hedef.lock().unwrap() = s;
                 ctx2.request_repaint();
             });
@@ -389,13 +399,14 @@ impl Uygulama {
         }
         let baglam = if self.soru_kod_ekle { self.baglam_metni() } else { String::new() };
         let (adres, ad) = (self.ayar.koordinator.clone(), self.ayar.takma_ad.clone());
+        let anahtar = ayar::anahtar_oku(&self.koord_anahtar_adi()).unwrap_or_default();
         let (tx, rx) = channel();
         self.soru_alici = Some(rx);
         self.sorular.push((soru.clone(), "gönderiliyor…".into()));
         self.soru_girdi.clear();
         let ctx = ctx.clone();
         std::thread::spawn(move || {
-            let _ = tx.send(surec::soru_gonder(&adres, &ad, &soru, &baglam));
+            let _ = tx.send(surec::soru_gonder(&adres, &ad, &soru, &baglam, &anahtar));
             ctx.request_repaint();
         });
     }
@@ -540,6 +551,31 @@ impl Uygulama {
                     ui.text_edit_singleline(&mut self.ayar.takma_ad);
                     ui.end_row();
                 });
+                // kapalı grup: koordinatörün verdiği anahtar (Windows kimlik kasasında; dosyaya yazılmaz, komut satırında görünmez)
+                let kasa_adi = self.koord_anahtar_adi();
+                if ayar::anahtar_oku(&kasa_adi).is_some() {
+                    ui.horizontal(|ui| {
+                        ui.label("Koordinatör anahtarı: kayıtlı (kimlik kasasında)");
+                        if ui.small_button("Sil").clicked() {
+                            self.bildirim = match ayar::anahtar_sil(&kasa_adi) {
+                                Ok(_) => "Koordinatör anahtarı silindi.".into(),
+                                Err(e) => format!("Silinemedi: {e}"),
+                            };
+                        }
+                    });
+                } else {
+                    ui.horizontal(|ui| {
+                        ui.label("Koordinatör anahtarı (kapalı grup)");
+                        ui.add(egui::TextEdit::singleline(&mut self.koord_anahtar_girdi).password(true).hint_text("yoksa boş bırakın"));
+                        if ui.button("Kasaya kaydet").clicked() && !self.koord_anahtar_girdi.trim().is_empty() {
+                            self.bildirim = match ayar::anahtar_yaz(&kasa_adi, self.koord_anahtar_girdi.trim()) {
+                                Ok(_) => "Koordinatör anahtarı kasaya kaydedildi.".into(),
+                                Err(e) => format!("Kaydedilemedi: {e}"),
+                            };
+                            self.koord_anahtar_girdi.clear();
+                        }
+                    });
+                }
                 ui.label(RichText::new("Takma adı kişisel veri içermeyecek şekilde seçin. Listede olmayan bir adres yazarsanız adaptörünüz o sunucuya gider; yalnızca güvendiğiniz sunuculara bağlanın.").small());
                 ui.horizontal(|ui| {
                     let calisiyor = self.isci.as_mut().map(|s| s.calisiyor()).unwrap_or(false);

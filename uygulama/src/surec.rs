@@ -64,6 +64,11 @@ fn okuyucu(mut r: impl Read + Send + 'static, gunluk: Arc<Mutex<VecDeque<String>
 
 impl Surec {
     pub fn baslat(program: &str, klasor: &str, argumanlar: &[String]) -> Result<Surec, String> {
+        Self::baslat_env(program, klasor, argumanlar, &[])
+    }
+
+    /// `baslat` + ek ortam değişkenleri (sırlar komut satırında değil, ortamda geçer; `ps`/görev yöneticisinde görünmez).
+    pub fn baslat_env(program: &str, klasor: &str, argumanlar: &[String], ortam: &[(&str, &str)]) -> Result<Surec, String> {
         if !Path::new(klasor).join(argumanlar.first().map(String::as_str).unwrap_or("")).exists() {
             return Err(format!("dosya bulunamadı: {}", Path::new(klasor).join(argumanlar.first().map(String::as_str).unwrap_or("")).display()));
         }
@@ -72,6 +77,7 @@ impl Surec {
             .current_dir(klasor)
             .env("PYTHONIOENCODING", "utf-8")
             .env("PYTHONUNBUFFERED", "1")
+            .envs(ortam.iter().copied())
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped());
@@ -126,11 +132,14 @@ pub fn dostca(satir: &str) -> String {
 }
 
 /// Soruyu topluluğa (koordinatör /soru) gönderir; başarıda soru numarasını döndürür.
-pub fn soru_gonder(adres: &str, isci: &str, soru: &str, baglam: &str) -> Result<u64, String> {
+pub fn soru_gonder(adres: &str, isci: &str, soru: &str, baglam: &str, anahtar: &str) -> Result<u64, String> {
     let ajan = ureq::AgentBuilder::new().timeout(Duration::from_secs(10)).build();
     let govde = serde_json::json!({"soru": soru, "baglam": baglam, "isci": isci, "surum": env!("CARGO_PKG_VERSION")});
-    let v: Value = ajan
-        .post(&format!("{}/soru", adres.trim_end_matches('/')))
+    let mut istek = ajan.post(&format!("{}/soru", adres.trim_end_matches('/')));
+    if !anahtar.is_empty() {
+        istek = istek.set("X-Anahtar", anahtar);
+    }
+    let v: Value = istek
         .send_json(govde)
         .map_err(|e| e.to_string())?
         .into_json()
@@ -263,7 +272,7 @@ mod testler {
             let _ = write!(c, "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}", g.len(), g);
             String::from_utf8_lossy(&alinan).to_string()
         });
-        let no = soru_gonder(&format!("http://127.0.0.1:{port}"), "ali", "Merhaba, nasılsınız?", "").unwrap();
+        let no = soru_gonder(&format!("http://127.0.0.1:{port}"), "ali", "Merhaba, nasılsınız?", "", "").unwrap();
         assert_eq!(no, 7);
         let istek = sunucu.join().unwrap();
         assert!(istek.starts_with("POST /soru"), "{istek}");
@@ -304,6 +313,30 @@ mod testler {
         assert!(s.calisiyor());
         s.durdur();
         assert!(!s.calisiyor());
+        let _ = std::fs::remove_file(f);
+    }
+
+    #[test]
+    fn ortam_degiskeni_surece_gecer_komut_satirina_degil() {
+        let d = std::env::temp_dir();
+        let f = d.join(format!("modelen-ortam-{}.py", std::process::id()));
+        std::fs::write(&f, "import os
+print('anahtar=' + os.environ.get('MODELEN_ANAHTAR', 'YOK'), flush=True)
+").unwrap();
+        let py = if cfg!(windows) { "python" } else { "python3" };
+        let ad = f.file_name().unwrap().to_string_lossy().into_owned();
+        let Ok(mut s) = Surec::baslat_env(py, d.to_str().unwrap(), &[ad.clone()], &[("MODELEN_ANAHTAR", "gizli-123")]) else {
+            return; // python yoksa atla
+        };
+        for _ in 0..50 {
+            if s.son_satirlar(5).iter().any(|l| l.starts_with("anahtar=")) {
+                break;
+            }
+            std::thread::sleep(Duration::from_millis(100));
+        }
+        assert!(s.son_satirlar(5).iter().any(|l| l == "anahtar=gizli-123"));
+        assert!(!ad.contains("gizli"), "anahtar komut satırında olmamalı");
+        s.durdur();
         let _ = std::fs::remove_file(f);
     }
 }
