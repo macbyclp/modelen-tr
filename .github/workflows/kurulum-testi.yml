@@ -20,6 +20,7 @@ jobs:
           if bash kur.sh --dene 2>err.txt; then echo "GPU olmadan hata beklenirdi"; exit 1; fi
           cat err.txt
           grep -q "nvidia-smi bulunamadı" err.txt
+          grep -q "ubuntu-drivers" err.txt   # Ubuntu'ya özel sürücü ipucu
 
       - name: Ön koşul denetimi (--dene --cuda cpu)
         run: bash kur.sh --dene --cuda cpu
@@ -32,6 +33,36 @@ jobs:
           PY="$RUNNER_TEMP/modelen/.venv/bin/python"
           "$PY" -c "import torch, transformers, peft, safetensors; print('torch', torch.__version__)"
           "$PY" "$RUNNER_TEMP/modelen/istemci/isci.py" --help
+          test -x "$HOME/.local/bin/modelen-isci"
+          "$HOME/.local/bin/modelen-isci" --help
+
+  arch:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Temel araçlar (minimal Arch imajında)
+        run: pacman -Syu --noconfirm --needed bash curl tar gzip coreutils findutils gawk sed grep git
+
+      - uses: actions/checkout@v4
+
+      - name: GPU yokken net hata ve Arch'a özel sürücü ipucu
+        run: |
+          if bash kur.sh --dene 2>err.txt; then echo "GPU olmadan hata beklenirdi"; exit 1; fi
+          cat err.txt
+          grep -q "nvidia-smi bulunamadı" err.txt
+          grep -q "pacman -S nvidia" err.txt
+
+      - name: Ön koşul denetimi (--dene --cuda cpu)
+        run: bash kur.sh --dene --cuda cpu
+
+      - name: Kur (yerel kaynak, cpu, modelsiz)
+        run: bash kur.sh --kaynak . --cuda cpu --model-atla --hedef /tmp/modelen
+
+      - name: Kurulumu doğrula
+        run: |
+          PY=/tmp/modelen/.venv/bin/python
+          "$PY" -c "import torch, transformers, peft, safetensors; print('torch', torch.__version__)"
+          "$PY" /tmp/modelen/istemci/isci.py --help
           test -x "$HOME/.local/bin/modelen-isci"
           "$HOME/.local/bin/modelen-isci" --help
 

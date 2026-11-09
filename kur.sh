@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Modelen gönüllü kurulumu (Linux / Ubuntu): eğitim ortamı + taban model + "modelen-isci" komutu.
+# Modelen gönüllü kurulumu (Linux: Ubuntu, Arch ve diğer glibc tabanlı dağıtımlar): eğitim ortamı + taban model + "modelen-isci" komutu.
 #
 #   bash kur.sh                 # kur (varsayılan: ~/.local/share/modelen)
 #   bash kur.sh --dene          # hiçbir şey kurmadan ön koşulları denetle, planı yaz
@@ -20,6 +20,18 @@ KAYNAK=""
 CUDA="cu124"
 MODEL_ATLA=0
 DENE=0
+
+# Dağıtıma göre NVIDIA sürücü ipucu (/etc/os-release: ID ve ID_LIKE)
+surucu_ipucu() {
+  local kimlik=""
+  [ -r /etc/os-release ] && kimlik="$( . /etc/os-release; printf '%s %s' "${ID:-}" "${ID_LIKE:-}" )"
+  case " $kimlik " in
+    *" arch "*|*" manjaro "*|*" endeavouros "*) echo "Arch: 'sudo pacman -S nvidia-open nvidia-utils' (ya da nvidia / nvidia-dkms) ile kurup yeniden başlatın." ;;
+    *" ubuntu "*|*" debian "*|*" linuxmint "*|*" pop "*) echo "Ubuntu/Debian: 'sudo ubuntu-drivers install' (Debian: nvidia-driver paketi) ile kurup yeniden başlatın." ;;
+    *" fedora "*|*" rhel "*) echo "Fedora: RPM Fusion'dan akmod-nvidia kurup yeniden başlatın." ;;
+    *) echo "dağıtımınızın NVIDIA sürücü rehberine bakın (https://www.nvidia.com/drivers)." ;;
+  esac
+}
 
 kullanim() { sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
 adim() { printf '\n==> %s\n' "$*"; }
@@ -43,13 +55,15 @@ case "$CUDA" in cu124|cu121|cu126|cpu) ;; *) hata "--cuda cu124, cu121, cu126 ya
 # ---------------------------------------------------------------- ön koşullar
 adim "Ön koşullar"
 [ "$(uname -s)" = "Linux" ] || hata "Bu betik yalnızca Linux içindir (macOS desteklenmiyor: NVIDIA/CUDA yok)."
+# PyTorch tekerleri glibc ister; musl tabanlı dağıtımlar (Alpine vb.) desteklenmez.
+if ldd --version 2>&1 | grep -qi musl; then hata "musl tabanlı dağıtım (Alpine vb.) desteklenmiyor: PyTorch tekerleri glibc ister."; fi
 ARCH="$(uname -m)"
 case "$ARCH" in
   x86_64) UV_ARCH="x86_64-unknown-linux-gnu" ;;
   aarch64) UV_ARCH="aarch64-unknown-linux-gnu"; [ "$CUDA" = "cpu" ] || hata "aarch64'te yalnızca --cuda cpu denenebilir (CUDA tekerleri x86_64 içindir)." ;;
   *) hata "Desteklenmeyen mimari: $ARCH" ;;
 esac
-command -v curl >/dev/null 2>&1 || hata "curl gerekli (Ubuntu: sudo apt install curl)."
+command -v curl >/dev/null 2>&1 || hata "curl gerekli (Ubuntu: sudo apt install curl, Arch: sudo pacman -S curl, Fedora: sudo dnf install curl)."
 mkdir -p "$HEDEF" 2>/dev/null || hata "$HEDEF oluşturulamadı."
 BOS_KB="$(df -Pk "$HEDEF" | awk 'NR==2{print $4}')"
 BOS_GB=$((BOS_KB / 1024 / 1024))
@@ -58,7 +72,7 @@ tamam "Boş disk: ~${BOS_GB} GB"
 tamam "Hedef: $HEDEF"
 
 if [ "$CUDA" != "cpu" ]; then
-  command -v nvidia-smi >/dev/null 2>&1 || hata "nvidia-smi bulunamadı: NVIDIA sürücüsü yok. Ubuntu: 'sudo ubuntu-drivers install' ile kurup yeniden başlatın. Yalnızca denemek için --cuda cpu kullanın."
+  command -v nvidia-smi >/dev/null 2>&1 || hata "nvidia-smi bulunamadı: NVIDIA sürücüsü yok. $(surucu_ipucu) Yalnızca denemek için --cuda cpu kullanın."
   GPU="$(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null | head -n1 || true)"
   [ -n "$GPU" ] || hata "nvidia-smi bir GPU göstermedi (sürücü yüklü ama çalışmıyor olabilir)."
   tamam "GPU: $GPU"
