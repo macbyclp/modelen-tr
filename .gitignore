@@ -24,16 +24,7 @@ portal/veri/
 *.db-wal
 *.db-shm
 
-# logo: yalnızca seçilen sürüm ve betikler; ara ham çıktılar yok
-logo/img/
-logo/ham/
-logo/ham-img/
-logo/briefs-img/
-logo/fener/ham/
-logo/fener/img/
-logo/fener/briefs-img/
 
-belgeler/cikti/
 
 dist/
 kurulum/target/

@@ -1,4 +1,4 @@
-"""Örnek koordinatör ve Python API istemcisi testleri (dokümantasyondaki kodun çalıştığını kanıtlar).
+"""Örnek koordinatör testleri (API istemcisinin portal ile uçtan uca testi web deposundadır) (dokümantasyondaki kodun çalıştığını kanıtlar).
 Çalıştırma (istemci/ornekler/ klasöründe): py -3 -W ignore -m unittest test_ornekler"""
 import array
 import hashlib
@@ -15,12 +15,8 @@ import urllib.request
 AD = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AD)
 sys.path.insert(0, os.path.dirname(AD))
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(AD)), "portal"))
 
-import api  # noqa: E402
 import minimal_koordinator as mk  # noqa: E402
-import modelen_api  # noqa: E402
-import portal  # noqa: E402
 import uyum_testi  # noqa: E402
 
 
@@ -92,64 +88,6 @@ class MinimalKoordinator(unittest.TestCase):
         self.assertEqual(json.loads(get(self.url, "/gorev?isci=a")[2]), {"bitti": True})
         self.assertEqual(post(self.url, "/sonuc?isci=a&tur=2", adaptor(1.0)[0])[0], 409)
         self.assertEqual(json.loads(get(self.url, "/durum")[2])["tur"], 2)
-
-
-class ApiIstemcisi(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.sunucu = portal.sunucu_kur(os.path.join(tempfile.mkdtemp(), "o.db"), "127.0.0.1", 0)
-        cls.port = cls.sunucu.server_address[1]
-        threading.Thread(target=cls.sunucu.serve_forever, daemon=True).start()
-        kid = portal.yurut("INSERT INTO kullanicilar(eposta,ad,parola,olusturma,eposta_dogrulandi) VALUES(?,?,?,?,1)", "ornek@ornek.org", "Örnek", portal.parola_ozet("parola-123456"), int(time.time())).lastrowid
-        cls.anahtar = api.anahtar_olustur(kid, "test")[1]
-        cls.api = modelen_api.ModelenApi(cls.anahtar, f"http://127.0.0.1:{cls.port}/api/v1")
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.sunucu.shutdown()
-
-    def test_istemci_akisi(self):
-        a = self.api
-        self.assertEqual(a.saglik()["durum"], "tamam")
-        self.assertEqual(modelen_api.ModelenApi("", a.taban).koordinatorler(), [])
-        self.assertEqual(a.ben()["eposta"], "ornek@ornek.org")
-        with self.assertRaises(modelen_api.ApiHatasi) as h:
-            a.koordinator()
-        self.assertEqual(h.exception.kod, "basvuru_yok")
-        k = a.basvur(ad="Örnek Lab", kisa="Python istemcisiyle oluşturulan başvuru", adres="https://koord.ornek.example")
-        self.assertEqual((k["slug"], k["durum"]), ("ornek-lab", "beklemede"))
-        self.assertEqual(a.guncelle(hf="https://huggingface.co/ornek")["hf"], "https://huggingface.co/ornek")
-        with self.assertRaises(modelen_api.ApiHatasi) as h:
-            a.nabiz("calisiyor")
-        self.assertEqual(h.exception.kod, "onayli_degil")
-        portal.yurut("UPDATE basvurular SET durum='onaylandi' WHERE slug='ornek-lab'")  # yönetici onayı
-        # nabız döngüsü: sahte koordinatörü yoklar
-        srv, d = mk.sunucu_olustur(adaptor(1.0)[0], "127.0.0.1", 0, tur=4, en_az=2)
-        threading.Thread(target=srv.serve_forever, daemon=True).start()
-        try:
-            get(f"http://127.0.0.1:{srv.server_address[1]}", "/gorev?isci=x")
-            modelen_api.nabiz_dongusu(a, f"http://127.0.0.1:{srv.server_address[1]}", once=True)
-        finally:
-            srv.shutdown()
-        n = modelen_api.ModelenApi("", a.taban)._istek("GET", "/koordinatorler/ornek-lab")["nabiz"]
-        self.assertEqual((n["durum"], n["tur"], n["toplam_tur"], n["aktif_isci"]), ("cevrimici", 0, 4, 1))
-        # koordinatöre ulaşılamazsa "durdu"
-        portal.HIZ.clear()
-        modelen_api.nabiz_dongusu(a, "http://127.0.0.1:1", once=True)
-        self.assertEqual(modelen_api.ModelenApi("", a.taban)._istek("GET", "/koordinatorler/ornek-lab")["nabiz"]["durum"], "durdu")
-        # adres doğrulama
-        t = a.adres_dogrulama_baslat()
-        self.assertEqual(t["dosya"], "https://koord.ornek.example/.well-known/modelen-dogrulama.txt")
-        api.GETIR = lambda url: t["icerik"]
-        try:
-            self.assertTrue(a.adres_dogrulama_kontrol()["adres_dogrulandi"])
-        finally:
-            api.GETIR = api.guvenli_getir
-        # CLI
-        self.assertEqual(modelen_api.main(["liste", "--taban", a.taban]), 0)
-        with self.assertRaises(SystemExit):
-            modelen_api.main(["ben", "--taban", a.taban])  # anahtar yok (ortam değişkeni boş): 401
-
 
 if __name__ == "__main__":
     unittest.main()

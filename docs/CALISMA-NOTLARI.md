@@ -1,5 +1,8 @@
 # modelen: çalışma notları
 
+> **Not (2026-11-09):** `site/`, `belgeler/`, `portal/`, `kurumsal/` ve `logo/` bu depodan ayrıldı; web tarafı özel `macbyclp/modelen-web` deposundadır. Aşağıdaki bu klasörlere ait satırlar tarihsel kayıttır.
+
+
 > Bu dosya projenin ilk README'sidir ve gün gün tutulan çalışma notları olarak saklanır. Güncel tanıtım için kök dizindeki README.md'ye bakın. Notlardaki "kullanıcı beyanı" ifadeleri, kararların proje sahibinden geldiğini belirtir.
 
 Türkçe odaklı, küçük dil modellerini **gönüllü GPU'larla dağıtık olarak eğitme** projesi.

@@ -1,9 +1,0 @@
-[Unit]
-Description=Modelen veritabani yedegi
-[Service]
-Type=oneshot
-User=modelen
-ExecStart=/opt/modelen/yedekle.sh
-ProtectSystem=strict
-ReadWritePaths=/opt/modelen/yedek /opt/modelen/veri
-NoNewPrivileges=true

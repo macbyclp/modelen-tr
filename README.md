@@ -107,7 +107,7 @@ Tek exe (~10 MB, egui). **Kolay mod:** tek sayfa, büyük AÇIK/KAPALI düğmesi
 ### 🌐 Site ve portal (modelen.tr)
 34 sayfa, TR + EN, çerezsiz, üçüncü taraf kaynaksız. **Portal** (tek dosya Python, SQLite): kayıt/giriş, **e-posta doğrulama ve şifre sıfırlama (SMTP)**, **koordinatör başvurusu** (adres isteğe bağlı, Hugging Face bağlantısı, görseller, onaylı profil düzenleme), herkese açık **Koordinatörler** sayfaları, **yönetici paneli**, **profiller**, sosyal bağlantılar, takip, kısa gönderi **akışı**, engel/bildirim ve moderasyon. Profil varsayılan **gizli**.
 
-`site/` · `portal/` · [`PORTAL.md`](portal/PORTAL.md) · 45 test
+Web tarafı (site, portal, docs kaynağı) ayrı, özel bir depoda tutulur; bu depo ürünün kendisidir.
 
 </td>
 </tr>
@@ -154,9 +154,9 @@ flowchart TB
   U -- "Topluluğa sor" --> K
 ```
 
-**Geliştiriciler için:** koordinatör olmak, kendi eğitim sisteminizi bağlamak ve Portal API'sini kullanmak için **[docs.modelen.tr](https://docs.modelen.tr)** (kaynak: `belgeler/`). Protokol v1 uyum testi (`istemci/uyum_testi.py`), yalnızca standart kütüphaneyle yazılmış örnek koordinatör ve Python API istemcisi (`istemci/ornekler/`) ile OpenAPI şeması (`/api/v1/openapi.json`) bu amaçla eklendi.
+**Geliştiriciler için:** koordinatör olmak, kendi eğitim sisteminizi bağlamak ve Portal API'sini kullanmak için **[docs.modelen.tr](https://docs.modelen.tr)**. Protokol v1 uyum testi (`istemci/uyum_testi.py`), yalnızca standart kütüphaneyle yazılmış örnek koordinatör ve Python API istemcisi (`istemci/ornekler/`) ile OpenAPI şeması (`/api/v1/openapi.json`) bu amaçla eklendi.
 
-**Ayrıca:** `logo/` (100 SVG kavram, seçilen *Halay Halkası* vektör sürümleri ve üretim betikleri), `kurumsal/` (kimlik notları ve avukat onay listesi), `ide/` (eski VS Code eklentisi prototipi, **artık kullanılmıyor**).
+**Ayrıca:** `ide/` (eski VS Code eklentisi prototipi, **artık kullanılmıyor**).
 
 ## Güvenlik ve gizlilik ilkeleri
 
@@ -166,7 +166,7 @@ flowchart TB
 - **Profil varsayılan gizlidir.** Kişi "herkese açık" yapmadıkça adı, fotoğrafı ve gönderileri görünmez.
 - API anahtarları (uygulamada) yalnızca işletim sistemi kimlik kasasında; ayar dosyasına yazılmaz.
 
-> Yasal metinler (KVKK, gizlilik, çerez, topluluk kuralları, koşullar) sitede yayındadır; **bir avukat tarafından incelenmemiştir**. Avukat için soru listesi: [`kurumsal/AVUKAT-ONAY-LISTESI.md`](kurumsal/AVUKAT-ONAY-LISTESI.md).
+> Yasal metinler (KVKK, gizlilik, çerez, topluluk kuralları, koşullar) sitede yayındadır; **bir avukat tarafından incelenmemiştir**.
 
 ## Hızlı başlangıç
 
@@ -179,34 +179,23 @@ cargo build --release
 cargo test --release                  # 15 test
 ```
 
-**Portal ve site** (yalnızca Python 3.10+ standart kütüphanesi):
-
-```bash
-py -3 site/build.py                                          # statik siteyi derle (34 sayfa)
-py -3 portal/portal.py admin-olustur --eposta ben@ornek.org  # yönetici hesabı
-py -3 portal/portal.py calistir --port 8780                  # http://127.0.0.1:8780
-cd portal && py -3 -W ignore -m unittest test_portal test_gorsel test_duzenleme test_sosyal test_eposta   # 45 test
-```
-
 **Gönüllü protokolünü yerelde dene** (CUDA'lı GPU, PyTorch, `transformers`, `peft`, `safetensors`; Qwen3-0.6B-Base `models/qwen3-0.6b-base` altında): adım adım komutlar [`istemci/ISTEMCI.md`](istemci/ISTEMCI.md) içinde. Veri ve model dosyaları depoda yok (büyük ve lisanslı); Vikipedi metnini `wiki_to_txt.py` üretir.
 
-**Sunucuya kurulum:** systemd + Caddy örnekleri `portal/deploy/` altında; güncelleme için `portal/yayinla.sh`.
 
 ## Depo haritası
 
 ```
-modelen/
+modelen/            (web tarafı — site, portal, docs — ayrı özel depoda)
 ├─ README.md · ADAPTASYON.md · LICENSE · NOTICE
 ├─ diloco_sim.py · lora_cpt.py · olc_*.py · adaptor_diloco.py · wiki_to_txt.py   araştırma betikleri
 ├─ sweep/ · sweep-wiki/ · grid-wiki/ · *.json · olcum-sonuc.txt                  ham sonuçlar
 ├─ istemci/    gönüllü istemci: koordinatör, işçi, değerlendirme, ISTEMCI.md
 ├─ sunucu/     yerel OpenAI uyumlu model sunucusu
 ├─ uygulama/   Rust masaüstü uygulaması (egui)
-├─ site/       modelen.tr statik sitesi (TR+EN) · build.py
-├─ belgeler/   docs.modelen.tr geliştirici dokümantasyonu (TR+EN) · build.py
-├─ portal/     kayıt/giriş, koordinatör başvurusu, profil/akış, yönetici paneli · deploy/
-├─ logo/       Halay Halkası ve kavram çalışmaları
-├─ kurumsal/   kimlik notları, avukat onay listesi
+├─ kurulum/    Modelen-Kurulum.exe (kur.ps1'i gömen Rust kurulum programı)
+├─ kur.ps1 · kur.sh   Windows ve Linux (Ubuntu, Arch) kurulum betikleri
+├─ tools/      sürüm paketleme (paketle.py)
+├─ .github/    sürüm hattı ve kurulum testleri (CI)
 ├─ ide/        eski VS Code prototipi (kullanılmıyor)
 └─ docs/       çalışma notları, görsel üretim betiği, README görselleri
 ```
