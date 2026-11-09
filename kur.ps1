@@ -52,6 +52,8 @@ $UV_URL = "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc
 
 function Adim($m) { Write-Host "`n==> $m" -ForegroundColor Red }
 function Tamam($m) { Write-Host "    $m" -ForegroundColor Gray }
+# Yerel komutların çıktısını satır satır yazar; Windows PowerShell 5.1'in stderr'den ürettiği boş "RemoteException" satırlarını atlar.
+function CiktiYaz { process { $m = "$_"; if ($m.Trim() -and $m -notmatch "^System\.Management\.Automation\.RemoteException$") { Tamam $m } } }
 function Hata($m) { Write-Host "`nHATA: $m" -ForegroundColor Yellow; exit 1 }
 
 # ---------------------------------------------------------------- ön koşullar
@@ -157,16 +159,16 @@ try {
   }
   $venv = Join-Path $Hedef ".venv"
   if (-not (Test-Path (Join-Path $venv "Scripts\python.exe"))) {
-    & $uv venv $venv --python 3.12 --seed 2>&1 | ForEach-Object { Tamam $_ }
+    & $uv venv $venv --python 3.12 --seed 2>&1 | CiktiYaz
     if ($LASTEXITCODE -ne 0) { Hata "sanal ortam oluşturulamadı." }
   }
   $py = Join-Path $venv "Scripts\python.exe"
 
   Adim "PyTorch ($CudaSurumu) ve gerekli paketler (birkaç GB; sabırlı olun)"
   $torchIdx = "https://download.pytorch.org/whl/$CudaSurumu"
-  & $uv pip install --python $py torch --index-url $torchIdx 2>&1 | ForEach-Object { Tamam $_ }
+  & $uv pip install --python $py torch --index-url $torchIdx 2>&1 | CiktiYaz
   if ($LASTEXITCODE -ne 0) { Hata "PyTorch kurulamadı." }
-  & $uv pip install --python $py @PAKETLER 2>&1 | ForEach-Object { Tamam $_ }
+  & $uv pip install --python $py @PAKETLER 2>&1 | CiktiYaz
   if ($LASTEXITCODE -ne 0) { Hata "paketler kurulamadı." }
 
   # ---------------------------------------------------------------- taban model
@@ -177,7 +179,7 @@ try {
     Adim "Taban model indiriliyor ($MODEL, Apache-2.0, ~1.2 GB)"
     New-Item -ItemType Directory -Force -Path $modelKlasoru | Out-Null
     $kod = "from huggingface_hub import snapshot_download; snapshot_download('$MODEL', local_dir=r'$modelKlasoru', allow_patterns=['*.json','*.safetensors','*.txt','merges.txt','vocab.json'])"
-    & $py -c $kod 2>&1 | ForEach-Object { Tamam $_ }
+    & $py -c $kod 2>&1 | CiktiYaz
     if ($LASTEXITCODE -ne 0) { Hata "model indirilemedi." }
   }
 
@@ -185,7 +187,7 @@ try {
   Adim "Doğrulama"
   $env:PYTHONIOENCODING = "utf-8"
   $dogrula = "import torch; print('torch', torch.__version__, '| CUDA available:', torch.cuda.is_available()); import transformers, peft, safetensors; print('packages ok')"
-  & $py -c $dogrula 2>&1 | ForEach-Object { Tamam $_ }
+  & $py -c $dogrula 2>&1 | CiktiYaz
   if ($LASTEXITCODE -ne 0) { Hata "Python ortamı doğrulanamadı." }
 
   # ---------------------------------------------------------------- kısayol
