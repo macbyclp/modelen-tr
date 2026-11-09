@@ -1,6 +1,6 @@
 [package]
 name = "modelen-kurulum"
-version = "0.5.3"
+version = "0.5.4"
 edition = "2021"
 description = "Modelen gönüllü kurulum programı: kur.ps1'i içine gömer ve çift tıklayınca çalıştırır"
 license = "Apache-2.0"
