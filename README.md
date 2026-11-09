@@ -3,6 +3,10 @@
 </p>
 
 <p align="center">
+  <b>Türkçe</b> · <a href="README.en.md">English</a>
+</p>
+
+<p align="center">
   <a href="https://modelen.tr"><img alt="Site" src="https://img.shields.io/badge/site-modelen.tr-e30a17?style=for-the-badge"></a>
   <img alt="Lisans" src="https://img.shields.io/badge/lisans-Apache--2.0-1f6feb?style=for-the-badge">
   <img alt="Durum" src="https://img.shields.io/badge/durum-ara%C5%9Ft%C4%B1rma%20a%C5%9Famas%C4%B1-f0a500?style=for-the-badge">
