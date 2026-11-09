@@ -2,7 +2,7 @@
 # her varlık için kaynak kanıtı (build provenance attestation) oluşturur ve GitHub sürümü açar.
 # Doğrulama (indiren kişi): gh attestation verify modelen.exe --repo macbyclp/modelen-tr
 #
-# NOT: Bu iş akışı yazıldı ama henüz hiç koşmadı; ilk etiket atıldığında çalışması izlenmeli.
+# Durum: v0.5.0'dan beri etiketlerle koşuyor (son: v0.5.7, başarılı).
 name: surum
 on:
   push:

@@ -1,0 +1,30 @@
+# Windows uygulamasının (uygulama/) birim testleri: uygulama, işçi betiği ya da kasa/süreç kodu değişince koşar.
+# Sürüm hattından (surum.yml) ayrıdır: etiket atmadan önce kırılmayı yakalamak içindir.
+name: uygulama-testi
+on:
+  push:
+    branches: [main]
+    paths: ["uygulama/**", "istemci/isci.py", ".github/workflows/uygulama-testi.yml"]
+  pull_request:
+    paths: ["uygulama/**", "istemci/isci.py"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            uygulama/target
+          key: cargo-test-${{ hashFiles('uygulama/Cargo.lock') }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Birim testleri
+        working-directory: uygulama
+        run: cargo test --locked
