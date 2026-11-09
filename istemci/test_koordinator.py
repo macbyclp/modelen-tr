@@ -216,6 +216,17 @@ class Testler(unittest.TestCase):
         self.assertEqual(k.istek("/durum", None, {"X-Anahtar": "ortam-iki"})[0], 200)
         self.assertTrue(k.al("/bilgi")["anahtar_gerekli"])
 
+    def test_anahtar_basina_isci_ortamdan(self):
+        os.environ["MODELEN_ANAHTAR"] = "e1,e2"
+        os.environ["MODELEN_ANAHTAR_BASINA_ISCI"] = "1"
+        try:
+            k = Koordinator(self)
+        finally:
+            os.environ.pop("MODELEN_ANAHTAR", None)
+            os.environ.pop("MODELEN_ANAHTAR_BASINA_ISCI", None)
+        self.assertEqual(k.istek("/gorev?isci=a", None, {"X-Anahtar": "e1"})[0], 200)
+        self.assertEqual(k.istek("/gorev?isci=b", None, {"X-Anahtar": "e1"})[0], 403)
+
     def test_bilgi_surum(self):
         k = Koordinator(self)
         b = k.al("/bilgi")

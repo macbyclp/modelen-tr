@@ -58,6 +58,23 @@ ok "anahtar süreç listesinde yok"
 [ "$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/durum")" = "401" ] || fail "kapat sonrası anahtarsız /durum 401 vermedi"
 ok "acik/kapat modları çalışıyor"
 
+# --- 6b. gönüllü başına anahtar: bir anahtar = bir işçi adı, iptal edilebilir
+HAZIR() { for i in $(seq 1 60); do curl -s "http://127.0.0.1:$PORT/bilgi" >/dev/null && break; sleep 1; done; }
+ADMIN="$("$KOMUT" anahtar)"
+V="$("$KOMUT" anahtar-ekle ali | sed -n 's/^Gönüllü .* için anahtar: //p')"
+[ ${#V} -ge 24 ] || fail "gönüllü anahtarı üretilmedi: '$V'"
+HAZIR
+GK() { curl -s -o /dev/null -w '%{http_code}' -H "X-Anahtar: $1" "http://127.0.0.1:$PORT/gorev?isci=$2"; }
+[ "$(GK "$V" ali)" = "200" ] || fail "gönüllü anahtarı kendi işçi adıyla 200 vermedi"
+[ "$(GK "$V" baska)" = "403" ] || fail "gönüllü anahtarı ikinci işçi adını kabul etti"
+[ "$(GK "$ADMIN" ali)" = "403" ] || fail "başka anahtar bağlı işçi adını aldı"
+[ "$(GK "$ADMIN" yonetici-deneme)" = "200" ] || fail "yönetici anahtarı çalışmadı"
+"$KOMUT" anahtarlar | grep -q '^ali ' || fail "anahtarlar listesi ali'yi göstermiyor"
+"$KOMUT" anahtar-sil ali >/dev/null; HAZIR
+[ "$(GK "$V" ali)" = "401" ] || fail "iptal edilen gönüllü anahtarı hâlâ geçerli"
+[ "$("$KOMUT" anahtar)" = "$ADMIN" ] || fail "yönetici anahtarı değişti"
+ok "gönüllü başına anahtar: ekle, sınır, iptal çalışıyor"
+
 # --- 7. adres doğrulama dosyası ve Caddyfile
 "$KOMUT" dogrulama "modelen-dogrulama-AbC123" >/dev/null
 [ "$(cat "$H/dogrulama/dogrulama.txt")" = "modelen-dogrulama-AbC123" ] || fail "doğrulama dosyası yazılmadı"

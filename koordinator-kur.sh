@@ -162,11 +162,16 @@ fi
 adim "Yapılandırma"
 umask 027
 ANAHTAR=""
-if [ -f "$HEDEF/koordinator.env" ]; then ANAHTAR="$(sed -n 's/^MODELEN_ANAHTAR=//p' "$HEDEF/koordinator.env" | head -n1)"; fi
+SINIR=""
+if [ -f "$HEDEF/koordinator.env" ]; then
+  ANAHTAR="$(sed -n 's/^MODELEN_ANAHTAR=//p' "$HEDEF/koordinator.env" | head -n1)"
+  SINIR="$(sed -n 's/^MODELEN_ANAHTAR_BASINA_ISCI=//p' "$HEDEF/koordinator.env" | head -n1)"
+fi
 if [ "$ACIK" -eq 0 ] && [ -z "$ANAHTAR" ]; then ANAHTAR="$(head -c 24 /dev/urandom | base64 | tr -d '=+/\n' | cut -c1-32)"; fi
 if [ "$ACIK" -eq 1 ]; then ANAHTAR=""; fi
 VEKIL=0; [ -n "$ALAN" ] && [ "$SISTEMSIZ" -eq 0 ] && VEKIL=1
 printf 'MODELEN_ANAHTAR=%s\n' "$ANAHTAR" > "$HEDEF/koordinator.env"
+if [ -n "$ANAHTAR" ] && [ -n "$SINIR" ]; then printf 'MODELEN_ANAHTAR_BASINA_ISCI=%s\n' "$SINIR" >> "$HEDEF/koordinator.env"; fi
 cat > "$HEDEF/koordinator.conf" <<KONF
 PORT=$PORT
 TUR=$TUR
@@ -205,7 +210,14 @@ YONET
 cat >> "$BIN/modelen-koordinator" <<'YONET'
 cd "$HEDEF" || exit 1
 . ./koordinator.conf
-anahtar_oku() { sed -n 's/^MODELEN_ANAHTAR=//p' ./koordinator.env | head -n1; }
+anahtar_liste() { sed -n 's/^MODELEN_ANAHTAR=//p' ./koordinator.env | head -n1; }
+anahtar_oku() { anahtar_liste | cut -d, -f1; }   # ilk anahtar = yönetici/izleme anahtarı (uyum testi, nabız, durum)
+yeni_anahtar() { head -c 24 /dev/urandom | base64 | tr -d '=+/\n' | cut -c1-32; }
+env_yaz() {  # $1 = virgüllü anahtar listesi, $2 = anahtar başına işçi sınırı (boş = yok)
+  printf 'MODELEN_ANAHTAR=%s\n' "$1" > koordinator.env
+  [ -n "${2:-}" ] && printf 'MODELEN_ANAHTAR_BASINA_ISCI=%s\n' "$2" >> koordinator.env
+  env_izin
+}
 curl_k() { local a; a="$(anahtar_oku)"; if [ -n "$a" ]; then curl -s -H "X-Anahtar: $a" "$@"; else curl -s "$@"; fi; }
 env_izin() {  # servis kullanıcısı (systemd) anahtar dosyasını okuyabilmeli, başkaları okuyamamalı; root yeniden yazınca izinler sıfırlanır
   if [ "$SISTEMSIZ" = "1" ]; then chmod 600 koordinator.env; else chgrp modelen-koordinator koordinator.env 2>/dev/null; chmod 640 koordinator.env; fi
@@ -220,8 +232,25 @@ case "${1:-}" in
     else systemctl --no-pager --lines=0 status modelen-koordinator | sed -n '1,4p'; fi
     echo "--- /durum"; curl_k "http://127.0.0.1:$PORT/durum" | head -c 600; echo ;;
   anahtar) a="$(anahtar_oku)"; [ -n "$a" ] && echo "$a" || echo "(anahtar yok: koordinatör AÇIK; herkes katılabilir)" ;;
-  acik)  printf 'MODELEN_ANAHTAR=\n' > koordinator.env; env_izin; yeniden; echo "Koordinatör artık AÇIK: anahtar istemez, herkes katılabilir." ;;
-  kapat) a="$(head -c 24 /dev/urandom | base64 | tr -d '=+/\n' | cut -c1-32)"; printf 'MODELEN_ANAHTAR=%s\n' "$a" > koordinator.env; env_izin; yeniden; echo "Koordinatör artık KAPALI. Yeni anahtar: $a" ;;
+  anahtar-ekle)
+    ad="${2:-}"; [ -n "$ad" ] || { echo "Kullanım: modelen-koordinator anahtar-ekle <gönüllü-adı>"; exit 1; }
+    case "$ad" in *[!A-Za-z0-9._-]*) echo "Ad yalnızca harf, rakam, . _ - içerebilir"; exit 1 ;; esac
+    [ -n "$(anahtar_oku)" ] || { echo "Koordinatör AÇIK; önce: modelen-koordinator kapat"; exit 1; }
+    [ -f anahtarlar.txt ] && grep -q "^$ad " anahtarlar.txt && { echo "Bu ad zaten var: $ad"; exit 1; }
+    n="$(yeni_anahtar)"; umask 077; printf '%s %s\n' "$ad" "$n" >> anahtarlar.txt; chmod 600 anahtarlar.txt
+    env_yaz "$(anahtar_liste),$n" 1; yeniden
+    echo "Gönüllü '$ad' için anahtar: $n"
+    echo "(Bir anahtar yalnızca bir işçi adı kullanabilir; iptal: modelen-koordinator anahtar-sil $ad)" ;;
+  anahtar-sil)
+    ad="${2:-}"; [ -n "$ad" ] || { echo "Kullanım: modelen-koordinator anahtar-sil <gönüllü-adı>"; exit 1; }
+    n="$(grep "^$ad " anahtarlar.txt 2>/dev/null | head -n1 | cut -d' ' -f2)"; [ -n "$n" ] || { echo "Böyle bir gönüllü anahtarı yok: $ad"; exit 1; }
+    kalan="$(anahtar_liste | tr ',' '\n' | grep -vxF "$n" | paste -sd, -)"
+    grep -v "^$ad " anahtarlar.txt > anahtarlar.yeni; mv anahtarlar.yeni anahtarlar.txt; chmod 600 anahtarlar.txt
+    env_yaz "$kalan" "$(sed -n 's/^MODELEN_ANAHTAR_BASINA_ISCI=//p' koordinator.env | head -n1)"; yeniden
+    echo "'$ad' anahtarı iptal edildi." ;;
+  anahtarlar) [ -s anahtarlar.txt ] && cat anahtarlar.txt || echo "(gönüllü başına anahtar yok; tek paylaşılan anahtar: modelen-koordinator anahtar)" ;;
+  acik)  env_yaz ""; : > anahtarlar.txt; yeniden; echo "Koordinatör artık AÇIK: anahtar istemez, herkes katılabilir." ;;
+  kapat) a="$(yeni_anahtar)"; env_yaz "$a"; : > anahtarlar.txt; yeniden; echo "Koordinatör artık KAPALI. Yeni anahtar: $a" ;;
   dogrulama)
     [ -n "${2:-}" ] || { echo "Kullanım: modelen-koordinator dogrulama <portalın verdiği içerik>"; exit 1; }
     case "$2" in *[!A-Za-z0-9._-]*) echo "Geçersiz içerik (yalnızca harf, rakam, . _ - olmalı)"; exit 1 ;; esac

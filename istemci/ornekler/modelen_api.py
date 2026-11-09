@@ -80,7 +80,7 @@ def koordinator_durumu(url, zaman=10, anahtar=""):
     """Referans koordinatörün /durum çıktısından nabız alanlarını türetir.
     Koordinatör anahtar istiyorsa (X-Anahtar) `anahtar` ya da MODELEN_ANAHTAR ortam değişkeni kullanılır; anahtar yoksa/reddedilirse
     anahtarsız açılan /bilgi'ye (tur, toplam_tur) düşülür; koordinatör ayakta olduğu sürece "durdu" bildirilmez."""
-    anahtar = anahtar or os.environ.get("MODELEN_ANAHTAR", "")
+    anahtar = (anahtar or os.environ.get("MODELEN_ANAHTAR", "")).split(",")[0].strip()  # çoklu anahtarda ilki (yönetici) kullanılır
     taban = url.rstrip("/")
     try:
         r = urllib.request.Request(taban + "/durum", headers={"X-Anahtar": anahtar} if anahtar else {})

@@ -5,7 +5,7 @@ name: kurulum-testi
 on:
   workflow_dispatch:
   push:
-    paths: ["kur.sh", "kur.ps1", "kurulum/**", "koordinator-kur.sh", "tools/koordinator_kurulum_testi.sh", "istemci/adaptor_uret.py", "istemci/veri_hazirla.py", "istemci/koordinator.py", ".github/workflows/kurulum-testi.yml"]
+    paths: ["kur.sh", "kur.ps1", "kurulum/**", "koordinator-kur.sh", "tools/koordinator_kurulum_testi.sh", "istemci/adaptor_uret.py", "istemci/veri_hazirla.py", "istemci/koordinator.py", "istemci/ornekler/modelen_api.py", ".github/workflows/kurulum-testi.yml"]
   pull_request:
     paths: ["kur.sh", "kur.ps1", "kurulum/**", "koordinator-kur.sh"]
 
