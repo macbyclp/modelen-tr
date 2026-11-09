@@ -29,7 +29,7 @@
 
 [Idea](#idea) · [How it works](#how-it-works) · [What we measured](#what-we-measured-and-what-we-could-not) · [Components](#components) · [Security and privacy](#security-and-privacy-principles) · [Quick start](#quick-start) · [Repository map](#repository-map) · [Releases and history](#releases-and-history) · [Honest status](#honest-status-and-roadmap)
 
-> The documentation, website and most in-repo notes are in Turkish. The docs site has English pages: [docs.modelen.tr](https://docs.modelen.tr).
+> Every in-repo document has an English version (`*.en.md`). The docs site also has English pages: [docs.modelen.tr](https://docs.modelen.tr).
 
 ## Idea
 
@@ -68,11 +68,11 @@ flowchart LR
 3. The coordinator validates the results (shape, type, NaN, outlier norm), averages them and applies the **outer step**.
 4. The round ends, the new global adapter is saved; the loop continues.
 
-Only **safetensors** is read from the network: no `pickle`, no code can be executed. Detailed protocol and an honest list of gaps: [`istemci/ISTEMCI.md`](istemci/ISTEMCI.md) (Turkish).
+Only **safetensors** is read from the network: no `pickle`, no code can be executed. Detailed protocol and an honest list of gaps: [`istemci/ISTEMCI.en.md`](istemci/ISTEMCI.en.md).
 
 ## What we measured (and what we could not)
 
-Everything is small scale, on a **single RTX 4060 Laptop (8 GB)**. Raw outputs and scripts are in this repository. Full method and limits: [`ADAPTASYON.md`](ADAPTASYON.md) (Turkish) and the [Measurements page on the site](https://modelen.tr/olcumler.html).
+Everything is small scale, on a **single RTX 4060 Laptop (8 GB)**. Raw outputs and scripts are in this repository. Full method and limits: [`ADAPTASYON.en.md`](ADAPTASYON.en.md) and the [Measurements page on the site](https://modelen.tr/olcumler.html).
 
 <p align="center">
   <img src="docs/assets/grafik-diloco.png" alt="With adapter-DiLoCo, the bits/byte curve almost overlaps the reference that synchronises every step" width="49%">
@@ -97,7 +97,7 @@ Everything is small scale, on a **single RTX 4060 Laptop (8 GB)**. Raw outputs a
 ### 🖥️ Desktop app (Rust)
 A single exe (~10 MB, egui). **Easy mode:** one page, a big ON/OFF button; you dedicate your GPU to a coordinator. **Advanced:** coordinator, nickname, local model server, logs; an **Ask the community** panel. It hides in the system tray, and API keys live only in the Windows credential vault.
 
-`uygulama/` · [`UYGULAMA.md`](uygulama/UYGULAMA.md) · 15 unit tests
+`uygulama/` · [`UYGULAMA.en.md`](uygulama/UYGULAMA.en.md) · 15 unit tests
 
 </td>
 <td width="50%" valign="top">
@@ -123,7 +123,7 @@ The web side (site, portal, docs source) is kept in a separate private repositor
 ### 🔁 Volunteer client and coordinator (Python)
 The adapter-DiLoCo protocol: coordinator (`/gorev`, `/agirlik`, `/sonuc`), worker, evaluation. Safetensors, sha256, outlier-delta elimination, one result per round. A local **OpenAI-compatible model server** (`sunucu/`).
 
-`istemci/` · `sunucu/` · [`ISTEMCI.md`](istemci/ISTEMCI.md)
+`istemci/` · `sunucu/` · [`ISTEMCI.md`](istemci/ISTEMCI.en.md)
 
 </td>
 <td width="50%" valign="top">
@@ -185,7 +185,7 @@ cargo build --release
 cargo test --release                  # 15 tests
 ```
 
-**Try the volunteer protocol locally** (CUDA GPU, PyTorch, `transformers`, `peft`, `safetensors`; Qwen3-0.6B-Base under `models/qwen3-0.6b-base`): step-by-step commands are in [`istemci/ISTEMCI.md`](istemci/ISTEMCI.md). Data and model files are not in the repository (large and licensed); `wiki_to_txt.py` produces the Wikipedia text.
+**Try the volunteer protocol locally** (CUDA GPU, PyTorch, `transformers`, `peft`, `safetensors`; Qwen3-0.6B-Base under `models/qwen3-0.6b-base`): step-by-step commands are in [`istemci/ISTEMCI.en.md`](istemci/ISTEMCI.en.md). Data and model files are not in the repository (large and licensed); `wiki_to_txt.py` produces the Wikipedia text.
 
 ## Repository map
 
@@ -238,4 +238,4 @@ modelen/            (web side — site, portal, docs — in a separate private r
 - 📬 **Contact:** iletisim@modelen.tr
 - 🐞 For bugs or suggestions you can open an *issue* in this repository.
 
-**License:** [Apache-2.0](LICENSE) (code and model). For third-party components and data licenses see [`NOTICE`](NOTICE) and [`ADAPTASYON.md`](ADAPTASYON.md). Base model: Qwen3-0.6B-Base (Apache-2.0). Turkish Wikipedia text is CC BY-SA/GFDL; it is not distributed in this repository.
+**License:** [Apache-2.0](LICENSE) (code and model). For third-party components and data licenses see [`NOTICE`](NOTICE) and [`ADAPTASYON.en.md`](ADAPTASYON.en.md). Base model: Qwen3-0.6B-Base (Apache-2.0). Turkish Wikipedia text is CC BY-SA/GFDL; it is not distributed in this repository.
